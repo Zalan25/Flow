@@ -33,6 +33,7 @@
             txtFullName = new TextBox();
             btnAdd = new Button();
             btnoutput = new Button();
+            btnDelete = new Button();
             SuspendLayout();
             // 
             // listUsers
@@ -84,11 +85,22 @@
             btnoutput.UseVisualStyleBackColor = true;
             btnoutput.Click += btnoutput_Click;
             // 
+            // btnDelete
+            // 
+            btnDelete.Location = new Point(238, 271);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(75, 23);
+            btnDelete.TabIndex = 7;
+            btnDelete.Text = "button1";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(509, 325);
+            Controls.Add(btnDelete);
             Controls.Add(btnoutput);
             Controls.Add(btnAdd);
             Controls.Add(txtFullName);
@@ -108,5 +120,6 @@
         private TextBox txtFullName;
         private Button btnAdd;
         private Button btnoutput;
+        private Button btnDelete;
     }
 }

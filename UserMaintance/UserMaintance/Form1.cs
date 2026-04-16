@@ -13,6 +13,7 @@ namespace UserMaintance
             lblFullName.Text = Resource1.FullName;
             btnAdd.Text = Resource1.Add;
             btnoutput.Text = Resource1.Output;
+            btnDelete.Text = Resource1.Delete;
 
             // listbox beállítások
             listUsers.DataSource = users;
@@ -20,7 +21,7 @@ namespace UserMaintance
             listUsers.DisplayMember = "FullName";
 
 
-           
+
         }
 
         private void btnoutput_Click(object sender, EventArgs e)
@@ -49,5 +50,21 @@ namespace UserMaintance
             users.Add(u);
         }
 
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var mbox = MessageBox.Show(Resource1.DeleteConformation, Resource1.Delete, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (mbox == DialogResult.Yes)
+            {
+                if (listUsers.SelectedItem != null)
+                {
+                    
+                        var user = (User)listUsers.SelectedItem;
+                    users.Remove(user);
+                }
+            }
+                
+            
+            
+        }
     }
 }
