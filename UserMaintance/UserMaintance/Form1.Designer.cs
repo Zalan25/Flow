@@ -32,6 +32,7 @@
             lblFullName = new Label();
             txtFullName = new TextBox();
             btnAdd = new Button();
+            btnoutput = new Button();
             SuspendLayout();
             // 
             // listUsers
@@ -71,12 +72,24 @@
             btnAdd.TabIndex = 5;
             btnAdd.Text = "button1";
             btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
+            // 
+            // btnoutput
+            // 
+            btnoutput.Location = new Point(397, 267);
+            btnoutput.Name = "btnoutput";
+            btnoutput.Size = new Size(75, 23);
+            btnoutput.TabIndex = 6;
+            btnoutput.Text = "button1";
+            btnoutput.UseVisualStyleBackColor = true;
+            btnoutput.Click += btnoutput_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(509, 325);
+            Controls.Add(btnoutput);
             Controls.Add(btnAdd);
             Controls.Add(txtFullName);
             Controls.Add(lblFullName);
@@ -94,5 +107,6 @@
         private Label lblFullName;
         private TextBox txtFullName;
         private Button btnAdd;
+        private Button btnoutput;
     }
 }
