@@ -29,73 +29,59 @@
         private void InitializeComponent()
         {
             listUsers = new ListBox();
-            lblLastName = new Label();
-            lblFirstName = new Label();
-            txtLastName = new TextBox();
-            txtFirstName = new TextBox();
+            lblFullName = new Label();
+            txtFullName = new TextBox();
             btnAdd = new Button();
             SuspendLayout();
             // 
             // listUsers
             // 
             listUsers.FormattingEnabled = true;
-            listUsers.Location = new Point(41, 112);
+            listUsers.ItemHeight = 15;
+            listUsers.Location = new Point(14, 35);
+            listUsers.Margin = new Padding(1);
             listUsers.Name = "listUsers";
-            listUsers.Size = new Size(518, 820);
+            listUsers.Size = new Size(184, 259);
             listUsers.TabIndex = 0;
             // 
-            // lblLastName
+            // lblFullName
             // 
-            lblLastName.AutoSize = true;
-            lblLastName.Location = new Point(770, 136);
-            lblLastName.Name = "lblLastName";
-            lblLastName.Size = new Size(115, 48);
-            lblLastName.TabIndex = 1;
-            lblLastName.Text = "label1";
+            lblFullName.AutoSize = true;
+            lblFullName.Location = new Point(270, 42);
+            lblFullName.Margin = new Padding(1, 0, 1, 0);
+            lblFullName.Name = "lblFullName";
+            lblFullName.Size = new Size(38, 15);
+            lblFullName.TabIndex = 1;
+            lblFullName.Text = "label1";
             // 
-            // lblFirstName
+            // txtFullName
             // 
-            lblFirstName.AutoSize = true;
-            lblFirstName.Location = new Point(770, 309);
-            lblFirstName.Name = "lblFirstName";
-            lblFirstName.Size = new Size(115, 48);
-            lblFirstName.TabIndex = 2;
-            lblFirstName.Text = "label2";
-            // 
-            // txtLastName
-            // 
-            txtLastName.Location = new Point(981, 136);
-            txtLastName.Name = "txtLastName";
-            txtLastName.Size = new Size(431, 55);
-            txtLastName.TabIndex = 3;
-            // 
-            // txtFirstName
-            // 
-            txtFirstName.Location = new Point(981, 309);
-            txtFirstName.Name = "txtFirstName";
-            txtFirstName.Size = new Size(431, 55);
-            txtFirstName.TabIndex = 4;
+            txtFullName.Location = new Point(343, 42);
+            txtFullName.Margin = new Padding(1);
+            txtFullName.Name = "txtFullName";
+            txtFullName.Size = new Size(153, 23);
+            txtFullName.TabIndex = 3;
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(770, 438);
+            btnAdd.Location = new Point(270, 137);
+            btnAdd.Margin = new Padding(1);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(642, 69);
+            btnAdd.Size = new Size(225, 22);
             btnAdd.TabIndex = 5;
             btnAdd.Text = "button1";
             btnAdd.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(20F, 48F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1455, 1040);
+            ClientSize = new Size(509, 325);
             Controls.Add(btnAdd);
-            Controls.Add(txtFirstName);
-            Controls.Add(txtLastName);
-            Controls.Add(lblFirstName);
-            Controls.Add(lblLastName);
+            Controls.Add(txtFullName);
+            Controls.Add(lblFullName);
             Controls.Add(listUsers);
+            Margin = new Padding(1);
             Name = "Form1";
             Text = "Form1";
             ResumeLayout(false);
@@ -105,10 +91,8 @@
         #endregion
 
         private ListBox listUsers;
-        private Label lblLastName;
-        private Label lblFirstName;
-        private TextBox txtLastName;
-        private TextBox txtFirstName;
+        private Label lblFullName;
+        private TextBox txtFullName;
         private Button btnAdd;
     }
 }

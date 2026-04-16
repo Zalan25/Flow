@@ -10,8 +10,7 @@ namespace UserMaintance
         {
             InitializeComponent();
             // Localizáció beállítása
-            lblFirstName.Text = Resource1.FirstName;
-            lblLastName.Text = Resource1.LastName;
+            lblFullName.Text = Resource1.FullName;
             btnAdd.Text = Resource1.Add;
 
             // listbox beállítások
@@ -21,8 +20,7 @@ namespace UserMaintance
 
             var u = new User
             {
-                LastName = txtLastName.Text,
-                FirstName = txtFirstName.Text
+                FullName = txtFullName.Text,
             };
             users.Add(u);
         }
