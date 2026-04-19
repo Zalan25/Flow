@@ -116,7 +116,7 @@ CREATE TABLE dbo.lm__tests
 (
     TestId INT IDENTITY(1,1) NOT NULL,
     TestName NVARCHAR(150) NOT NULL,
-    Description NVARCHAR(2000),
+    Characterization NVARCHAR(2000),
     LanguageId INT NOT NULL,
     TotalPoints INT NOT NULL,
     IsRandom BIT NOT NULL CONSTRAINT DF_lm__tests_IsRandom DEFAULT 0,
