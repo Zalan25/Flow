@@ -1,0 +1,461 @@
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+GO
+
+/* =========================================================
+   1. TÖRZSDATOK
+   ========================================================= */
+
+INSERT INTO dbo.lm__languages (Name, Code, IsActive)
+VALUES
+(N'English', N'en', 1),
+(N'Hungarian', N'hu', 1);
+GO
+
+INSERT INTO dbo.lm__question_levels (LevelName, LevelOrder)
+VALUES
+(N'A1', 1),
+(N'A2', 2),
+(N'B1', 3),
+(N'B2', 4),
+(N'C1', 5);
+GO
+
+INSERT INTO dbo.lm__question_types (TypeName)
+VALUES
+(N'SingleChoice');
+GO
+
+INSERT INTO dbo.lm__skill_types (SkillName)
+VALUES
+(N'Vocabulary'),
+(N'Reading'),
+(N'Listening'),
+(N'Practice'),
+(N'SelfStudy');
+GO
+
+INSERT INTO dbo.lm__assessment_modes (ModeKey, ModeName, IsActive)
+VALUES
+(N'STUDY_GUIDE', N'Study Guide', 1),
+(N'LEVEL_TEST', N'Level Test', 1);
+GO
+
+INSERT INTO dbo.lm__pace_types (PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
+VALUES
+(N'SLOW',   N'Nyugodt tempó',      2, 3, 1),
+(N'MEDIUM', N'Kiegyensúlyozott',   3, 5, 1),
+(N'FAST',   N'Gyors fejlődés',     5, 7, 1);
+GO
+
+/* =========================================================
+   2. TESZT
+   ========================================================= */
+
+DECLARE @EnglishLanguageId INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'en');
+
+INSERT INTO dbo.lm__tests (TestName, Characterization , LanguageId, TotalPoints, IsRandom, IsActive)
+VALUES
+(N'Sample Test', N'This is a sample test for demonstration purposes.', @EnglishLanguageId, 50, 0, 1);
+GO
+
+/* =========================================================
+   3. KÉRDÉSEK
+   ========================================================= */
+
+DECLARE @LanguageId_English INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'en');
+
+DECLARE @LevelId_A1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A1');
+DECLARE @LevelId_A2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A2');
+DECLARE @LevelId_B1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B1');
+DECLARE @LevelId_B2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B2');
+DECLARE @LevelId_C1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'C1');
+
+DECLARE @QuestionTypeId_SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm__question_types WHERE TypeName = N'SingleChoice');
+
+DECLARE @SkillId_Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @SkillId_Reading INT    = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Reading');
+DECLARE @SkillId_Listening INT  = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Listening');
+DECLARE @SkillId_Practice INT   = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Practice');
+
+INSERT INTO dbo.lm__questions
+(
+    QuestionText,
+    LanguageId,
+    QuestionLevelId,
+    QuestionTypeId,
+    SkillTypeId,
+    Points,
+    IsActive
+)
+VALUES
+/* A1 - 5 db */
+(N'What is the English word for "alma"?', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 1, 1),
+(N'Choose the correct sentence.', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 1, 1),
+(N'Complete the sentence: "I ___ a student."', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 1, 1),
+(N'Choose the correct plural form of "book".', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Reading, 1, 1),
+(N'What time expression means "reggel"?', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 1, 1),
+
+/* A2 - 5 db */
+(N'Choose the correct past tense form: "Yesterday I ___ to school."', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
+(N'Which sentence is correct?', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
+(N'Choose the synonym of "big".', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 2, 1),
+(N'Complete the sentence: "She is interested ___ music."', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
+(N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Reading, 2, 1),
+
+/* B1 - 5 db */
+(N'Choose the correct conditional sentence.', @LanguageId_English, @LevelId_B1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 3, 1),
+(N'Choose the best meaning of "reliable".', @LanguageId_English, @LevelId_B1, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 3, 1),
+(N'Which sentence uses the present perfect correctly?', @LanguageId_English, @LevelId_B1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 3, 1),
+(N'Read: "The meeting was postponed due to bad weather." What happened?', @LanguageId_English, @LevelId_B1, @QuestionTypeId_SingleChoice, @SkillId_Reading, 3, 1),
+(N'Choose the sentence with the correct word order.', @LanguageId_English, @LevelId_B1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 3, 1),
+
+/* B2 - 3 db */
+(N'Choose the most appropriate formal sentence.', @LanguageId_English, @LevelId_B2, @QuestionTypeId_SingleChoice, @SkillId_Reading, 4, 1),
+(N'Which option best completes the sentence? "Hardly ___ the station when the train left."', @LanguageId_English, @LevelId_B2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 4, 1),
+(N'Choose the best meaning of "to tackle a problem".', @LanguageId_English, @LevelId_B2, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 4, 1),
+
+/* C1 - 2 db */
+(N'Choose the sentence that expresses the idea most precisely.', @LanguageId_English, @LevelId_C1, @QuestionTypeId_SingleChoice, @SkillId_Reading, 4, 1),
+(N'Choose the best interpretation of the phrase: "The proposal was met with skepticism."', @LanguageId_English, @LevelId_C1, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 4, 1);
+GO
+
+/* =========================================================
+   4. VÁLASZOK
+   ========================================================= */
+
+INSERT INTO dbo.lm__answers (QuestionId, AnswerText, IsCorrect, AnswerOrder)
+SELECT q.QuestionId, v.AnswerText, v.IsCorrect, v.AnswerOrder
+FROM dbo.lm__questions q
+JOIN
+(
+    VALUES
+    (N'What is the English word for "alma"?', N'apple', 1, 1),
+    (N'What is the English word for "alma"?', N'bread', 0, 2),
+    (N'What is the English word for "alma"?', N'chair', 0, 3),
+    (N'What is the English word for "alma"?', N'window', 0, 4),
+
+    (N'Choose the correct sentence.', N'She is my friend.', 1, 1),
+    (N'Choose the correct sentence.', N'She are my friend.', 0, 2),
+    (N'Choose the correct sentence.', N'She am my friend.', 0, 3),
+    (N'Choose the correct sentence.', N'She be my friend.', 0, 4),
+
+    (N'Complete the sentence: "I ___ a student."', N'am', 1, 1),
+    (N'Complete the sentence: "I ___ a student."', N'is', 0, 2),
+    (N'Complete the sentence: "I ___ a student."', N'are', 0, 3),
+    (N'Complete the sentence: "I ___ a student."', N'be', 0, 4),
+
+    (N'Choose the correct plural form of "book".', N'books', 1, 1),
+    (N'Choose the correct plural form of "book".', N'bookes', 0, 2),
+    (N'Choose the correct plural form of "book".', N'book''s', 0, 3),
+    (N'Choose the correct plural form of "book".', N'book', 0, 4),
+
+    (N'What time expression means "reggel"?', N'in the morning', 1, 1),
+    (N'What time expression means "reggel"?', N'at night', 0, 2),
+    (N'What time expression means "reggel"?', N'in the evening', 0, 3),
+    (N'What time expression means "reggel"?', N'at noon', 0, 4),
+
+    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'went', 1, 1),
+    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'go', 0, 2),
+    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'gone', 0, 3),
+    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'going', 0, 4),
+
+    (N'Which sentence is correct?', N'There are some books on the table.', 1, 1),
+    (N'Which sentence is correct?', N'There is some books on the table.', 0, 2),
+    (N'Which sentence is correct?', N'There are any books on the table.', 0, 3),
+    (N'Which sentence is correct?', N'There some books are on the table.', 0, 4),
+
+    (N'Choose the synonym of "big".', N'large', 1, 1),
+    (N'Choose the synonym of "big".', N'small', 0, 2),
+    (N'Choose the synonym of "big".', N'low', 0, 3),
+    (N'Choose the synonym of "big".', N'short', 0, 4),
+
+    (N'Complete the sentence: "She is interested ___ music."', N'in', 1, 1),
+    (N'Complete the sentence: "She is interested ___ music."', N'on', 0, 2),
+    (N'Complete the sentence: "She is interested ___ music."', N'at', 0, 3),
+    (N'Complete the sentence: "She is interested ___ music."', N'for', 0, 4),
+
+    (N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', N'Usually', 1, 1),
+    (N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', N'Never', 0, 2),
+    (N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', N'Rarely', 0, 3),
+    (N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', N'Once a year', 0, 4),
+
+    (N'Choose the correct conditional sentence.', N'If I have time, I will call you.', 1, 1),
+    (N'Choose the correct conditional sentence.', N'If I will have time, I call you.', 0, 2),
+    (N'Choose the correct conditional sentence.', N'If I had time, I will call you yesterday.', 0, 3),
+    (N'Choose the correct conditional sentence.', N'If I have time, I called you tomorrow.', 0, 4),
+
+    (N'Choose the best meaning of "reliable".', N'can be trusted', 1, 1),
+    (N'Choose the best meaning of "reliable".', N'very old', 0, 2),
+    (N'Choose the best meaning of "reliable".', N'expensive', 0, 3),
+    (N'Choose the best meaning of "reliable".', N'difficult to use', 0, 4),
+
+    (N'Which sentence uses the present perfect correctly?', N'I have lived here for three years.', 1, 1),
+    (N'Which sentence uses the present perfect correctly?', N'I live here for three years.', 0, 2),
+    (N'Which sentence uses the present perfect correctly?', N'I am living here since three years.', 0, 3),
+    (N'Which sentence uses the present perfect correctly?', N'I have live here for three years.', 0, 4),
+
+    (N'Read: "The meeting was postponed due to bad weather." What happened?', N'It was moved to a later time.', 1, 1),
+    (N'Read: "The meeting was postponed due to bad weather." What happened?', N'It was cancelled forever.', 0, 2),
+    (N'Read: "The meeting was postponed due to bad weather." What happened?', N'It started earlier.', 0, 3),
+    (N'Read: "The meeting was postponed due to bad weather." What happened?', N'It changed location only.', 0, 4),
+
+    (N'Choose the sentence with the correct word order.', N'I have never seen that film.', 1, 1),
+    (N'Choose the sentence with the correct word order.', N'I never have seen that film.', 0, 2),
+    (N'Choose the sentence with the correct word order.', N'Never I have seen that film.', 0, 3),
+    (N'Choose the sentence with the correct word order.', N'I have seen never that film.', 0, 4),
+
+    (N'Choose the most appropriate formal sentence.', N'I would be grateful if you could send me the report.', 1, 1),
+    (N'Choose the most appropriate formal sentence.', N'Send me the report now.', 0, 2),
+    (N'Choose the most appropriate formal sentence.', N'I want that report, okay?', 0, 3),
+    (N'Choose the most appropriate formal sentence.', N'You gotta send me the report.', 0, 4),
+
+    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'had we reached', 1, 1),
+    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'we reached', 0, 2),
+    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'we had reached', 0, 3),
+    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'did we reached', 0, 4),
+
+    (N'Choose the best meaning of "to tackle a problem".', N'to deal with a problem', 1, 1),
+    (N'Choose the best meaning of "to tackle a problem".', N'to ignore a problem', 0, 2),
+    (N'Choose the best meaning of "to tackle a problem".', N'to create a problem', 0, 3),
+    (N'Choose the best meaning of "to tackle a problem".', N'to hide a problem', 0, 4),
+
+    (N'Choose the sentence that expresses the idea most precisely.', N'The data suggest a correlation, although causation has not been established.', 1, 1),
+    (N'Choose the sentence that expresses the idea most precisely.', N'The data prove everything completely.', 0, 2),
+    (N'Choose the sentence that expresses the idea most precisely.', N'The data are maybe something.', 0, 3),
+    (N'Choose the sentence that expresses the idea most precisely.', N'The data say nothing useful at all.', 0, 4),
+
+    (N'Choose the best interpretation of the phrase: "The proposal was met with skepticism."', N'People doubted the proposal.', 1, 1),
+    (N'Choose the best interpretation of the phrase: "The proposal was met with skepticism."', N'People celebrated the proposal enthusiastically.', 0, 2),
+    (N'Choose the best interpretation of the phrase: "The proposal was met with skepticism."', N'People did not hear the proposal.', 0, 3),
+    (N'Choose the best interpretation of the phrase: "The proposal was met with skepticism."', N'People finished the proposal quickly.', 0, 4)
+) v(QuestionText, AnswerText, IsCorrect, AnswerOrder)
+    ON q.QuestionText = v.QuestionText;
+GO
+
+/* =========================================================
+   5. KÉRDÉSEK KAPCSOLÁSA A TESZTHEZ
+   ========================================================= */
+
+DECLARE @TestId INT = (SELECT TestId FROM dbo.lm__tests WHERE TestName = N'Sample Test');
+
+INSERT INTO dbo.lm__test_questions (TestId, QuestionId, QuestionOrder)
+SELECT
+    @TestId,
+    q.QuestionId,
+    ROW_NUMBER() OVER (ORDER BY q.QuestionId)
+FROM dbo.lm__questions q;
+GO
+
+/* =========================================================
+   6. RECOMMENDATION RULES
+   1 cél nyelv: English
+   1 másodlagos nyelv: Hungarian
+   3 szint: A1, A2, B1, B2, C1
+   4 skill: Vocabulary, Reading, Listening, Practice
+   3 pace: SLOW, MEDIUM, FAST
+   -> összesen 75 sor
+   ========================================================= */
+
+DECLARE @LangEn INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'en');
+DECLARE @LangHu INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'hu');
+
+DECLARE @LvlA1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A1');
+DECLARE @LvlA2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A2');
+DECLARE @LvlB1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B1');
+DECLARE @LvlB2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B2');
+DECLARE @LvlC1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'C1');
+
+DECLARE @SkVocabulary INT = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @SkReading INT    = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Reading');
+DECLARE @SkListening INT  = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Listening');
+DECLARE @SkPractice INT   = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Practice');
+DECLARE @SkStudy INT   = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'SelfStudy');
+
+DECLARE @PaceSlow INT   = (SELECT PaceTypeId FROM dbo.lm__pace_types WHERE PaceKey = N'SLOW');
+DECLARE @PaceMedium INT = (SELECT PaceTypeId FROM dbo.lm__pace_types WHERE PaceKey = N'MEDIUM');
+DECLARE @PaceFast INT   = (SELECT PaceTypeId FROM dbo.lm__pace_types WHERE PaceKey = N'FAST');
+
+/*FALLBACK RULES*/
+INSERT INTO dbo.lm__recommendation_rules
+(
+    LanguageId,
+    QuestionLevelId,
+    SkillTypeId,
+    SecondaryLanguageId,
+    PaceTypeId,
+    Priority,
+    MatchMode,
+    HotcakesProductSKU,
+    HotcakesCategoryKey,
+    HotcakesTag,
+    MinProducts,
+    MaxProducts,
+    IsActive
+)
+VALUES
+(@LangEn, @LvlA1, @SkVocabulary, NULL, @PaceSlow,   100, N'FALLBACK', NULL, N'LANG-en-A1', N'fallback-en-a1-vocabulary-slow',   2, 3, 1),
+(@LangEn, @LvlA1, @SkVocabulary, NULL, @PaceMedium, 100, N'FALLBACK', NULL, N'LANG-en-A1', N'fallback-en-a1-vocabulary-medium', 3, 5, 1),
+(@LangEn, @LvlA1, @SkVocabulary, NULL, @PaceFast,   100, N'FALLBACK', NULL, N'LANG-en-A1', N'fallback-en-a1-vocabulary-fast',   5, 7, 1),
+
+(@LangEn, @LvlA2, @SkPractice, NULL, @PaceMedium, 100, N'FALLBACK', NULL, N'LANG-en-A2', N'fallback-en-a2-practice-medium', 3, 5, 1),
+(@LangEn, @LvlB1, @SkReading,  NULL, @PaceMedium, 100, N'FALLBACK', NULL, N'LANG-en-B1', N'fallback-en-b1-reading-medium',  3, 5, 1),
+(@LangEn, @LvlB2, @SkStudy,    NULL, @PaceMedium, 100, N'FALLBACK', NULL, N'LANG-en-B2', N'fallback-en-b2-study-medium',    3, 5, 1),
+(@LangEn, @LvlC1, @SkStudy,    NULL, @PaceMedium, 100, N'FALLBACK', NULL, N'LANG-en-C1', N'fallback-en-c1-study-medium',    3, 5, 1);
+
+
+/*GENERAL RULES*/
+
+INSERT INTO dbo.lm__recommendation_rules
+(
+    LanguageId,
+    QuestionLevelId,
+    SkillTypeId,
+    SecondaryLanguageId,
+    PaceTypeId,
+    Priority,
+    MatchMode,
+    HotcakesProductSKU,
+    HotcakesCategoryKey,
+    HotcakesTag,
+    MinProducts,
+    MaxProducts,
+    IsActive
+)
+VALUES
+(@LangEn, @LvlA1, @SkStudy, NULL, @PaceMedium, 999, N'GENERAL', NULL, N'LANG-en-A1', N'general-en-a1-study', 3, 5, 1),
+(@LangEn, @LvlA2, @SkStudy, NULL, @PaceMedium, 999, N'GENERAL', NULL, N'LANG-en-A2', N'general-en-a2-study', 3, 5, 1),
+(@LangEn, @LvlB1, @SkStudy, NULL, @PaceMedium, 999, N'GENERAL', NULL, N'LANG-en-B1', N'general-en-b1-study', 3, 5, 1),
+(@LangEn, @LvlB2, @SkStudy, NULL, @PaceMedium, 999, N'GENERAL', NULL, N'LANG-en-B2', N'general-en-b2-study', 3, 5, 1),
+(@LangEn, @LvlC1, @SkStudy, NULL, @PaceMedium, 999, N'GENERAL', NULL, N'LANG-en-C1', N'general-en-c1-study', 3, 5, 1);
+
+
+
+INSERT INTO dbo.lm__recommendation_rules
+(
+    LanguageId,
+    QuestionLevelId,
+    SkillTypeId,
+    SecondaryLanguageId,
+    PaceTypeId,
+    Priority,
+    MatchMode,
+    HotcakesProductSKU,
+    HotcakesCategoryKey,
+    HotcakesTag,
+    MinProducts,
+    MaxProducts,
+    IsActive
+)
+VALUES
+
+/* A1 Levels */
+
+(@LangEn, @LvlA1, @SkVocabulary, @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-vocabulary-slow',    2, 3, 1),
+(@LangEn, @LvlA1, @SkVocabulary, @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-vocabulary-medium',  3, 5, 1),
+(@LangEn, @LvlA1, @SkVocabulary, @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-vocabulary-fast',    5, 7, 1),
+
+(@LangEn, @LvlA1, @SkReading,    @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-reading-slow',       2, 3, 1),
+(@LangEn, @LvlA1, @SkReading,    @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-reading-medium',     3, 5, 1),
+(@LangEn, @LvlA1, @SkReading,    @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-reading-fast',       5, 7, 1),
+
+(@LangEn, @LvlA1, @SkListening,  @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-listening-slow',     2, 3, 1),
+(@LangEn, @LvlA1, @SkListening,  @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-listening-medium',   3, 5, 1),
+(@LangEn, @LvlA1, @SkListening,  @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-listening-fast',     5, 7, 1),
+
+(@LangEn, @LvlA1, @SkPractice,   @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-practice-slow',      2, 3, 1),
+(@LangEn, @LvlA1, @SkPractice,   @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-practice-medium',    3, 5, 1),
+(@LangEn, @LvlA1, @SkPractice,   @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-practice-fast',      5, 7, 1),
+
+(@LangEn, @LvlA1, @SkStudy,   @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-study-slow',      2, 3, 1),
+(@LangEn, @LvlA1, @SkStudy,   @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-study-medium',    3, 5, 1),
+(@LangEn, @LvlA1, @SkStudy,   @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-A1', N'study-en-a1-study-fast',      5, 7, 1),
+
+/* A2 Levels */
+
+(@LangEn, @LvlA2, @SkVocabulary, @LangHu, @PaceSlow,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-vocabulary-slow',    2, 3, 1),
+(@LangEn, @LvlA2, @SkVocabulary, @LangHu, @PaceMedium, 20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-vocabulary-medium',  3, 5, 1),
+(@LangEn, @LvlA2, @SkVocabulary, @LangHu, @PaceFast,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-vocabulary-fast',    5, 7, 1),
+
+(@LangEn, @LvlA2, @SkReading,    @LangHu, @PaceSlow,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-reading-slow',       2, 3, 1),
+(@LangEn, @LvlA2, @SkReading,    @LangHu, @PaceMedium, 20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-reading-medium',     3, 5, 1),
+(@LangEn, @LvlA2, @SkReading,    @LangHu, @PaceFast,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-reading-fast',       5, 7, 1),
+
+(@LangEn, @LvlA2, @SkListening,  @LangHu, @PaceSlow,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-listening-slow',     2, 3, 1),
+(@LangEn, @LvlA2, @SkListening,  @LangHu, @PaceMedium, 20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-listening-medium',   3, 5, 1),
+(@LangEn, @LvlA2, @SkListening,  @LangHu, @PaceFast,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-listening-fast',     5, 7, 1),
+
+(@LangEn, @LvlA2, @SkPractice,   @LangHu, @PaceSlow,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-practice-slow',      2, 3, 1),
+(@LangEn, @LvlA2, @SkPractice,   @LangHu, @PaceMedium, 20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-practice-medium',    3, 5, 1),
+(@LangEn, @LvlA2, @SkPractice,   @LangHu, @PaceFast,   20, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-practice-fast',      5, 7, 1),
+
+(@LangEn, @LvlA2, @SkStudy,   @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-study-slow',      2, 3, 1),
+(@LangEn, @LvlA2, @SkStudy,   @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-study-medium',    3, 5, 1),
+(@LangEn, @LvlA2, @SkStudy,   @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-A2', N'study-en-a2-study-fast',      5, 7, 1),
+
+/* B1 Levels */
+
+(@LangEn, @LvlB1, @SkVocabulary, @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-vocabulary-slow',    2, 3, 1),
+(@LangEn, @LvlB1, @SkVocabulary, @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-vocabulary-medium',  3, 5, 1),
+(@LangEn, @LvlB1, @SkVocabulary, @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-vocabulary-fast',    5, 7, 1),
+
+(@LangEn, @LvlB1, @SkReading,    @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-reading-slow',       2, 3, 1),
+(@LangEn, @LvlB1, @SkReading,    @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-reading-medium',     3, 5, 1),
+(@LangEn, @LvlB1, @SkReading,    @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-reading-fast',       5, 7, 1),
+
+(@LangEn, @LvlB1, @SkListening,  @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-listening-slow',     2, 3, 1),
+(@LangEn, @LvlB1, @SkListening,  @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-listening-medium',   3, 5, 1),
+(@LangEn, @LvlB1, @SkListening,  @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-listening-fast',     5, 7, 1),
+
+(@LangEn, @LvlB1, @SkPractice,   @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-practice-slow',      2, 3, 1),
+(@LangEn, @LvlB1, @SkPractice,   @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-practice-medium',    3, 5, 1),
+(@LangEn, @LvlB1, @SkPractice,   @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-practice-fast',      5, 7, 1),
+
+(@LangEn, @LvlB1, @SkStudy,   @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-study-slow',      2, 3, 1),
+(@LangEn, @LvlB1, @SkStudy,   @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-study-medium',    3, 5, 1),
+(@LangEn, @LvlB1, @SkStudy,   @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-B1', N'study-en-b1-study-fast',      5, 7, 1),
+
+/* B2 Levels */
+
+(@LangEn, @LvlB2, @SkVocabulary, @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-vocabulary-slow',    2, 3, 1),
+(@LangEn, @LvlB2, @SkVocabulary, @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-vocabulary-medium',  3, 5, 1),
+(@LangEn, @LvlB2, @SkVocabulary, @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-vocabulary-fast',    5, 7, 1),
+
+(@LangEn, @LvlB2, @SkReading,    @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-reading-slow',       2, 3, 1),
+(@LangEn, @LvlB2, @SkReading,    @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-reading-medium',     3, 5, 1),
+(@LangEn, @LvlB2, @SkReading,    @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-reading-fast',       5, 7, 1),
+
+(@LangEn, @LvlB2, @SkListening,  @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-listening-slow',     2, 3, 1),
+(@LangEn, @LvlB2, @SkListening,  @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-listening-medium',   3, 5, 1),
+(@LangEn, @LvlB2, @SkListening,  @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-listening-fast',     5, 7, 1),
+
+(@LangEn, @LvlB2, @SkPractice,   @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-practice-slow',      2, 3, 1),
+(@LangEn, @LvlB2, @SkPractice,   @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-practice-medium',    3, 5, 1),
+(@LangEn, @LvlB2, @SkPractice,   @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-practice-fast',      5, 7, 1),
+
+(@LangEn, @LvlB2, @SkStudy,   @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-study-slow',      2, 3, 1),
+(@LangEn, @LvlB2, @SkStudy,   @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-study-medium',    3, 5, 1),
+(@LangEn, @LvlB2, @SkStudy,   @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-B2', N'study-en-b2-study-fast',      5, 7, 1),
+
+/* C1 Levels */
+
+(@LangEn, @LvlC1, @SkVocabulary, @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-vocabulary-slow',    2, 3, 1),
+(@LangEn, @LvlC1, @SkVocabulary, @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-vocabulary-medium',  3, 5, 1),
+(@LangEn, @LvlC1, @SkVocabulary, @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-vocabulary-fast',    5, 7, 1),
+
+(@LangEn, @LvlC1, @SkReading,    @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-reading-slow',       2, 3, 1),
+(@LangEn, @LvlC1, @SkReading,    @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-reading-medium',     3, 5, 1),
+(@LangEn, @LvlC1, @SkReading,    @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-reading-fast',       5, 7, 1),
+
+(@LangEn, @LvlC1, @SkListening,  @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-listening-slow',     2, 3, 1),
+(@LangEn, @LvlC1, @SkListening,  @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-listening-medium',   3, 5, 1),
+(@LangEn, @LvlC1, @SkListening,  @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-listening-fast',     5, 7, 1),
+
+(@LangEn, @LvlC1, @SkPractice,   @LangHu, @PaceSlow,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-practice-slow',      2, 3, 1),
+(@LangEn, @LvlC1, @SkPractice,   @LangHu, @PaceMedium, 30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-practice-medium',    3, 5, 1),
+(@LangEn, @LvlC1, @SkPractice,   @LangHu, @PaceFast,   30, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-practice-fast',      5, 7, 1),
+
+(@LangEn, @LvlC1, @SkStudy,   @LangHu, @PaceSlow,   10, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-study-slow',      2, 3, 1),
+(@LangEn, @LvlC1, @SkStudy,   @LangHu, @PaceMedium, 10, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-study-medium',    3, 5, 1),
+(@LangEn, @LvlC1, @SkStudy,   @LangHu, @PaceFast,   10, N'EXACT', NULL, N'LANG-en-C1', N'study-en-c1-study-fast',      5, 7, 1);
+GO
