@@ -8,7 +8,6 @@ GO
 CREATE TABLE dbo.lm_languages
 (
     LanguageId INT IDENTITY(1,1) NOT NULL,
-    ModuleId INT NOT NULL,
     Name NVARCHAR(100) NOT NULL,
     Code NVARCHAR(10) NOT NULL,
     IsActive BIT NOT NULL CONSTRAINT DF_lm_languages_IsActive DEFAULT 1,
@@ -21,7 +20,6 @@ CREATE TABLE dbo.lm_languages
 CREATE TABLE dbo.lm_question_levels
 (
     QuestionLevelId INT IDENTITY(1,1) NOT NULL,
-    ModuleId INT NOT NULL,
     LevelName NVARCHAR(20) NOT NULL,
     LevelOrder INT NOT NULL,
 
@@ -33,7 +31,6 @@ CREATE TABLE dbo.lm_question_levels
 CREATE TABLE dbo.lm_question_types
 (
     QuestionTypeId INT IDENTITY(1,1) NOT NULL,
-    ModuleId INT NOT NULL,
     TypeName NVARCHAR(50) NOT NULL,
 
     CONSTRAINT PK_lm_question_types PRIMARY KEY (QuestionTypeId),
@@ -43,7 +40,6 @@ CREATE TABLE dbo.lm_question_types
 CREATE TABLE dbo.lm_skill_types
 (
     SkillTypeId INT IDENTITY(1,1) NOT NULL,
-    ModuleId INT NOT NULL,
     SkillName NVARCHAR(50) NOT NULL,
 
     CONSTRAINT PK_lm_skill_types PRIMARY KEY (SkillTypeId),
@@ -53,7 +49,6 @@ CREATE TABLE dbo.lm_skill_types
 CREATE TABLE dbo.lm_assessment_modes
 (
     AssessmentModeId INT IDENTITY(1,1) NOT NULL,
-    ModuleId INT NOT NULL,
     ModeKey NVARCHAR(50) NOT NULL,
     ModeName NVARCHAR(100) NOT NULL,
     IsActive BIT NOT NULL CONSTRAINT DF_lm_assessment_modes_IsActive DEFAULT 1,
@@ -65,7 +60,6 @@ CREATE TABLE dbo.lm_assessment_modes
 CREATE TABLE dbo.lm_pace_types
 (
     PaceTypeId INT IDENTITY(1,1) NOT NULL,
-    ModuleId INT NOT NULL,
     PaceKey NVARCHAR(50) NOT NULL,
     PaceName NVARCHAR(100) NOT NULL,
     MinProducts INT NOT NULL,
