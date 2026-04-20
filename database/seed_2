@@ -4,58 +4,53 @@ GO
 
 /* TÖRZSDATOK */
 
-DECLARE @ModuleId INT = 1;
-
-INSERT INTO dbo.lm_languages (ModuleId, Name, Code, IsActive)
+INSERT INTO dbo.lm_languages ( Name, Code, IsActive)
 VALUES
-(@ModuleId, N'English', N'en', 1),
-(@ModuleId, N'Hungarian', N'hu', 1);
+(N'English', N'en', 1),
+(N'Hungarian', N'hu', 1);
 GO
 
-DECLARE @ModuleId INT = 1;
-
-INSERT INTO dbo.lm_question_levels (ModuleId, LevelName, LevelOrder)
+INSERT INTO dbo.lm_question_levels (LevelName, LevelOrder)
 VALUES
-(@ModuleId, N'A1', 1),
-(@ModuleId, N'A2', 2),
-(@ModuleId, N'B1', 3),
-(@ModuleId, N'B2', 4),
-(@ModuleId, N'C1', 5);
+(N'A1', 1),
+(N'A2', 2),
+(N'B1', 3),
+(N'B2', 4),
+(N'C1', 5);
 GO
 
-DECLARE @ModuleId INT = 1;
 
-INSERT INTO dbo.lm_question_types (ModuleId, TypeName)
+INSERT INTO dbo.lm_question_types (TypeName)
 VALUES
-(@ModuleId, N'SingleChoice');
+( N'SingleChoice');
 GO
 
-DECLARE @ModuleId INT = 1;
 
-INSERT INTO dbo.lm_skill_types (ModuleId, SkillName)
+
+INSERT INTO dbo.lm_skill_types (SkillName)
 VALUES
-(@ModuleId, N'Vocabulary'),
-(@ModuleId, N'Reading'),
-(@ModuleId, N'Listening'),
-(@ModuleId, N'Practice'),
-(@ModuleId, N'SelfStudy');
+(N'Vocabulary'),
+(N'Reading'),
+(N'Listening'),
+(N'Practice'),
+(N'SelfStudy');
 GO
 
-DECLARE @ModuleId INT = 1;
 
-INSERT INTO dbo.lm_assessment_modes (ModuleId, ModeKey, ModeName, IsActive)
+
+INSERT INTO dbo.lm_assessment_modes (ModeKey, ModeName, IsActive)
 VALUES
-(@ModuleId, N'STUDY_GUIDE', N'Study Guide', 1),
-(@ModuleId, N'LEVEL_TEST', N'Level Test', 1);
+(N'STUDY_GUIDE', N'Study Guide', 1),
+(N'LEVEL_TEST', N'Level Test', 1);
 GO
 
-DECLARE @ModuleId INT = 1;
 
-INSERT INTO dbo.lm_pace_types (ModuleId, PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
+
+INSERT INTO dbo.lm_pace_types (PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
 VALUES
-(@ModuleId, N'SLOW',   N'Nyugodt tempó',      2, 3, 1),
-(@ModuleId, N'MEDIUM', N'Kiegyensúlyozott',   3, 5, 1),
-(@ModuleId, N'FAST',   N'Gyors fejlődés',     5, 7, 1);
+(N'SLOW',   N'Nyugodt tempó',      2, 3, 1),
+(N'MEDIUM', N'Kiegyensúlyozott',   3, 5, 1),
+(N'FAST',   N'Gyors fejlődés',     5, 7, 1);
 GO
 
 /* TESZT */
