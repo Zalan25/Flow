@@ -2,17 +2,15 @@ SET ANSI_NULLS ON;
 SET QUOTED_IDENTIFIER ON;
 GO
 
-/* =========================================================
-   1. TÖRZSDATOK
-   ========================================================= */
+/* TÖRZSDATOK */
 
-INSERT INTO dbo.lm__languages (Name, Code, IsActive)
+INSERT INTO dbo.lm_languages (Name, Code, IsActive)
 VALUES
 (N'English', N'en', 1),
 (N'Hungarian', N'hu', 1);
 GO
 
-INSERT INTO dbo.lm__question_levels (LevelName, LevelOrder)
+INSERT INTO dbo.lm_question_levels (LevelName, LevelOrder)
 VALUES
 (N'A1', 1),
 (N'A2', 2),
@@ -21,12 +19,12 @@ VALUES
 (N'C1', 5);
 GO
 
-INSERT INTO dbo.lm__question_types (TypeName)
+INSERT INTO dbo.lm_question_types (TypeName)
 VALUES
 (N'SingleChoice');
 GO
 
-INSERT INTO dbo.lm__skill_types (SkillName)
+INSERT INTO dbo.lm_skill_types (SkillName)
 VALUES
 (N'Vocabulary'),
 (N'Reading'),
@@ -35,50 +33,46 @@ VALUES
 (N'SelfStudy');
 GO
 
-INSERT INTO dbo.lm__assessment_modes (ModeKey, ModeName, IsActive)
+INSERT INTO dbo.lm_assessment_modes (ModeKey, ModeName, IsActive)
 VALUES
 (N'STUDY_GUIDE', N'Study Guide', 1),
 (N'LEVEL_TEST', N'Level Test', 1);
 GO
 
-INSERT INTO dbo.lm__pace_types (PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
+INSERT INTO dbo.lm_pace_types (PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
 VALUES
 (N'SLOW',   N'Nyugodt tempó',      2, 3, 1),
 (N'MEDIUM', N'Kiegyensúlyozott',   3, 5, 1),
 (N'FAST',   N'Gyors fejlődés',     5, 7, 1);
 GO
 
-/* =========================================================
-   2. TESZT
-   ========================================================= */
+/* TESZT */
 
-DECLARE @EnglishLanguageId INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'en');
+DECLARE @EnglishLanguageId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
 
-INSERT INTO dbo.lm__tests (TestName, Characterization , LanguageId, TotalPoints, IsRandom, IsActive)
+INSERT INTO dbo.lm_tests (TestName, Characterization , LanguageId, TotalPoints, IsRandom, IsActive)
 VALUES
 (N'Sample Test', N'This is a sample test for demonstration purposes.', @EnglishLanguageId, 50, 0, 1);
 GO
 
-/* =========================================================
-   3. KÉRDÉSEK
-   ========================================================= */
+/*  KÉRDÉSEK */
 
-DECLARE @LanguageId_English INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'en');
+DECLARE @LanguageId_English INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
 
-DECLARE @LevelId_A1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A1');
-DECLARE @LevelId_A2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A2');
-DECLARE @LevelId_B1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B1');
-DECLARE @LevelId_B2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B2');
-DECLARE @LevelId_C1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'C1');
+DECLARE @LevelId_A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
+DECLARE @LevelId_A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
+DECLARE @LevelId_B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
+DECLARE @LevelId_B2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
+DECLARE @LevelId_C1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1');
 
-DECLARE @QuestionTypeId_SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm__question_types WHERE TypeName = N'SingleChoice');
+DECLARE @QuestionTypeId_SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
 
-DECLARE @SkillId_Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @SkillId_Reading INT    = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Reading');
-DECLARE @SkillId_Listening INT  = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Listening');
-DECLARE @SkillId_Practice INT   = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Practice');
+DECLARE @SkillId_Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @SkillId_Reading INT    = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Reading');
+DECLARE @SkillId_Listening INT  = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Listening');
+DECLARE @SkillId_Practice INT   = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
 
-INSERT INTO dbo.lm__questions
+INSERT INTO dbo.lm_questions
 (
     QuestionText,
     LanguageId,
@@ -92,15 +86,15 @@ VALUES
 /* A1 - 5 db */
 (N'What is the English word for "alma"?', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 1, 1),
 (N'Choose the correct sentence.', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 1, 1),
-(N'Complete the sentence: "I ___ a student."', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 1, 1),
+(N'Complete the sentence: "I __ a student."', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Practice, 1, 1),
 (N'Choose the correct plural form of "book".', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Reading, 1, 1),
 (N'What time expression means "reggel"?', @LanguageId_English, @LevelId_A1, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 1, 1),
 
 /* A2 - 5 db */
-(N'Choose the correct past tense form: "Yesterday I ___ to school."', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
+(N'Choose the correct past tense form: "Yesterday I __ to school."', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
 (N'Which sentence is correct?', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
 (N'Choose the synonym of "big".', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 2, 1),
-(N'Complete the sentence: "She is interested ___ music."', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
+(N'Complete the sentence: "She is interested __ music."', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 2, 1),
 (N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', @LanguageId_English, @LevelId_A2, @QuestionTypeId_SingleChoice, @SkillId_Reading, 2, 1),
 
 /* B1 - 5 db */
@@ -112,7 +106,7 @@ VALUES
 
 /* B2 - 3 db */
 (N'Choose the most appropriate formal sentence.', @LanguageId_English, @LevelId_B2, @QuestionTypeId_SingleChoice, @SkillId_Reading, 4, 1),
-(N'Which option best completes the sentence? "Hardly ___ the station when the train left."', @LanguageId_English, @LevelId_B2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 4, 1),
+(N'Which option best completes the sentence? "Hardly __ the station when the train left."', @LanguageId_English, @LevelId_B2, @QuestionTypeId_SingleChoice, @SkillId_Practice, 4, 1),
 (N'Choose the best meaning of "to tackle a problem".', @LanguageId_English, @LevelId_B2, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 4, 1),
 
 /* C1 - 2 db */
@@ -120,13 +114,11 @@ VALUES
 (N'Choose the best interpretation of the phrase: "The proposal was met with skepticism."', @LanguageId_English, @LevelId_C1, @QuestionTypeId_SingleChoice, @SkillId_Vocabulary, 4, 1);
 GO
 
-/* =========================================================
-   4. VÁLASZOK
-   ========================================================= */
+/* VÁLASZOK */
 
-INSERT INTO dbo.lm__answers (QuestionId, AnswerText, IsCorrect, AnswerOrder)
+INSERT INTO dbo.lm_answers (QuestionId, AnswerText, IsCorrect, AnswerOrder)
 SELECT q.QuestionId, v.AnswerText, v.IsCorrect, v.AnswerOrder
-FROM dbo.lm__questions q
+FROM dbo.lm_questions q
 JOIN
 (
     VALUES
@@ -140,10 +132,10 @@ JOIN
     (N'Choose the correct sentence.', N'She am my friend.', 0, 3),
     (N'Choose the correct sentence.', N'She be my friend.', 0, 4),
 
-    (N'Complete the sentence: "I ___ a student."', N'am', 1, 1),
-    (N'Complete the sentence: "I ___ a student."', N'is', 0, 2),
-    (N'Complete the sentence: "I ___ a student."', N'are', 0, 3),
-    (N'Complete the sentence: "I ___ a student."', N'be', 0, 4),
+    (N'Complete the sentence: "I __ a student."', N'am', 1, 1),
+    (N'Complete the sentence: "I __ a student."', N'is', 0, 2),
+    (N'Complete the sentence: "I __ a student."', N'are', 0, 3),
+    (N'Complete the sentence: "I __ a student."', N'be', 0, 4),
 
     (N'Choose the correct plural form of "book".', N'books', 1, 1),
     (N'Choose the correct plural form of "book".', N'bookes', 0, 2),
@@ -155,10 +147,10 @@ JOIN
     (N'What time expression means "reggel"?', N'in the evening', 0, 3),
     (N'What time expression means "reggel"?', N'at noon', 0, 4),
 
-    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'went', 1, 1),
-    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'go', 0, 2),
-    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'gone', 0, 3),
-    (N'Choose the correct past tense form: "Yesterday I ___ to school."', N'going', 0, 4),
+    (N'Choose the correct past tense form: "Yesterday I __ to school."', N'went', 1, 1),
+    (N'Choose the correct past tense form: "Yesterday I __ to school."', N'go', 0, 2),
+    (N'Choose the correct past tense form: "Yesterday I __ to school."', N'gone', 0, 3),
+    (N'Choose the correct past tense form: "Yesterday I __ to school."', N'going', 0, 4),
 
     (N'Which sentence is correct?', N'There are some books on the table.', 1, 1),
     (N'Which sentence is correct?', N'There is some books on the table.', 0, 2),
@@ -170,10 +162,10 @@ JOIN
     (N'Choose the synonym of "big".', N'low', 0, 3),
     (N'Choose the synonym of "big".', N'short', 0, 4),
 
-    (N'Complete the sentence: "She is interested ___ music."', N'in', 1, 1),
-    (N'Complete the sentence: "She is interested ___ music."', N'on', 0, 2),
-    (N'Complete the sentence: "She is interested ___ music."', N'at', 0, 3),
-    (N'Complete the sentence: "She is interested ___ music."', N'for', 0, 4),
+    (N'Complete the sentence: "She is interested __ music."', N'in', 1, 1),
+    (N'Complete the sentence: "She is interested __ music."', N'on', 0, 2),
+    (N'Complete the sentence: "She is interested __ music."', N'at', 0, 3),
+    (N'Complete the sentence: "She is interested __ music."', N'for', 0, 4),
 
     (N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', N'Usually', 1, 1),
     (N'Read the sentence: "Tom usually gets up at 6." How often does he get up at 6?', N'Never', 0, 2),
@@ -210,10 +202,10 @@ JOIN
     (N'Choose the most appropriate formal sentence.', N'I want that report, okay?', 0, 3),
     (N'Choose the most appropriate formal sentence.', N'You gotta send me the report.', 0, 4),
 
-    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'had we reached', 1, 1),
-    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'we reached', 0, 2),
-    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'we had reached', 0, 3),
-    (N'Which option best completes the sentence? "Hardly ___ the station when the train left."', N'did we reached', 0, 4),
+    (N'Which option best completes the sentence? "Hardly __ the station when the train left."', N'had we reached', 1, 1),
+    (N'Which option best completes the sentence? "Hardly __ the station when the train left."', N'we reached', 0, 2),
+    (N'Which option best completes the sentence? "Hardly __ the station when the train left."', N'we had reached', 0, 3),
+    (N'Which option best completes the sentence? "Hardly __ the station when the train left."', N'did we reached', 0, 4),
 
     (N'Choose the best meaning of "to tackle a problem".', N'to deal with a problem', 1, 1),
     (N'Choose the best meaning of "to tackle a problem".', N'to ignore a problem', 0, 2),
@@ -233,51 +225,41 @@ JOIN
     ON q.QuestionText = v.QuestionText;
 GO
 
-/* =========================================================
-   5. KÉRDÉSEK KAPCSOLÁSA A TESZTHEZ
-   ========================================================= */
+/* 5. KÉRDÉSEK KAPCSOLÁSA A TESZTHEZ */
 
-DECLARE @TestId INT = (SELECT TestId FROM dbo.lm__tests WHERE TestName = N'Sample Test');
+DECLARE @TestId INT = (SELECT TestId FROM dbo.lm_tests WHERE TestName = N'Sample Test');
 
-INSERT INTO dbo.lm__test_questions (TestId, QuestionId, QuestionOrder)
+INSERT INTO dbo.lm_test_questions (TestId, QuestionId, QuestionOrder)
 SELECT
     @TestId,
     q.QuestionId,
     ROW_NUMBER() OVER (ORDER BY q.QuestionId)
-FROM dbo.lm__questions q;
+FROM dbo.lm_questions q;
 GO
 
-/* =========================================================
-   6. RECOMMENDATION RULES
-   1 cél nyelv: English
-   1 másodlagos nyelv: Hungarian
-   3 szint: A1, A2, B1, B2, C1
-   4 skill: Vocabulary, Reading, Listening, Practice
-   3 pace: SLOW, MEDIUM, FAST
-   -> összesen 75 sor
-   ========================================================= */
+/* RECOMMENDATION RULES */
 
-DECLARE @LangEn INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'en');
-DECLARE @LangHu INT = (SELECT LanguageId FROM dbo.lm__languages WHERE Code = N'hu');
+DECLARE @LangEn INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
+DECLARE @LangHu INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'hu');
 
-DECLARE @LvlA1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A1');
-DECLARE @LvlA2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'A2');
-DECLARE @LvlB1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B1');
-DECLARE @LvlB2 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'B2');
-DECLARE @LvlC1 INT = (SELECT QuestionLevelId FROM dbo.lm__question_levels WHERE LevelName = N'C1');
+DECLARE @LvlA1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
+DECLARE @LvlA2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
+DECLARE @LvlB1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
+DECLARE @LvlB2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
+DECLARE @LvlC1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1');
 
-DECLARE @SkVocabulary INT = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @SkReading INT    = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Reading');
-DECLARE @SkListening INT  = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Listening');
-DECLARE @SkPractice INT   = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'Practice');
-DECLARE @SkStudy INT   = (SELECT SkillTypeId FROM dbo.lm__skill_types WHERE SkillName = N'SelfStudy');
+DECLARE @SkVocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @SkReading INT    = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Reading');
+DECLARE @SkListening INT  = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Listening');
+DECLARE @SkPractice INT   = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @SkStudy INT   = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'SelfStudy');
 
-DECLARE @PaceSlow INT   = (SELECT PaceTypeId FROM dbo.lm__pace_types WHERE PaceKey = N'SLOW');
-DECLARE @PaceMedium INT = (SELECT PaceTypeId FROM dbo.lm__pace_types WHERE PaceKey = N'MEDIUM');
-DECLARE @PaceFast INT   = (SELECT PaceTypeId FROM dbo.lm__pace_types WHERE PaceKey = N'FAST');
+DECLARE @PaceSlow INT   = (SELECT PaceTypeId FROM dbo.lm_pace_types WHERE PaceKey = N'SLOW');
+DECLARE @PaceMedium INT = (SELECT PaceTypeId FROM dbo.lm_pace_types WHERE PaceKey = N'MEDIUM');
+DECLARE @PaceFast INT   = (SELECT PaceTypeId FROM dbo.lm_pace_types WHERE PaceKey = N'FAST');
 
 /*FALLBACK RULES*/
-INSERT INTO dbo.lm__recommendation_rules
+INSERT INTO dbo.lm_recommendation_rules
 (
     LanguageId,
     QuestionLevelId,
@@ -304,9 +286,9 @@ VALUES
 (@LangEn, @LvlC1, @SkStudy,    NULL, @PaceMedium, 100, N'FALLBACK', NULL, N'LANG-en-C1', N'fallback-en-c1-study-medium',    3, 5, 1);
 
 
-/*GENERAL RULES*/
+/* GENERAL RULES */
 
-INSERT INTO dbo.lm__recommendation_rules
+INSERT INTO dbo.lm_recommendation_rules
 (
     LanguageId,
     QuestionLevelId,
@@ -331,7 +313,7 @@ VALUES
 
 
 
-INSERT INTO dbo.lm__recommendation_rules
+INSERT INTO dbo.lm_recommendation_rules
 (
     LanguageId,
     QuestionLevelId,
