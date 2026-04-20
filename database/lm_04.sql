@@ -8,6 +8,7 @@ GO
 CREATE TABLE dbo.lm_languages
 (
     LanguageId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     Name NVARCHAR(100) NOT NULL,
     Code NVARCHAR(10) NOT NULL,
     IsActive BIT NOT NULL CONSTRAINT DF_lm_languages_IsActive DEFAULT 1,
@@ -20,6 +21,7 @@ CREATE TABLE dbo.lm_languages
 CREATE TABLE dbo.lm_question_levels
 (
     QuestionLevelId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     LevelName NVARCHAR(20) NOT NULL,
     LevelOrder INT NOT NULL,
 
@@ -31,6 +33,7 @@ CREATE TABLE dbo.lm_question_levels
 CREATE TABLE dbo.lm_question_types
 (
     QuestionTypeId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     TypeName NVARCHAR(50) NOT NULL,
 
     CONSTRAINT PK_lm_question_types PRIMARY KEY (QuestionTypeId),
@@ -40,6 +43,7 @@ CREATE TABLE dbo.lm_question_types
 CREATE TABLE dbo.lm_skill_types
 (
     SkillTypeId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     SkillName NVARCHAR(50) NOT NULL,
 
     CONSTRAINT PK_lm_skill_types PRIMARY KEY (SkillTypeId),
@@ -49,6 +53,7 @@ CREATE TABLE dbo.lm_skill_types
 CREATE TABLE dbo.lm_assessment_modes
 (
     AssessmentModeId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     ModeKey NVARCHAR(50) NOT NULL,
     ModeName NVARCHAR(100) NOT NULL,
     IsActive BIT NOT NULL CONSTRAINT DF_lm_assessment_modes_IsActive DEFAULT 1,
@@ -60,6 +65,7 @@ CREATE TABLE dbo.lm_assessment_modes
 CREATE TABLE dbo.lm_pace_types
 (
     PaceTypeId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     PaceKey NVARCHAR(50) NOT NULL,
     PaceName NVARCHAR(100) NOT NULL,
     MinProducts INT NOT NULL,
@@ -78,6 +84,7 @@ CREATE TABLE dbo.lm_pace_types
 CREATE TABLE dbo.lm_questions
 (
     QuestionId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     QuestionText NVARCHAR(1000) NOT NULL,
     LanguageId INT NOT NULL,
     QuestionLevelId INT NOT NULL,
@@ -99,6 +106,7 @@ CREATE TABLE dbo.lm_questions
 CREATE TABLE dbo.lm_answers
 (
     AnswerId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     QuestionId INT NOT NULL,
     AnswerText NVARCHAR(500) NOT NULL,
     IsCorrect BIT NOT NULL,
@@ -115,6 +123,7 @@ CREATE TABLE dbo.lm_answers
 CREATE TABLE dbo.lm_tests
 (
     TestId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     TestName NVARCHAR(150) NOT NULL,
     Characterization NVARCHAR(2000),
     LanguageId INT NOT NULL,
@@ -131,6 +140,7 @@ CREATE TABLE dbo.lm_tests
 CREATE TABLE dbo.lm_test_questions
 (
     TestQuestionId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     TestId INT NOT NULL,
     QuestionId INT NOT NULL,
     QuestionOrder INT NOT NULL,
@@ -148,6 +158,7 @@ CREATE TABLE dbo.lm_test_questions
 CREATE TABLE dbo.lm_assessment_sessions
 (
     AssessmentSessionId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     AssessmentModeId INT NOT NULL,
     LanguageId INT NOT NULL,
     SecondaryLanguageId INT NULL,
@@ -178,6 +189,7 @@ CREATE TABLE dbo.lm_assessment_sessions
 CREATE TABLE dbo.lm_assessment_session_skills
 (
     AssessmentSessionSkillId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     AssessmentSessionId INT NOT NULL,
     SkillTypeId INT NOT NULL,
 
@@ -193,6 +205,7 @@ CREATE TABLE dbo.lm_assessment_session_skills
 CREATE TABLE dbo.lm_test_attempts
 (
     TestAttemptId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     AssessmentSessionId INT NULL,
     TestId INT NOT NULL,
     UserId INT NULL,
@@ -226,6 +239,7 @@ CREATE TABLE dbo.lm_test_attempts
 CREATE TABLE dbo.lm_test_attempt_answers
 (
     TestAttemptAnswerId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     TestAttemptId INT NOT NULL,
     QuestionId INT NOT NULL,
     SelectedAnswerId INT NULL,
@@ -248,6 +262,7 @@ CREATE TABLE dbo.lm_test_attempt_answers
 CREATE TABLE dbo.lm_recommendation_rules
 (
     RecommendationRuleId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     LanguageId INT NOT NULL,
     QuestionLevelId INT NOT NULL,
     SkillTypeId INT NOT NULL,
@@ -281,6 +296,7 @@ CREATE TABLE dbo.lm_recommendation_rules
 CREATE TABLE dbo.lm_recommendation_results
 (
     RecommendationResultId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     AssessmentSessionId INT NOT NULL,
     SourceType NVARCHAR(50) NOT NULL,
     RecommendedLevelId INT NULL,
@@ -303,6 +319,7 @@ CREATE TABLE dbo.lm_recommendation_results
 CREATE TABLE dbo.lm_recommendation_result_items
 (
     RecommendationResultItemId INT IDENTITY(1,1) NOT NULL,
+    ModuleId INT NOT NULL,
     RecommendationResultId INT NOT NULL,
     ProductSKU NVARCHAR(100) NOT NULL,
     SortOrder INT NOT NULL,
