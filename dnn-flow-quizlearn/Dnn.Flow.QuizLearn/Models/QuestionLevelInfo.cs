@@ -8,4 +8,4 @@ namespace Dnn.Flow.QuizLearn.Models
         public string LevelName { get; set; }
         public string LevelOrder { get; set; }
     }
-
+}
