@@ -5,7 +5,7 @@ namespace Dnn.Flow.QuizLearn.Data
 {
     public interface IQuizLearnDataRepository
     {
-        // Lookups
+        // Lekérdezések
         IEnumerable<LanguageInfo> GetAllActiveLanguages();
         IEnumerable<QuestionLevelInfo> GetAllQuestionLevels();
         IEnumerable<SkillTypeInfo> GetAllSkillTypes();
@@ -15,9 +15,9 @@ namespace Dnn.Flow.QuizLearn.Data
         // Sessions
         int AddAssessmentSession(AssessmentSessionInfo sessionInfo);
         int AddAssessmentSessionSkill(int moduleId, int assessmentSessionId, int skillTypeId);
-        bool CompleteAssessmentSession(int moduleId, int assessmentSessionId, int? finalLevelId);
+        int CompleteAssessmentSession(int moduleId, int assessmentSessionId, int? finalLevelId);
 
-        // Recommendation rules
+        // Szabályok
         IEnumerable<RecommendationRuleInfo> FindExactRecommendationRules(
             int moduleId,
             int languageId,
@@ -37,7 +37,7 @@ namespace Dnn.Flow.QuizLearn.Data
             int moduleId,
             int languageId);
 
-        // Recommendation results
+        // Eredmények
         int AddRecommendationResult(RecommendationResultInfo resultInfo);
         int AddRecommendationResultItem(RecommendationResultItemInfo itemInfo);
 
