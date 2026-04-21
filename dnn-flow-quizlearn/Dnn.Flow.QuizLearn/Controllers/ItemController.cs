@@ -12,6 +12,8 @@
 
 using Dnn.Flow.QuizLearn.Components;
 using Dnn.Flow.QuizLearn.Models;
+using Dnn.Flow.QuizLearn.Data;
+using DotNetNuke.Data;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
@@ -22,9 +24,11 @@ using System.Web.Mvc;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
+
     [DnnHandleError]
     public class ItemController : DnnController
     {
+        
 
         public ActionResult Delete(int itemId)
         {
@@ -80,8 +84,14 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [ModuleAction(ControlKey = "Edit", TitleKey = "AddItem")]
         public ActionResult Index()
         {
-            var items = ItemManager.Instance.GetItems(ModuleContext.ModuleId);
-            return View(items);
+            //var items = ItemManager.Instance.GetItems(ModuleContext.ModuleId);
+            //return View(items);
+            var provider = new Data.SqlDataProvider();
+            var languages = provider.GetAllActiveLanguages();
+
+            ViewBag.TestMessage = "Nyelvek száma: " + languages.Count();
+
+            return View();
         }
     }
 }

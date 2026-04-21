@@ -271,7 +271,7 @@ namespace Dnn.Flow.QuizLearn.Data
                 new System.Data.SqlClient.SqlParameter("@QuestionLevelId", questionLevelId),
                 new System.Data.SqlClient.SqlParameter("@SkillTypeId", skillTypeId),
                 new System.Data.SqlClient.SqlParameter("@PaceTypeId", paceTypeId),
-                new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))))
+                new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))) ;
             {
                 while (reader.Read())
                 {
@@ -314,7 +314,7 @@ namespace Dnn.Flow.QuizLearn.Data
                 new System.Data.SqlClient.SqlParameter("@LanguageId", languageId),
                 new System.Data.SqlClient.SqlParameter("@QuestionLevelId", questionLevelId),
                 new System.Data.SqlClient.SqlParameter("@SkillTypeId", skillTypeId),
-                new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))))
+                new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))) ;
             {
                 while (reader.Read())
                 {
@@ -377,5 +377,6 @@ namespace Dnn.Flow.QuizLearn.Data
             }
             return rules;
         }
-    }   
+    } 
+}
     
