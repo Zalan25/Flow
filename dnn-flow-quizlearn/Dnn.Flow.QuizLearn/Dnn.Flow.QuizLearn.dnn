@@ -43,7 +43,7 @@
           <desktopModule>
             <moduleName>Dnn.Flow.QuizLearn</moduleName>
             <foldername>Dnn.Flow.QuizLearn</foldername>
-            <businessControllerClass>Dnn.QuizLearn.Dnn.Flow.QuizLearn.Components.FeatureController</businessControllerClass>
+            <businessControllerClass>Dnn.Flow.QuizLearn.Components.FeatureController</businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>
@@ -52,7 +52,7 @@
                 <moduleControls>
                   <moduleControl>
                     <controlKey />
-                    <controlSrc>Dnn.QuizLearn.Dnn.Flow.QuizLearn.Controllers/Item/Index.mvc</controlSrc>
+                    <controlSrc>Dnn.Flow.QuizLearn.Controllers/Item/Index.mvc</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
                     <controlType>View</controlType>
@@ -62,7 +62,7 @@
                   </moduleControl>
                   <moduleControl>
                     <controlKey>Edit</controlKey>
-                    <controlSrc>Dnn.QuizLearn.Dnn.Flow.QuizLearn.Controllers/Item/Edit.mvc</controlSrc>
+                    <controlSrc>Dnn.Flow.QuizLearn.Controllers/Item/Edit.mvc</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle>Edit Content</controlTitle>
                     <controlType>Edit</controlType>
@@ -73,7 +73,7 @@
                   </moduleControl>
                   <moduleControl>
                     <controlKey>Settings</controlKey>
-                    <controlSrc>Dnn.QuizLearn.Dnn.Flow.QuizLearn.Controllers/Settings/Settings.mvc</controlSrc>
+                    <controlSrc>Dnn.Flow.QuizLearn.Controllers/Settings/Settings.mvc</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle>Dnn.Flow.QuizLearn Settings</controlTitle>
                     <controlType>Edit</controlType>

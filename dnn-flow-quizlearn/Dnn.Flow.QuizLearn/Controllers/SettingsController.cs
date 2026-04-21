@@ -16,7 +16,7 @@ using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
 using System.Web.Mvc;
 
-namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Controllers
+namespace Dnn.Flow.QuizLearn.Controllers
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [DnnHandleError]

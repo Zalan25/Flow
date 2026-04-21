@@ -10,12 +10,12 @@
 ' 
 */
 
-using Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models;
+using Dnn.Flow.QuizLearn.Models;
 using DotNetNuke.Data;
 using DotNetNuke.Framework;
 using System.Collections.Generic;
 
-namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Components
+namespace Dnn.Flow.QuizLearn.Components
 {
     internal interface IItemManager
     {

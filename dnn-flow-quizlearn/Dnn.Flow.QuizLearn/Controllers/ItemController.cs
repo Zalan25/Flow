@@ -10,8 +10,8 @@
 ' 
 */
 
-using Dnn.QuizLearn.Dnn.Flow.QuizLearn.Components;
-using Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models;
+using Dnn.Flow.QuizLearn.Components;
+using Dnn.Flow.QuizLearn.Models;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
@@ -20,7 +20,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Controllers
+namespace Dnn.Flow.QuizLearn.Controllers
 {
     [DnnHandleError]
     public class ItemController : DnnController

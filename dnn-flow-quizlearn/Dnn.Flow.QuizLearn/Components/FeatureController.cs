@@ -15,7 +15,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search;
 using System.Collections.Generic;
 
-namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Components
+namespace Dnn.Flow.QuizLearn.Components
 {
     /// -----------------------------------------------------------------------------
     /// <summary>

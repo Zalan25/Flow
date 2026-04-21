@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.App_LocalResources
+namespace Dnn.Flow.QuizLearn.App_LocalResources
 {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -44,7 +44,7 @@ namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.App_LocalResources
             {
                 if (object.ReferenceEquals(resourceMan, null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Dnn.QuizLearn.Dnn.Flow.QuizLearn.App_LocalResources.Settings", typeof(Settings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Dnn.Flow.QuizLearn.App_LocalResources.Settings", typeof(Settings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -16,7 +16,7 @@ using DotNetNuke.Entities.Content;
 using System;
 using System.Web.Caching;
 
-namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models
+namespace Dnn.Flow.QuizLearn.Models
 {
     [TableName("Dnn.Flow.QuizLearn_Items")]
     //setup the primary key for table
