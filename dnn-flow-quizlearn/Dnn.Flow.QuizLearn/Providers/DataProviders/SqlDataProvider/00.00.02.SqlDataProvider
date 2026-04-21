@@ -1044,3 +1044,15 @@ BEGIN
     SELECT @@ROWCOUNT AS [AffectedRows];
 END
 GO
+
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.columns
+    WHERE Name = N'ModuleId'
+      AND Object_ID = OBJECT_ID(N'dbo.Dnn_Flow_QuizLearn_Items')
+)
+BEGIN
+    ALTER TABLE dbo.Dnn_Flow_QuizLearn_Items
+    ADD ModuleId INT NOT NULL DEFAULT 0;
+END
