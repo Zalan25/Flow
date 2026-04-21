@@ -1,0 +1,1046 @@
+﻿﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****       DNN Module: QuizLearn                           *****/
+/*****       Verzió: 00.00.02                           *****/
+/*****                                                  *****/
+/************************************************************/
+/* TÖRZSADATOK */
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_languages]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_languages]
+    (
+        [LanguageId] INT IDENTITY(1,1) NOT NULL,
+        [Name]       NVARCHAR(100) NOT NULL,
+        [Code]       NVARCHAR(10) NOT NULL,
+        [IsActive]   BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_languages_IsActive] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_languages] PRIMARY KEY CLUSTERED ([LanguageId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_languages_Name] UNIQUE ([Name]),
+        CONSTRAINT [UQ_{objectQualifier}lm_languages_Code] UNIQUE ([Code])
+    )
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_question_levels]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_question_levels]
+    (
+        [QuestionLevelId] INT IDENTITY(1,1) NOT NULL,
+        [LevelName]       NVARCHAR(20) NOT NULL,
+        [LevelOrder]      INT NOT NULL,
+
+        CONSTRAINT [PK_{objectQualifier}lm_question_levels] PRIMARY KEY CLUSTERED ([QuestionLevelId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_question_levels_Name] UNIQUE ([LevelName]),
+        CONSTRAINT [UQ_{objectQualifier}lm_question_levels_Order] UNIQUE ([LevelOrder])
+    )
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_question_types]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_question_types]
+    (
+        [QuestionTypeId] INT IDENTITY(1,1) NOT NULL,
+        [TypeName]       NVARCHAR(50) NOT NULL,
+
+        CONSTRAINT [PK_{objectQualifier}lm_question_types] PRIMARY KEY CLUSTERED ([QuestionTypeId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_question_types] UNIQUE ([TypeName])
+    )
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_skill_types]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_skill_types]
+    (
+        [SkillTypeId] INT IDENTITY(1,1) NOT NULL,
+        [SkillName]   NVARCHAR(50) NOT NULL,
+
+        CONSTRAINT [PK_{objectQualifier}lm_skill_types] PRIMARY KEY CLUSTERED ([SkillTypeId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_skill_types] UNIQUE ([SkillName])
+    )
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_modes]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_assessment_modes]
+    (
+        [AssessmentModeId] INT IDENTITY(1,1) NOT NULL,
+        [ModeKey]          NVARCHAR(50) NOT NULL,
+        [ModeName]         NVARCHAR(100) NOT NULL,
+        [IsActive]         BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_assessment_modes_IsActive] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_assessment_modes] PRIMARY KEY CLUSTERED ([AssessmentModeId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_assessment_modes_Key] UNIQUE ([ModeKey])
+    )
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_pace_types]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_pace_types]
+    (
+        [PaceTypeId]  INT IDENTITY(1,1) NOT NULL,
+        [PaceKey]     NVARCHAR(50) NOT NULL,
+        [PaceName]    NVARCHAR(100) NOT NULL,
+        [MinProducts] INT NOT NULL,
+        [MaxProducts] INT NOT NULL,
+        [IsActive]    BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_pace_types_IsActive] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_pace_types] PRIMARY KEY CLUSTERED ([PaceTypeId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_pace_types_Key] UNIQUE ([PaceKey]),
+        CONSTRAINT [CK_{objectQualifier}lm_pace_types_ProductRange]
+            CHECK (MinProducts >= 0 AND MaxProducts >= 0 AND MinProducts <= MaxProducts)
+    )
+END
+GO
+
+
+/* KÉRDÉSBANK */
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_questions]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_questions]
+    (
+        [QuestionId]      INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]        INT NOT NULL,
+        [QuestionText]    NVARCHAR(1000) NOT NULL,
+        [LanguageId]      INT NOT NULL,
+        [QuestionLevelId] INT NOT NULL,
+        [QuestionTypeId]  INT NOT NULL,
+        [SkillTypeId]     INT NOT NULL,
+        [Points]          INT NOT NULL,
+        [IsActive]        BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_questions_IsActive] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_questions] PRIMARY KEY CLUSTERED ([QuestionId] ASC),
+        CONSTRAINT [FK_{objectQualifier}lm_questions_LanguageId]
+            FOREIGN KEY ([LanguageId]) REFERENCES {databaseOwner}[{objectQualifier}lm_languages] ([LanguageId]),
+        CONSTRAINT [FK_{objectQualifier}lm_questions_QuestionLevelId]
+            FOREIGN KEY ([QuestionLevelId]) REFERENCES {databaseOwner}[{objectQualifier}lm_question_levels] ([QuestionLevelId]),
+        CONSTRAINT [FK_{objectQualifier}lm_questions_QuestionTypeId]
+            FOREIGN KEY ([QuestionTypeId]) REFERENCES {databaseOwner}[{objectQualifier}lm_question_types] ([QuestionTypeId]),
+        CONSTRAINT [FK_{objectQualifier}lm_questions_SkillTypeId]
+            FOREIGN KEY ([SkillTypeId]) REFERENCES {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillTypeId]),
+        CONSTRAINT [CK_{objectQualifier}lm_questions_Points] CHECK (Points >= 0)
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_questions]') AND name = N'IX_{objectQualifier}lm_questions_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_questions_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_questions] ([ModuleId])
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_questions]') AND name = N'IX_{objectQualifier}lm_questions_Language_Level')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_questions_Language_Level]
+    ON {databaseOwner}[{objectQualifier}lm_questions] ([LanguageId], [QuestionLevelId])
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_answers]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_answers]
+    (
+        [AnswerId]    INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]    INT NOT NULL,
+        [QuestionId]  INT NOT NULL,
+        [AnswerText]  NVARCHAR(500) NOT NULL,
+        [IsCorrect]   BIT NOT NULL,
+        [AnswerOrder] INT NOT NULL,
+
+        CONSTRAINT [PK_{objectQualifier}lm_answers] PRIMARY KEY CLUSTERED ([AnswerId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_answers] UNIQUE ([QuestionId], [AnswerOrder]),
+        CONSTRAINT [FK_{objectQualifier}lm_answers_QuestionId]
+            FOREIGN KEY ([QuestionId]) REFERENCES {databaseOwner}[{objectQualifier}lm_questions] ([QuestionId])
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_answers]') AND name = N'IX_{objectQualifier}lm_answers_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_answers_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_answers] ([ModuleId])
+END
+GO
+
+
+/* TESZTEK */
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_tests]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_tests]
+    (
+        [TestId]           INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]         INT NOT NULL,
+        [TestName]         NVARCHAR(150) NOT NULL,
+        [Characterization] NVARCHAR(2000) NULL,
+        [LanguageId]       INT NOT NULL,
+        [TotalPoints]      INT NOT NULL,
+        [IsRandom]         BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_tests_IsRandom] DEFAULT 0,
+        [IsActive]         BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_tests_IsActive] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_tests] PRIMARY KEY CLUSTERED ([TestId] ASC),
+        CONSTRAINT [FK_{objectQualifier}lm_tests_LanguageId]
+            FOREIGN KEY ([LanguageId]) REFERENCES {databaseOwner}[{objectQualifier}lm_languages] ([LanguageId]),
+        CONSTRAINT [CK_{objectQualifier}lm_tests_TotalPoints] CHECK (TotalPoints >= 0)
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_tests]') AND name = N'IX_{objectQualifier}lm_tests_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_tests_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_tests] ([ModuleId])
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_questions]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_test_questions]
+    (
+        [TestQuestionId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]       INT NOT NULL,
+        [TestId]         INT NOT NULL,
+        [QuestionId]     INT NOT NULL,
+        [QuestionOrder]  INT NOT NULL,
+
+        CONSTRAINT [PK_{objectQualifier}lm_test_questions] PRIMARY KEY CLUSTERED ([TestQuestionId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_test_questions] UNIQUE ([TestId], [QuestionOrder]),
+        CONSTRAINT [UQ_{objectQualifier}lm_test_questions_Test_Question] UNIQUE ([TestId], [QuestionId]),
+        CONSTRAINT [FK_{objectQualifier}lm_test_questions_TestId]
+            FOREIGN KEY ([TestId]) REFERENCES {databaseOwner}[{objectQualifier}lm_tests] ([TestId]),
+        CONSTRAINT [FK_{objectQualifier}lm_test_questions_QuestionId]
+            FOREIGN KEY ([QuestionId]) REFERENCES {databaseOwner}[{objectQualifier}lm_questions] ([QuestionId])
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_questions]') AND name = N'IX_{objectQualifier}lm_test_questions_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_test_questions_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_test_questions] ([ModuleId])
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_questions]') AND name = N'IX_{objectQualifier}lm_test_questions_Test')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_test_questions_Test]
+    ON {databaseOwner}[{objectQualifier}lm_test_questions] ([TestId])
+END
+GO
+
+
+/* SESSION  */
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_sessions]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+    (
+        [AssessmentSessionId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]            INT NOT NULL,
+        [AssessmentModeId]    INT NOT NULL,
+        [LanguageId]          INT NOT NULL,
+        [SecondaryLanguageId] INT NULL,
+        [SelectedLevelId]     INT NULL,
+        [SessionKey]          UNIQUEIDENTIFIER NOT NULL CONSTRAINT [DF_{objectQualifier}lm_assessment_sessions_SessionKey] DEFAULT NEWID(),
+        [PaceTypeId]          INT NULL,
+        [UserId]              INT NULL,
+        [NeedLevelTest]       BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_assessment_sessions_NeedLevelTest] DEFAULT 0,
+        [Status]              NVARCHAR(50) NOT NULL,
+        [FinalLevelId]        INT NULL,
+        [CreatedOn]           DATETIME2 NOT NULL CONSTRAINT [DF_{objectQualifier}lm_assessment_sessions_CreatedOn] DEFAULT SYSUTCDATETIME(),
+        [CompletedOn]         DATETIME2 NULL,
+
+        CONSTRAINT [PK_{objectQualifier}lm_assessment_sessions] PRIMARY KEY CLUSTERED ([AssessmentSessionId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_assessment_sessions] UNIQUE ([SessionKey]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_sessions_AssessmentModeId]
+            FOREIGN KEY ([AssessmentModeId]) REFERENCES {databaseOwner}[{objectQualifier}lm_assessment_modes] ([AssessmentModeId]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_sessions_LanguageId]
+            FOREIGN KEY ([LanguageId]) REFERENCES {databaseOwner}[{objectQualifier}lm_languages] ([LanguageId]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_sessions_SecondaryLanguageId]
+            FOREIGN KEY ([SecondaryLanguageId]) REFERENCES {databaseOwner}[{objectQualifier}lm_languages] ([LanguageId]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_sessions_SelectedLevelId]
+            FOREIGN KEY ([SelectedLevelId]) REFERENCES {databaseOwner}[{objectQualifier}lm_question_levels] ([QuestionLevelId]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_sessions_FinalLevelId]
+            FOREIGN KEY ([FinalLevelId]) REFERENCES {databaseOwner}[{objectQualifier}lm_question_levels] ([QuestionLevelId]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_sessions_PaceTypeId]
+            FOREIGN KEY ([PaceTypeId]) REFERENCES {databaseOwner}[{objectQualifier}lm_pace_types] ([PaceTypeId]),
+        CONSTRAINT [CK_{objectQualifier}lm_assessment_sessions_Status]
+            CHECK (Status IN ('Started', 'Completed', 'Abandoned'))
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_sessions]') AND name = N'IX_{objectQualifier}lm_assessment_sessions_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_assessment_sessions_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_assessment_sessions] ([ModuleId])
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_session_skills]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_assessment_session_skills]
+    (
+        [AssessmentSessionSkillId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]                 INT NOT NULL,
+        [AssessmentSessionId]      INT NOT NULL,
+        [SkillTypeId]              INT NOT NULL,
+
+        CONSTRAINT [PK_{objectQualifier}lm_assessment_session_skills] PRIMARY KEY CLUSTERED ([AssessmentSessionSkillId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_session_skill] UNIQUE ([AssessmentSessionId], [SkillTypeId]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_session_skills_AssessmentSessionId]
+            FOREIGN KEY ([AssessmentSessionId]) REFERENCES {databaseOwner}[{objectQualifier}lm_assessment_sessions] ([AssessmentSessionId]),
+        CONSTRAINT [FK_{objectQualifier}lm_assessment_session_skills_SkillTypeId]
+            FOREIGN KEY ([SkillTypeId]) REFERENCES {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillTypeId])
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_session_skills]') AND name = N'IX_{objectQualifier}lm_assessment_session_skills_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_assessment_session_skills_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_assessment_session_skills] ([ModuleId])
+END
+GO
+
+
+/* TEST ATTEMPTS */
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempts]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_test_attempts]
+    (
+        [TestAttemptId]       INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]            INT NOT NULL,
+        [AssessmentSessionId] INT NULL,
+        [TestId]              INT NOT NULL,
+        [UserId]              INT NULL,
+        [TotalScore]          INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_TotalScore] DEFAULT 0,
+        [A1CorrectCount]      INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_A1CorrectCount] DEFAULT 0,
+        [A2CorrectCount]      INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_A2CorrectCount] DEFAULT 0,
+        [B1CorrectCount]      INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_B1CorrectCount] DEFAULT 0,
+        [B2CorrectCount]      INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_B2CorrectCount] DEFAULT 0,
+        [C1CorrectCount]      INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_C1CorrectCount] DEFAULT 0,
+        [ResultLevelId]       INT NULL,
+        [StartedOn]           DATETIME2 NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_StartedOn] DEFAULT SYSUTCDATETIME(),
+        [CompletedOn]         DATETIME2 NULL,
+        [IsCompleted]         BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_IsCompleted] DEFAULT 0,
+        [AttemptNumber]       INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempts_AttemptNumber] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_test_attempts] PRIMARY KEY CLUSTERED ([TestAttemptId] ASC),
+        CONSTRAINT [FK_{objectQualifier}lm_test_attempts_AssessmentSessionId]
+            FOREIGN KEY ([AssessmentSessionId]) REFERENCES {databaseOwner}[{objectQualifier}lm_assessment_sessions] ([AssessmentSessionId]),
+        CONSTRAINT [FK_{objectQualifier}lm_test_attempts_TestId]
+            FOREIGN KEY ([TestId]) REFERENCES {databaseOwner}[{objectQualifier}lm_tests] ([TestId]),
+        CONSTRAINT [FK_{objectQualifier}lm_test_attempts_ResultLevelId]
+            FOREIGN KEY ([ResultLevelId]) REFERENCES {databaseOwner}[{objectQualifier}lm_question_levels] ([QuestionLevelId]),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempts_TotalScore]    CHECK (TotalScore >= 0),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempts_A1]            CHECK (A1CorrectCount >= 0),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempts_A2]            CHECK (A2CorrectCount >= 0),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempts_B1]            CHECK (B1CorrectCount >= 0),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempts_B2]            CHECK (B2CorrectCount >= 0),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempts_C1]            CHECK (C1CorrectCount >= 0),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempts_AttemptNumber] CHECK (AttemptNumber >= 1)
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempts]') AND name = N'IX_{objectQualifier}lm_test_attempts_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_test_attempts_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempts] ([ModuleId])
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempts]') AND name = N'UQ_{objectQualifier}lm_attempt_session')
+BEGIN
+    CREATE UNIQUE INDEX [UQ_{objectQualifier}lm_attempt_session]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempts] ([AssessmentSessionId], [AttemptNumber])
+    WHERE AssessmentSessionId IS NOT NULL
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempt_answers]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+    (
+        [TestAttemptAnswerId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]            INT NOT NULL,
+        [TestAttemptId]       INT NOT NULL,
+        [QuestionId]          INT NOT NULL,
+        [SelectedAnswerId]    INT NULL,
+        [IsCorrect]           BIT NOT NULL,
+        [EarnedPoints]        INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempt_answers_EarnedPoints] DEFAULT 0,
+        [AnsweredOn]          DATETIME2 NOT NULL CONSTRAINT [DF_{objectQualifier}lm_test_attempt_answers_AnsweredOn] DEFAULT SYSUTCDATETIME(),
+
+        CONSTRAINT [PK_{objectQualifier}lm_test_attempt_answers] PRIMARY KEY CLUSTERED ([TestAttemptAnswerId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_attempt_question] UNIQUE ([TestAttemptId], [QuestionId]),
+        CONSTRAINT [FK_{objectQualifier}lm_test_attempt_answers_TestAttemptId]
+            FOREIGN KEY ([TestAttemptId]) REFERENCES {databaseOwner}[{objectQualifier}lm_test_attempts] ([TestAttemptId]),
+        CONSTRAINT [FK_{objectQualifier}lm_test_attempt_answers_QuestionId]
+            FOREIGN KEY ([QuestionId]) REFERENCES {databaseOwner}[{objectQualifier}lm_questions] ([QuestionId]),
+        CONSTRAINT [FK_{objectQualifier}lm_test_attempt_answers_SelectedAnswerId]
+            FOREIGN KEY ([SelectedAnswerId]) REFERENCES {databaseOwner}[{objectQualifier}lm_answers] ([AnswerId]),
+        CONSTRAINT [CK_{objectQualifier}lm_test_attempt_answers_EarnedPoints] CHECK (EarnedPoints >= 0)
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempt_answers]') AND name = N'IX_{objectQualifier}lm_test_attempt_answers_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_test_attempt_answers_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempt_answers] ([ModuleId])
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempt_answers]') AND name = N'IX_{objectQualifier}lm_test_attempt_answers_Attempt')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_test_attempt_answers_Attempt]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempt_answers] ([TestAttemptId])
+END
+GO
+
+
+/* RECOMMENDATION */
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_rules]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+    (
+        [RecommendationRuleId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]             INT NOT NULL,
+        [LanguageId]           INT NOT NULL,
+        [QuestionLevelId]      INT NOT NULL,
+        [SkillTypeId]          INT NOT NULL,
+        [SecondaryLanguageId]  INT NULL,
+        [PaceTypeId]           INT NOT NULL,
+        [Priority]             INT NOT NULL,
+        [MatchMode]            NVARCHAR(50) NOT NULL,
+        [HotcakesProductSKU]   NVARCHAR(100) NULL,
+        [HotcakesCategoryKey]  NVARCHAR(100) NULL,
+        [HotcakesTag]          NVARCHAR(100) NULL,
+        [MinProducts]          INT NOT NULL,
+        [MaxProducts]          INT NOT NULL,
+        [IsActive]             BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_recommendation_rules_IsActive] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_recommendation_rules] PRIMARY KEY CLUSTERED ([RecommendationRuleId] ASC),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_rules_LanguageId]
+            FOREIGN KEY ([LanguageId]) REFERENCES {databaseOwner}[{objectQualifier}lm_languages] ([LanguageId]),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_rules_QuestionLevelId]
+            FOREIGN KEY ([QuestionLevelId]) REFERENCES {databaseOwner}[{objectQualifier}lm_question_levels] ([QuestionLevelId]),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_rules_SkillTypeId]
+            FOREIGN KEY ([SkillTypeId]) REFERENCES {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillTypeId]),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_rules_SecondaryLanguageId]
+            FOREIGN KEY ([SecondaryLanguageId]) REFERENCES {databaseOwner}[{objectQualifier}lm_languages] ([LanguageId]),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_rules_PaceTypeId]
+            FOREIGN KEY ([PaceTypeId]) REFERENCES {databaseOwner}[{objectQualifier}lm_pace_types] ([PaceTypeId]),
+        CONSTRAINT [CK_{objectQualifier}lm_recommendation_rules_Priority] CHECK (Priority >= 1),
+        CONSTRAINT [CK_{objectQualifier}lm_recommendation_rules_ProductRange]
+            CHECK (MinProducts >= 0 AND MaxProducts >= 0 AND MinProducts <= MaxProducts),
+        CONSTRAINT [CK_{objectQualifier}lm_recommendation_rules_MatchMode]
+            CHECK (MatchMode IN ('EXACT', 'FALLBACK', 'GENERAL'))
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_rules]') AND name = N'IX_{objectQualifier}lm_recommendation_rules_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_recommendation_rules_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_rules] ([ModuleId])
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_rules]') AND name = N'IX_{objectQualifier}lm_recommendation_rules_Filter')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_recommendation_rules_Filter]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_rules] ([LanguageId], [QuestionLevelId], [SkillTypeId], [PaceTypeId], [IsActive])
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_results]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_recommendation_results]
+    (
+        [RecommendationResultId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]               INT NOT NULL,
+        [AssessmentSessionId]    INT NOT NULL,
+        [SourceType]             NVARCHAR(50) NOT NULL,
+        [RecommendedLevelId]     INT NULL,
+        [RecommendationSummary]  NVARCHAR(2000) NULL,
+        [MinProducts]            INT NOT NULL,
+        [MaxProducts]            INT NOT NULL,
+        [CreatedOn]              DATETIME2 NOT NULL CONSTRAINT [DF_{objectQualifier}lm_recommendation_results_CreatedOn] DEFAULT SYSUTCDATETIME(),
+
+        CONSTRAINT [PK_{objectQualifier}lm_recommendation_results] PRIMARY KEY CLUSTERED ([RecommendationResultId] ASC),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_results_AssessmentSessionId]
+            FOREIGN KEY ([AssessmentSessionId]) REFERENCES {databaseOwner}[{objectQualifier}lm_assessment_sessions] ([AssessmentSessionId]),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_results_RecommendedLevelId]
+            FOREIGN KEY ([RecommendedLevelId]) REFERENCES {databaseOwner}[{objectQualifier}lm_question_levels] ([QuestionLevelId]),
+        CONSTRAINT [CK_{objectQualifier}lm_recommendation_results_ProductRange]
+            CHECK (MinProducts >= 0 AND MaxProducts >= 0 AND MinProducts <= MaxProducts),
+        CONSTRAINT [CK_{objectQualifier}lm_recommendation_results_SourceType]
+            CHECK (SourceType IN ('StudyGuide', 'LevelTest'))
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_results]') AND name = N'IX_{objectQualifier}lm_recommendation_results_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_recommendation_results_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_results] ([ModuleId])
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_results]') AND name = N'IX_{objectQualifier}lm_recommendation_results_Session')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_recommendation_results_Session]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_results] ([AssessmentSessionId])
+END
+GO
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_result_items]'))
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_recommendation_result_items]
+    (
+        [RecommendationResultItemId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId]                   INT NOT NULL,
+        [RecommendationResultId]     INT NOT NULL,
+        [ProductSKU]                 NVARCHAR(100) NOT NULL,
+        [SortOrder]                  INT NOT NULL,
+        [SourceRule]                 NVARCHAR(100) NULL,
+        [SourceType]                 NVARCHAR(50) NOT NULL,
+        [Score]                      DECIMAL(10,2) NULL,
+        [IsPrimary]                  BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_recommendation_result_items_IsPrimary] DEFAULT 0,
+        [CreatedOn]                  DATETIME2 NOT NULL CONSTRAINT [DF_{objectQualifier}lm_recommendation_result_items_CreatedOn] DEFAULT SYSUTCDATETIME(),
+
+        CONSTRAINT [PK_{objectQualifier}lm_recommendation_result_items] PRIMARY KEY CLUSTERED ([RecommendationResultItemId] ASC),
+        CONSTRAINT [UQ_{objectQualifier}lm_result_sort] UNIQUE ([RecommendationResultId], [SortOrder]),
+        CONSTRAINT [UQ_{objectQualifier}lm_result_item_sku] UNIQUE ([RecommendationResultId], [ProductSKU]),
+        CONSTRAINT [FK_{objectQualifier}lm_recommendation_result_items_RecommendationResultId]
+            FOREIGN KEY ([RecommendationResultId]) REFERENCES {databaseOwner}[{objectQualifier}lm_recommendation_results] ([RecommendationResultId]),
+        CONSTRAINT [CK_{objectQualifier}lm_recommendation_result_items_SourceType]
+            CHECK (SourceType IN ('Rule', 'Fallback', 'Manual')),
+        CONSTRAINT [CK_{objectQualifier}lm_recommendation_result_items_SortOrder] CHECK (SortOrder >= 1)
+    )
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_result_items]') AND name = N'IX_{objectQualifier}lm_recommendation_result_items_ModuleId')
+BEGIN
+    CREATE INDEX [IX_{objectQualifier}lm_recommendation_result_items_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_result_items] ([ModuleId])
+END
+GO
+
+
+/* STORED PROCEDURES */
+
+
+/* ---------------------------------------------
+   lm_Languages_GetAllActive
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_Languages_GetAllActive]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_Languages_GetAllActive]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_Languages_GetAllActive]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [LanguageId],
+        [Name],
+        [Code],
+        [IsActive]
+    FROM {databaseOwner}[{objectQualifier}lm_languages]
+    WHERE [IsActive] = 1
+    ORDER BY [Name];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_QuestionLevels_GetAll
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_QuestionLevels_GetAll]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_QuestionLevels_GetAll]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_QuestionLevels_GetAll]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [QuestionLevelId],
+        [LevelName],
+        [LevelOrder]
+    FROM {databaseOwner}[{objectQualifier}lm_question_levels]
+    ORDER BY [LevelOrder];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_SkillTypes_GetAll
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_SkillTypes_GetAll]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_SkillTypes_GetAll]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_SkillTypes_GetAll]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [SkillTypeId],
+        [SkillName]
+    FROM {databaseOwner}[{objectQualifier}lm_skill_types]
+    ORDER BY [SkillName];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_PaceTypes_GetAll
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_PaceTypes_GetAll]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_PaceTypes_GetAll]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_PaceTypes_GetAll]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [PaceTypeId],
+        [PaceKey],
+        [PaceName],
+        [MinProducts],
+        [MaxProducts],
+        [IsActive]
+    FROM {databaseOwner}[{objectQualifier}lm_pace_types]
+    WHERE [IsActive] = 1
+    ORDER BY [PaceName];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_AssessmentModes_GetByKey
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentModes_GetByKey]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentModes_GetByKey]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentModes_GetByKey]
+    @ModeKey NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [AssessmentModeId],
+        [ModeKey],
+        [ModeName],
+        [IsActive]
+    FROM {databaseOwner}[{objectQualifier}lm_assessment_modes]
+    WHERE [ModeKey]  = @ModeKey
+      AND [IsActive] = 1;
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_AssessmentSessions_Add
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessions_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_Add]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_Add]
+    @ModuleId            INT,
+    @AssessmentModeId    INT,
+    @LanguageId          INT,
+    @SecondaryLanguageId INT          = NULL,
+    @SelectedLevelId     INT          = NULL,
+    @PaceTypeId          INT          = NULL,
+    @UserId              INT          = NULL,
+    @NeedLevelTest       BIT          = 0,
+    @Status              NVARCHAR(50) = 'Started'
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+    (
+        [ModuleId],
+        [AssessmentModeId],
+        [LanguageId],
+        [SecondaryLanguageId],
+        [SelectedLevelId],
+        [PaceTypeId],
+        [UserId],
+        [NeedLevelTest],
+        [Status]
+    )
+    VALUES
+    (
+        @ModuleId,
+        @AssessmentModeId,
+        @LanguageId,
+        @SecondaryLanguageId,
+        @SelectedLevelId,
+        @PaceTypeId,
+        @UserId,
+        @NeedLevelTest,
+        @Status
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS [AssessmentSessionId];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_AssessmentSessionSkills_Add
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessionSkills_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionSkills_Add]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionSkills_Add]
+    @ModuleId            INT,
+    @AssessmentSessionId INT,
+    @SkillTypeId         INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1
+        FROM {databaseOwner}[{objectQualifier}lm_assessment_session_skills]
+        WHERE [AssessmentSessionId] = @AssessmentSessionId
+          AND [SkillTypeId]         = @SkillTypeId
+    )
+    BEGIN
+        SELECT [AssessmentSessionSkillId]
+        FROM {databaseOwner}[{objectQualifier}lm_assessment_session_skills]
+        WHERE [AssessmentSessionId] = @AssessmentSessionId
+          AND [SkillTypeId]         = @SkillTypeId;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_session_skills]
+        (
+            [ModuleId],
+            [AssessmentSessionId],
+            [SkillTypeId]
+        )
+        VALUES
+        (
+            @ModuleId,
+            @AssessmentSessionId,
+            @SkillTypeId
+        );
+
+        SELECT CAST(SCOPE_IDENTITY() AS INT) AS [AssessmentSessionSkillId];
+    END
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_RecommendationRules_FindExact
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationRules_FindExact]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindExact]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindExact]
+    @ModuleId            INT,
+    @LanguageId          INT,
+    @QuestionLevelId     INT,
+    @SkillTypeId         INT,
+    @PaceTypeId          INT,
+    @SecondaryLanguageId INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [RecommendationRuleId],
+        [ModuleId],
+        [LanguageId],
+        [QuestionLevelId],
+        [SkillTypeId],
+        [SecondaryLanguageId],
+        [PaceTypeId],
+        [Priority],
+        [MatchMode],
+        [HotcakesProductSKU],
+        [HotcakesCategoryKey],
+        [HotcakesTag],
+        [MinProducts],
+        [MaxProducts]
+    FROM {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+    WHERE [ModuleId]        = @ModuleId
+      AND [LanguageId]      = @LanguageId
+      AND [QuestionLevelId] = @QuestionLevelId
+      AND [SkillTypeId]     = @SkillTypeId
+      AND [PaceTypeId]      = @PaceTypeId
+      AND [MatchMode]       = 'EXACT'
+      AND [IsActive]        = 1
+      AND (
+            (@SecondaryLanguageId IS NULL AND [SecondaryLanguageId] IS NULL)
+            OR [SecondaryLanguageId] = @SecondaryLanguageId
+          )
+    ORDER BY [Priority];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_RecommendationRules_FindFallback
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationRules_FindFallback]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindFallback]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindFallback]
+    @ModuleId            INT,
+    @LanguageId          INT,
+    @QuestionLevelId     INT,
+    @SkillTypeId         INT,
+    @SecondaryLanguageId INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [RecommendationRuleId],
+        [ModuleId],
+        [LanguageId],
+        [QuestionLevelId],
+        [SkillTypeId],
+        [SecondaryLanguageId],
+        [PaceTypeId],
+        [Priority],
+        [MatchMode],
+        [HotcakesProductSKU],
+        [HotcakesCategoryKey],
+        [HotcakesTag],
+        [MinProducts],
+        [MaxProducts]
+    FROM {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+    WHERE [ModuleId]        = @ModuleId
+      AND [LanguageId]      = @LanguageId
+      AND [QuestionLevelId] = @QuestionLevelId
+      AND [SkillTypeId]     = @SkillTypeId
+      AND [MatchMode]       = 'FALLBACK'
+      AND [IsActive]        = 1
+      AND (
+            (@SecondaryLanguageId IS NULL AND [SecondaryLanguageId] IS NULL)
+            OR [SecondaryLanguageId] = @SecondaryLanguageId
+          )
+    ORDER BY [Priority];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_RecommendationRules_FindGeneral
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationRules_FindGeneral]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindGeneral]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindGeneral]
+    @ModuleId   INT,
+    @LanguageId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [RecommendationRuleId],
+        [ModuleId],
+        [LanguageId],
+        [QuestionLevelId],
+        [SkillTypeId],
+        [SecondaryLanguageId],
+        [PaceTypeId],
+        [Priority],
+        [MatchMode],
+        [HotcakesProductSKU],
+        [HotcakesCategoryKey],
+        [HotcakesTag],
+        [MinProducts],
+        [MaxProducts]
+    FROM {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+    WHERE [ModuleId]   = @ModuleId
+      AND [LanguageId] = @LanguageId
+      AND [MatchMode]  = 'GENERAL'
+      AND [IsActive]   = 1
+    ORDER BY [Priority];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_RecommendationResults_Add
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationResults_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationResults_Add]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationResults_Add]
+    @ModuleId              INT,
+    @AssessmentSessionId   INT,
+    @SourceType            NVARCHAR(50),
+    @RecommendedLevelId    INT            = NULL,
+    @RecommendationSummary NVARCHAR(2000) = NULL,
+    @MinProducts           INT,
+    @MaxProducts           INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_recommendation_results]
+    (
+        [ModuleId],
+        [AssessmentSessionId],
+        [SourceType],
+        [RecommendedLevelId],
+        [RecommendationSummary],
+        [MinProducts],
+        [MaxProducts]
+    )
+    VALUES
+    (
+        @ModuleId,
+        @AssessmentSessionId,
+        @SourceType,
+        @RecommendedLevelId,
+        @RecommendationSummary,
+        @MinProducts,
+        @MaxProducts
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS [RecommendationResultId];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_RecommendationResultItems_Add
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationResultItems_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationResultItems_Add]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationResultItems_Add]
+    @ModuleId               INT,
+    @RecommendationResultId INT,
+    @ProductSKU             NVARCHAR(100),
+    @SortOrder              INT,
+    @SourceRule             NVARCHAR(100) = NULL,
+    @SourceType             NVARCHAR(50),
+    @Score                  DECIMAL(10,2) = NULL,
+    @IsPrimary              BIT           = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_recommendation_result_items]
+    (
+        [ModuleId],
+        [RecommendationResultId],
+        [ProductSKU],
+        [SortOrder],
+        [SourceRule],
+        [SourceType],
+        [Score],
+        [IsPrimary]
+    )
+    VALUES
+    (
+        @ModuleId,
+        @RecommendationResultId,
+        @ProductSKU,
+        @SortOrder,
+        @SourceRule,
+        @SourceType,
+        @Score,
+        @IsPrimary
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS [RecommendationResultItemId];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_AssessmentSessions_Complete
+   --------------------------------------------- */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessions_Complete]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_Complete]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_Complete]
+    @ModuleId            INT,
+    @AssessmentSessionId INT,
+    @FinalLevelId        INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+    SET
+        [Status]       = 'Completed',
+        [FinalLevelId] = @FinalLevelId,
+        [CompletedOn]  = SYSUTCDATETIME()
+    WHERE [AssessmentSessionId] = @AssessmentSessionId
+      AND [ModuleId]            = @ModuleId;
+
+    SELECT @@ROWCOUNT AS [AffectedRows];
+END
+GO

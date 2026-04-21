@@ -1,3 +1,228 @@
 ﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}Dnn.Flow.QuizLearn_Items]') AND type in (N'U'))
 DROP TABLE {databaseOwner}[{objectQualifier}Dnn.Flow.QuizLearn_Items]
 GO
+
+/* Stored Procedures */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessions_Complete]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_Complete]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationResultItems_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationResultItems_Add]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationResults_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationResults_Add]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationRules_FindGeneral]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindGeneral]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationRules_FindFallback]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindFallback]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_RecommendationRules_FindExact]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_RecommendationRules_FindExact]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessionSkills_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionSkills_Add]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessions_Add]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_Add]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentModes_GetByKey]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentModes_GetByKey]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_PaceTypes_GetAll]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_PaceTypes_GetAll]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_SkillTypes_GetAll]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_SkillTypes_GetAll]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_QuestionLevels_GetAll]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_QuestionLevels_GetAll]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_Languages_GetAllActive]') AND type = 'P')
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_Languages_GetAllActive]
+GO
+
+
+/* Indexek */
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_result_items]') AND name = N'IX_{objectQualifier}lm_recommendation_result_items_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_recommendation_result_items_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_result_items]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_results]') AND name = N'IX_{objectQualifier}lm_recommendation_results_Session')
+    DROP INDEX [IX_{objectQualifier}lm_recommendation_results_Session]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_results]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_results]') AND name = N'IX_{objectQualifier}lm_recommendation_results_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_recommendation_results_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_results]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_rules]') AND name = N'IX_{objectQualifier}lm_recommendation_rules_Filter')
+    DROP INDEX [IX_{objectQualifier}lm_recommendation_rules_Filter]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_rules]') AND name = N'IX_{objectQualifier}lm_recommendation_rules_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_recommendation_rules_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempt_answers]') AND name = N'IX_{objectQualifier}lm_test_attempt_answers_Attempt')
+    DROP INDEX [IX_{objectQualifier}lm_test_attempt_answers_Attempt]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempt_answers]') AND name = N'IX_{objectQualifier}lm_test_attempt_answers_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_test_attempt_answers_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempts]') AND name = N'UQ_{objectQualifier}lm_attempt_session')
+    DROP INDEX [UQ_{objectQualifier}lm_attempt_session]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempts]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempts]') AND name = N'IX_{objectQualifier}lm_test_attempts_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_test_attempts_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_test_attempts]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_session_skills]') AND name = N'IX_{objectQualifier}lm_assessment_session_skills_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_assessment_session_skills_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_assessment_session_skills]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_sessions]') AND name = N'IX_{objectQualifier}lm_assessment_sessions_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_assessment_sessions_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_questions]') AND name = N'IX_{objectQualifier}lm_test_questions_Test')
+    DROP INDEX [IX_{objectQualifier}lm_test_questions_Test]
+    ON {databaseOwner}[{objectQualifier}lm_test_questions]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_questions]') AND name = N'IX_{objectQualifier}lm_test_questions_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_test_questions_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_test_questions]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_tests]') AND name = N'IX_{objectQualifier}lm_tests_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_tests_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_tests]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_answers]') AND name = N'IX_{objectQualifier}lm_answers_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_answers_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_answers]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_questions]') AND name = N'IX_{objectQualifier}lm_questions_Language_Level')
+    DROP INDEX [IX_{objectQualifier}lm_questions_Language_Level]
+    ON {databaseOwner}[{objectQualifier}lm_questions]
+GO
+
+IF EXISTS (SELECT * FROM sysindexes WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_questions]') AND name = N'IX_{objectQualifier}lm_questions_ModuleId')
+    DROP INDEX [IX_{objectQualifier}lm_questions_ModuleId]
+    ON {databaseOwner}[{objectQualifier}lm_questions]
+GO
+
+
+/* Táblák */
+
+/* Recommendation (deepest leaves first) */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_result_items]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_recommendation_result_items]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_results]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_recommendation_results]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_rules]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+GO
+
+/* Próbálkozások */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempt_answers]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_attempts]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_test_attempts]
+GO
+
+/* Alkalmak */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_session_skills]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_session_skills]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_sessions]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+GO
+
+/* Tesztek */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_test_questions]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_test_questions]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_tests]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_tests]
+GO
+
+/* Kérdésbank */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_answers]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_answers]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_questions]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_questions]
+GO
+
+/* Törzsadatok */
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_pace_types]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_pace_types]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_modes]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_modes]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_skill_types]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_skill_types]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_question_types]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_question_types]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_question_levels]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_question_levels]
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_languages]'))
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_languages]
+GO
