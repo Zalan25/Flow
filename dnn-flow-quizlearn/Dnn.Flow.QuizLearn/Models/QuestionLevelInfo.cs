@@ -6,6 +6,6 @@ namespace Dnn.Flow.QuizLearn.Models
     {
         public int QuestionLevelId { get; set; }
         public string LevelName { get; set; }
-        public string LevelOrder { get; set; }
+        public int LevelOrder { get; set; }
     }
 }
