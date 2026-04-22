@@ -36,8 +36,8 @@
             this.btnShort = new System.Windows.Forms.Button();
             this.pnlleft = new System.Windows.Forms.Panel();
             this.pnlCenter = new System.Windows.Forms.Panel();
-            this.pnlright = new System.Windows.Forms.Panel();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.pnlright = new System.Windows.Forms.Panel();
             this.lblSetHeader = new System.Windows.Forms.Label();
             this.pnlleft.SuspendLayout();
             this.pnlCenter.SuspendLayout();
@@ -130,16 +130,6 @@
             this.pnlCenter.Size = new System.Drawing.Size(613, 893);
             this.pnlCenter.TabIndex = 1;
             // 
-            // pnlright
-            // 
-            this.pnlright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlright.Controls.Add(this.lblSetHeader);
-            this.pnlright.Location = new System.Drawing.Point(894, 0);
-            this.pnlright.Name = "pnlright";
-            this.pnlright.Size = new System.Drawing.Size(303, 892);
-            this.pnlright.TabIndex = 2;
-            // 
             // btnAdd
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -153,6 +143,16 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // pnlright
+            // 
+            this.pnlright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlright.Controls.Add(this.lblSetHeader);
+            this.pnlright.Location = new System.Drawing.Point(894, 0);
+            this.pnlright.Name = "pnlright";
+            this.pnlright.Size = new System.Drawing.Size(303, 892);
+            this.pnlright.TabIndex = 2;
+            // 
             // lblSetHeader
             // 
             this.lblSetHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -161,9 +161,9 @@
             this.lblSetHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.lblSetHeader.Location = new System.Drawing.Point(35, 30);
             this.lblSetHeader.Name = "lblSetHeader";
-            this.lblSetHeader.Size = new System.Drawing.Size(239, 31);
+            this.lblSetHeader.Size = new System.Drawing.Size(248, 31);
             this.lblSetHeader.TabIndex = 0;
-            this.lblSetHeader.Text = "Kérdés beállítása";
+            this.lblSetHeader.Text = "Kérdés beállítása.";
             // 
             // UC_TypeSelector
             // 
