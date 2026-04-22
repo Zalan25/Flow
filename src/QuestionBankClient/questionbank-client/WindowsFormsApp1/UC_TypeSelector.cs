@@ -10,11 +10,29 @@ using System.Windows.Forms;
 
 namespace QuestionBankClient
 {
+
     public partial class UC_TypeSelector : UserControl
     {
         public UC_TypeSelector()
         {
             InitializeComponent();
+            this.Load += UC_TypeSelector_Load;
+        }
+
+        private void UC_TypeSelector_Load(object sender, EventArgs e)
+        {
+            CenterControls();
+        }
+
+        private void CenterControls()
+        {
+            btnAdd.Left = (pnlCenter.Width - btnAdd.Width) / 2;
+            btnAdd.Top = 20; // vagy ahova tenni akarod fentről
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

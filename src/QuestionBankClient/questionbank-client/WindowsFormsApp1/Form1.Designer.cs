@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.pnlHeader = new System.Windows.Forms.Panel();
-            this.pnlMainContent = new System.Windows.Forms.Panel();
-            this.lblMainTitle = new System.Windows.Forms.Label();
-            this.btnFinalSave = new System.Windows.Forms.Button();
-            this.pnlStartCard = new System.Windows.Forms.Panel();
-            this.lblTestName = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.txtDescription = new System.Windows.Forms.TextBox();
-            this.lblDescription = new System.Windows.Forms.Label();
-            this.btnAddQuestions = new System.Windows.Forms.Button();
             this.btnBack = new System.Windows.Forms.Button();
+            this.btnFinalSave = new System.Windows.Forms.Button();
+            this.lblMainTitle = new System.Windows.Forms.Label();
+            this.pnlMainContent = new System.Windows.Forms.Panel();
+            this.pnlStartCard = new System.Windows.Forms.Panel();
+            this.btnAddQuestions = new System.Windows.Forms.Button();
+            this.lblDescription = new System.Windows.Forms.Label();
+            this.txtDescription = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.lblTestName = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             this.pnlMainContent.SuspendLayout();
             this.pnlStartCard.SuspendLayout();
@@ -55,8 +55,45 @@
             this.pnlHeader.Controls.Add(this.lblMainTitle);
             this.pnlHeader.Location = new System.Drawing.Point(-2, 1);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1453, 413);
+            this.pnlHeader.Size = new System.Drawing.Size(877, 330);
             this.pnlHeader.TabIndex = 0;
+            // 
+            // btnBack
+            // 
+            this.btnBack.Location = new System.Drawing.Point(3, 3);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(99, 43);
+            this.btnBack.TabIndex = 1;
+            this.btnBack.Text = "Vissza";
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Visible = false;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
+            // 
+            // btnFinalSave
+            // 
+            this.btnFinalSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFinalSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.btnFinalSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnFinalSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFinalSave.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFinalSave.ForeColor = System.Drawing.Color.White;
+            this.btnFinalSave.Location = new System.Drawing.Point(578, 62);
+            this.btnFinalSave.Name = "btnFinalSave";
+            this.btnFinalSave.Size = new System.Drawing.Size(213, 103);
+            this.btnFinalSave.TabIndex = 1;
+            this.btnFinalSave.Text = "Mentés";
+            this.btnFinalSave.UseVisualStyleBackColor = false;
+            // 
+            // lblMainTitle
+            // 
+            this.lblMainTitle.AutoSize = true;
+            this.lblMainTitle.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.lblMainTitle.Location = new System.Drawing.Point(14, 74);
+            this.lblMainTitle.Name = "lblMainTitle";
+            this.lblMainTitle.Size = new System.Drawing.Size(548, 59);
+            this.lblMainTitle.TabIndex = 0;
+            this.lblMainTitle.Text = "Saját kérdőív összeállítása";
             // 
             // pnlMainContent
             // 
@@ -67,34 +104,8 @@
             this.pnlMainContent.Controls.Add(this.pnlStartCard);
             this.pnlMainContent.Location = new System.Drawing.Point(1, 222);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Size = new System.Drawing.Size(1449, 691);
+            this.pnlMainContent.Size = new System.Drawing.Size(873, 608);
             this.pnlMainContent.TabIndex = 1;
-            // 
-            // lblMainTitle
-            // 
-            this.lblMainTitle.AutoSize = true;
-            this.lblMainTitle.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.lblMainTitle.Location = new System.Drawing.Point(60, 84);
-            this.lblMainTitle.Name = "lblMainTitle";
-            this.lblMainTitle.Size = new System.Drawing.Size(548, 59);
-            this.lblMainTitle.TabIndex = 0;
-            this.lblMainTitle.Text = "Saját kérdőív összeállítása";
-            // 
-            // btnFinalSave
-            // 
-            this.btnFinalSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFinalSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.btnFinalSave.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnFinalSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFinalSave.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFinalSave.ForeColor = System.Drawing.Color.White;
-            this.btnFinalSave.Location = new System.Drawing.Point(1154, 62);
-            this.btnFinalSave.Name = "btnFinalSave";
-            this.btnFinalSave.Size = new System.Drawing.Size(213, 103);
-            this.btnFinalSave.TabIndex = 1;
-            this.btnFinalSave.Text = "Mentés";
-            this.btnFinalSave.UseVisualStyleBackColor = false;
             // 
             // pnlStartCard
             // 
@@ -107,46 +118,27 @@
             this.pnlStartCard.Controls.Add(this.txtDescription);
             this.pnlStartCard.Controls.Add(this.textBox1);
             this.pnlStartCard.Controls.Add(this.lblTestName);
-            this.pnlStartCard.Location = new System.Drawing.Point(272, 65);
+            this.pnlStartCard.Location = new System.Drawing.Point(86, 47);
             this.pnlStartCard.Name = "pnlStartCard";
-            this.pnlStartCard.Size = new System.Drawing.Size(880, 571);
+            this.pnlStartCard.Size = new System.Drawing.Size(702, 519);
             this.pnlStartCard.TabIndex = 0;
             // 
-            // lblTestName
+            // btnAddQuestions
             // 
-            this.lblTestName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.btnAddQuestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblTestName.AutoSize = true;
-            this.lblTestName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTestName.Location = new System.Drawing.Point(93, 42);
-            this.lblTestName.Name = "lblTestName";
-            this.lblTestName.Size = new System.Drawing.Size(200, 37);
-            this.lblTestName.TabIndex = 0;
-            this.lblTestName.Text = "Kérdőív címe";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(100, 95);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(596, 54);
-            this.textBox1.TabIndex = 1;
-            // 
-            // txtDescription
-            // 
-            this.txtDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDescription.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDescription.Location = new System.Drawing.Point(100, 274);
-            this.txtDescription.Multiline = true;
-            this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(596, 54);
-            this.txtDescription.TabIndex = 2;
+            this.btnAddQuestions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.btnAddQuestions.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAddQuestions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddQuestions.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddQuestions.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.btnAddQuestions.Location = new System.Drawing.Point(216, 357);
+            this.btnAddQuestions.Name = "btnAddQuestions";
+            this.btnAddQuestions.Size = new System.Drawing.Size(244, 119);
+            this.btnAddQuestions.TabIndex = 4;
+            this.btnAddQuestions.Text = "+ Kérdések hozzáadása";
+            this.btnAddQuestions.UseVisualStyleBackColor = false;
+            this.btnAddQuestions.Click += new System.EventHandler(this.btnAddQuestions_Click);
             // 
             // lblDescription
             // 
@@ -160,42 +152,50 @@
             this.lblDescription.TabIndex = 3;
             this.lblDescription.Text = "Leírása";
             // 
-            // btnAddQuestions
+            // txtDescription
             // 
-            this.btnAddQuestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddQuestions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.btnAddQuestions.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAddQuestions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddQuestions.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddQuestions.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.btnAddQuestions.Location = new System.Drawing.Point(216, 409);
-            this.btnAddQuestions.Name = "btnAddQuestions";
-            this.btnAddQuestions.Size = new System.Drawing.Size(422, 119);
-            this.btnAddQuestions.TabIndex = 4;
-            this.btnAddQuestions.Text = "+ Kérdések hozzáadása";
-            this.btnAddQuestions.UseVisualStyleBackColor = false;
-            this.btnAddQuestions.Click += new System.EventHandler(this.btnAddQuestions_Click);
+            this.txtDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDescription.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDescription.Location = new System.Drawing.Point(100, 274);
+            this.txtDescription.Multiline = true;
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(418, 54);
+            this.txtDescription.TabIndex = 2;
             // 
-            // btnBack
+            // textBox1
             // 
-            this.btnBack.Location = new System.Drawing.Point(3, 3);
-            this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(99, 43);
-            this.btnBack.TabIndex = 1;
-            this.btnBack.Text = "Vissza";
-            this.btnBack.UseVisualStyleBackColor = true;
-            this.btnBack.Visible = false;
-            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(100, 95);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(418, 54);
+            this.textBox1.TabIndex = 1;
+            // 
+            // lblTestName
+            // 
+            this.lblTestName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblTestName.AutoSize = true;
+            this.lblTestName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTestName.Location = new System.Drawing.Point(93, 42);
+            this.lblTestName.Name = "lblTestName";
+            this.lblTestName.Size = new System.Drawing.Size(200, 37);
+            this.lblTestName.TabIndex = 0;
+            this.lblTestName.Text = "Kérdőív címe";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1450, 912);
+            this.ClientSize = new System.Drawing.Size(874, 829);
             this.Controls.Add(this.pnlMainContent);
             this.Controls.Add(this.pnlHeader);
-            this.MinimumSize = new System.Drawing.Size(800, 600);
+            this.MinimumSize = new System.Drawing.Size(900, 900);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
