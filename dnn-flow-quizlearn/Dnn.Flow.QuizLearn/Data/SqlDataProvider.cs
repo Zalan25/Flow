@@ -30,8 +30,14 @@ namespace Dnn.Flow.QuizLearn.Data
 
         private string GetFullyQualifiedName(string name)
         {
-            return _databaseOwner + _objectQualifier + "lm_" + name;
-            //return {_databaseOwner}+ {_objectQualifier} + "lm_" + {name};
+            var databaseOwner = _databaseOwner;
+
+            if (!string.IsNullOrEmpty(databaseOwner) && !databaseOwner.EndsWith("."))
+            {
+                databaseOwner += ".";
+            }
+
+            return databaseOwner + _objectQualifier + "lm_" + name;
         }
 
 
@@ -377,4 +383,4 @@ namespace Dnn.Flow.QuizLearn.Data
         //    }
         //    return rules;
         }
-    }
+    } 
