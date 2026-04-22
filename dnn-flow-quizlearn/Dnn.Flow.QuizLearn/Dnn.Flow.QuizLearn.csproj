@@ -115,7 +115,8 @@
     <Compile Include="Models\LanguageInfo.cs" />
     <Compile Include="Models\PaceTypeInfo.cs" />
     <Compile Include="Models\QuestionLevelInfo.cs" />
-    <Compile Include="Models\RecommendationRuleInfo.cs" />
+    <Compile Include="Models\RecommendationResultInfo.cs" />
+    <Compile Include="Models\RecommendationResultItemInfo.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\SkillTypeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

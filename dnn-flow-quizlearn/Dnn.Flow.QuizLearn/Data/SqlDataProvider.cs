@@ -377,6 +377,4 @@ namespace Dnn.Flow.QuizLearn.Data
         //    }
         //    return rules;
         }
-    } 
-}
-    
+    }
