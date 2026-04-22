@@ -252,130 +252,130 @@ namespace Dnn.Flow.QuizLearn.Data
         //---------------------
 
 
-        public IEnumerable<RecommendationRuleInfo> FindExactRecommendationRules(
-            int moduleId,
-            int languageId,
-            int questionLevelId,
-            int skillTypeId,
-            int paceTypeId,
-            int? secondaryLanguageId)
-        {
-            var rules = new List<RecommendationRuleInfo>();
+        //public IEnumerable<RecommendationRuleInfo> FindExactRecommendationRules(
+        //    int moduleId,
+        //    int languageId,
+        //    int questionLevelId,
+        //    int skillTypeId,
+        //    int paceTypeId,
+        //    int? secondaryLanguageId)
+        //{
+        //    var rules = new List<RecommendationRuleInfo>();
 
-            using (IDataReader reader = SqlHelper.ExecuteReader(
-                _connectionString,
-                CommandType.StoredProcedure,
-                GetFullyQualifiedName("RecommendationRules_FindExact"),
-                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
-                new System.Data.SqlClient.SqlParameter("@LanguageId", languageId),
-                new System.Data.SqlClient.SqlParameter("@QuestionLevelId", questionLevelId),
-                new System.Data.SqlClient.SqlParameter("@SkillTypeId", skillTypeId),
-                new System.Data.SqlClient.SqlParameter("@PaceTypeId", paceTypeId),
-                new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))) ;
-            {
-                while (reader.Read())
-                {
-                    rules.Add(new RecommendationRuleInfo
-                    {
-                        RecommendationRuleId = Null.SetNullInteger(reader["RecommendationRuleId"]),
-                        ModuleId = Null.SetNullInteger(reader["ModuleId"]),
-                        LanguageId = Null.SetNullInteger(reader["LanguageId"]),
-                        QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
-                        SkillTypeId = Null.SetNullInteger(reader["SkillTypeId"]),
-                        SecondaryLanguageId = Null.SetNullInteger(reader["SecondaryLanguageId"]),
-                        PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
-                        Priority = Null.SetNullInteger(reader["Priority"]),
-                        MatchMode = Null.SetNullString(reader["MatchMode"]),
-                        HotcakesProductSKU = Null.SetNullString(reader["HotcakesProductSKU"]),
-                        HotcakesCategoryKey = Null.SetNullString(reader["HotcakesCategoryKey"]),
-                        HotcakesTag = Null.SetNullString(reader["HotcakesTag"]),
-                        MinProducts = Null.SetNullInteger(reader["MinProducts"]),
-                        MaxProducts = Null.SetNullInteger(reader["MaxProducts"])
-                    });
-                }
-            }
+        //    using (IDataReader reader = SqlHelper.ExecuteReader(
+        //        _connectionString,
+        //        CommandType.StoredProcedure,
+        //        GetFullyQualifiedName("RecommendationRules_FindExact"),
+        //        new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+        //        new System.Data.SqlClient.SqlParameter("@LanguageId", languageId),
+        //        new System.Data.SqlClient.SqlParameter("@QuestionLevelId", questionLevelId),
+        //        new System.Data.SqlClient.SqlParameter("@SkillTypeId", skillTypeId),
+        //        new System.Data.SqlClient.SqlParameter("@PaceTypeId", paceTypeId),
+        //        new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))) ;
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            rules.Add(new RecommendationRuleInfo
+        //            {
+        //                RecommendationRuleId = Null.SetNullInteger(reader["RecommendationRuleId"]),
+        //                ModuleId = Null.SetNullInteger(reader["ModuleId"]),
+        //                LanguageId = Null.SetNullInteger(reader["LanguageId"]),
+        //                QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
+        //                SkillTypeId = Null.SetNullInteger(reader["SkillTypeId"]),
+        //                SecondaryLanguageId = Null.SetNullInteger(reader["SecondaryLanguageId"]),
+        //                PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
+        //                Priority = Null.SetNullInteger(reader["Priority"]),
+        //                MatchMode = Null.SetNullString(reader["MatchMode"]),
+        //                HotcakesProductSKU = Null.SetNullString(reader["HotcakesProductSKU"]),
+        //                HotcakesCategoryKey = Null.SetNullString(reader["HotcakesCategoryKey"]),
+        //                HotcakesTag = Null.SetNullString(reader["HotcakesTag"]),
+        //                MinProducts = Null.SetNullInteger(reader["MinProducts"]),
+        //                MaxProducts = Null.SetNullInteger(reader["MaxProducts"])
+        //            });
+        //        }
+        //    }
 
-            return rules;
-        }
+        //    return rules;
+        //}
 
-        public IEnumerable<RecommendationRuleInfo> FindFallbackRecommendationRules(
-            int moduleId,
-            int languageId,
-            int questionLevelId,
-            int skillTypeId,
-            int? secondaryLanguageId)
-        {
-            var rules = new List<RecommendationRuleInfo>();
-            using (IDataReader reader = SqlHelper.ExecuteReader(
-                _connectionString,
-                CommandType.StoredProcedure,
-                GetFullyQualifiedName("RecommendationRules_FindFallback"),
-                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
-                new System.Data.SqlClient.SqlParameter("@LanguageId", languageId),
-                new System.Data.SqlClient.SqlParameter("@QuestionLevelId", questionLevelId),
-                new System.Data.SqlClient.SqlParameter("@SkillTypeId", skillTypeId),
-                new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))) ;
-            {
-                while (reader.Read())
-                {
-                    rules.Add(new RecommendationRuleInfo
-                    {
-                        RecommendationRuleId = Null.SetNullInteger(reader["RecommendationRuleId"]),
-                        ModuleId = Null.SetNullInteger(reader["ModuleId"]),
-                        LanguageId = Null.SetNullInteger(reader["LanguageId"]),
-                        QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
-                        SkillTypeId = Null.SetNullInteger(reader["SkillTypeId"]),
-                        SecondaryLanguageId = Null.SetNullInteger(reader["SecondaryLanguageId"]),
-                        PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
-                        Priority = Null.SetNullInteger(reader["Priority"]),
-                        MatchMode = Null.SetNullString(reader["MatchMode"]),
-                        HotcakesProductSKU = Null.SetNullString(reader["HotcakesProductSKU"]),
-                        HotcakesCategoryKey = Null.SetNullString(reader["HotcakesCategoryKey"]),
-                        HotcakesTag = Null.SetNullString(reader["HotcakesTag"]),
-                        MinProducts = Null.SetNullInteger(reader["MinProducts"]),
-                        MaxProducts = Null.SetNullInteger(reader["MaxProducts"])
-                    });
-                }
-            }
-            return rules;
+        //public IEnumerable<RecommendationRuleInfo> FindFallbackRecommendationRules(
+        //    int moduleId,
+        //    int languageId,
+        //    int questionLevelId,
+        //    int skillTypeId,
+        //    int? secondaryLanguageId)
+        //{
+        //    var rules = new List<RecommendationRuleInfo>();
+        //    using (IDataReader reader = SqlHelper.ExecuteReader(
+        //        _connectionString,
+        //        CommandType.StoredProcedure,
+        //        GetFullyQualifiedName("RecommendationRules_FindFallback"),
+        //        new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+        //        new System.Data.SqlClient.SqlParameter("@LanguageId", languageId),
+        //        new System.Data.SqlClient.SqlParameter("@QuestionLevelId", questionLevelId),
+        //        new System.Data.SqlClient.SqlParameter("@SkillTypeId", skillTypeId),
+        //        new System.Data.SqlClient.SqlParameter("@SecondaryLanguageId", (object)secondaryLanguageId ?? DBNull.Value))) ;
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            rules.Add(new RecommendationRuleInfo
+        //            {
+        //                RecommendationRuleId = Null.SetNullInteger(reader["RecommendationRuleId"]),
+        //                ModuleId = Null.SetNullInteger(reader["ModuleId"]),
+        //                LanguageId = Null.SetNullInteger(reader["LanguageId"]),
+        //                QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
+        //                SkillTypeId = Null.SetNullInteger(reader["SkillTypeId"]),
+        //                SecondaryLanguageId = Null.SetNullInteger(reader["SecondaryLanguageId"]),
+        //                PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
+        //                Priority = Null.SetNullInteger(reader["Priority"]),
+        //                MatchMode = Null.SetNullString(reader["MatchMode"]),
+        //                HotcakesProductSKU = Null.SetNullString(reader["HotcakesProductSKU"]),
+        //                HotcakesCategoryKey = Null.SetNullString(reader["HotcakesCategoryKey"]),
+        //                HotcakesTag = Null.SetNullString(reader["HotcakesTag"]),
+        //                MinProducts = Null.SetNullInteger(reader["MinProducts"]),
+        //                MaxProducts = Null.SetNullInteger(reader["MaxProducts"])
+        //            });
+        //        }
+        //    }
+        //    return rules;
 
-        }
+        //}
 
 
-        public IEnumerable<RecommendationRuleInfo> FindGeneralRecommendationRules(
-            int moduleId,
-            int languageId)
-        {
-            var rules = new List<RecommendationRuleInfo>();
-            using (IDataReader reader = SqlHelper.ExecuteReader(
-                _connectionString,
-                CommandType.StoredProcedure,
-                GetFullyQualifiedName("RecommendationRules_FindGeneral"),
-                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
-                new System.Data.SqlClient.SqlParameter("@LanguageId", languageId)))
-            {
-                while (reader.Read())
-                {
-                    rules.Add(new RecommendationRuleInfo
-                    {
-                        RecommendationRuleId = Null.SetNullInteger(reader["RecommendationRuleId"]),
-                        ModuleId = Null.SetNullInteger(reader["ModuleId"]),
-                        LanguageId = Null.SetNullInteger(reader["LanguageId"]),
-                        QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
-                        SkillTypeId = Null.SetNullInteger(reader["SkillTypeId"]),
-                        SecondaryLanguageId = Null.SetNullInteger(reader["SecondaryLanguageId"]),
-                        PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
-                        Priority = Null.SetNullInteger(reader["Priority"]),
-                        MatchMode = Null.SetNullString(reader["MatchMode"]),
-                        HotcakesProductSKU = Null.SetNullString(reader["HotcakesProductSKU"]),
-                        HotcakesCategoryKey = Null.SetNullString(reader["HotcakesCategoryKey"]),
-                        HotcakesTag = Null.SetNullString(reader["HotcakesTag"]),
-                        MinProducts = Null.SetNullInteger(reader["MinProducts"]),
-                        MaxProducts = Null.SetNullInteger(reader["MaxProducts"])
-                    });
-                }
-            }
-            return rules;
+        //public IEnumerable<RecommendationRuleInfo> FindGeneralRecommendationRules(
+        //    int moduleId,
+        //    int languageId)
+        //{
+        //    var rules = new List<RecommendationRuleInfo>();
+        //    using (IDataReader reader = SqlHelper.ExecuteReader(
+        //        _connectionString,
+        //        CommandType.StoredProcedure,
+        //        GetFullyQualifiedName("RecommendationRules_FindGeneral"),
+        //        new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+        //        new System.Data.SqlClient.SqlParameter("@LanguageId", languageId)))
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            rules.Add(new RecommendationRuleInfo
+        //            {
+        //                RecommendationRuleId = Null.SetNullInteger(reader["RecommendationRuleId"]),
+        //                ModuleId = Null.SetNullInteger(reader["ModuleId"]),
+        //                LanguageId = Null.SetNullInteger(reader["LanguageId"]),
+        //                QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
+        //                SkillTypeId = Null.SetNullInteger(reader["SkillTypeId"]),
+        //                SecondaryLanguageId = Null.SetNullInteger(reader["SecondaryLanguageId"]),
+        //                PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
+        //                Priority = Null.SetNullInteger(reader["Priority"]),
+        //                MatchMode = Null.SetNullString(reader["MatchMode"]),
+        //                HotcakesProductSKU = Null.SetNullString(reader["HotcakesProductSKU"]),
+        //                HotcakesCategoryKey = Null.SetNullString(reader["HotcakesCategoryKey"]),
+        //                HotcakesTag = Null.SetNullString(reader["HotcakesTag"]),
+        //                MinProducts = Null.SetNullInteger(reader["MinProducts"]),
+        //                MaxProducts = Null.SetNullInteger(reader["MaxProducts"])
+        //            });
+        //        }
+        //    }
+        //    return rules;
         }
     } 
 }
