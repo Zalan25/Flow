@@ -9,26 +9,13 @@
 ' DEALINGS IN THE SOFTWARE.
 ' 
 */
-
-using Dnn.Flow.QuizLearn.Components;
-using Dnn.Flow.QuizLearn.Data;
 using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using DotNetNuke.Data;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
-using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Services.Protocols;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
