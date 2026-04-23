@@ -1,40 +1,41 @@
-﻿@Model IEnumerable<Dnn.Flow.QuizLearn.Models.RecommendationRuleInfo>
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<IEnumerable<Dnn.Flow.QuizLearn.Models.RecommendationRuleInfo>>
+@using Dnn.Flow.QuizLearn.Models
 
-    <h2>Ajánlási eredmény</h2>
+<h2>Ajánlási eredmény</h2>
 
-    @if (Model == null)
+@if (Model == null)
 {
-    <p>Nincs találat.</p>
+<p>Nincs találat.</p>
 }
 else
 {
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Rule ID</th>
-                <th>Szint</th>
-                <th>Készség</th>
-                <th>Tempó</th>
-                <th>Match</th>
-                <th>Tag</th>
-                <th>Min</th>
-                <th>Max</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var rule in Model)
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Rule ID</th>
+            <th>Szint</th>
+            <th>Készség</th>
+            <th>Tempó</th>
+            <th>Match</th>
+            <th>Tag</th>
+            <th>Min</th>
+            <th>Max</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rule in Model)
         {
-            <tr>
-                <td>@rule.RecommendationRuleId</td>
-                <td>@rule.QuestionLevelId</td>
-                <td>@rule.SkillTypeId</td>
-                <td>@rule.PaceTypeId</td>
-                <td>@rule.MatchMode</td>
-                <td>@rule.HotcakesTag</td>
-                <td>@rule.MinProducts</td>
-                <td>@rule.MaxProducts</td>
-            </tr>
+        <tr>
+            <td>@rule.RecommendationRuleId</td>
+            <td>@rule.QuestionLevelId</td>
+            <td>@rule.SkillTypeId</td>
+            <td>@rule.PaceTypeId</td>
+            <td>@rule.MatchMode</td>
+            <td>@rule.HotcakesTag</td>
+            <td>@rule.MinProducts</td>
+            <td>@rule.MaxProducts</td>
+        </tr>
         }
-        </tbody>
-    </table>
+    </tbody>
+</table>
 }
