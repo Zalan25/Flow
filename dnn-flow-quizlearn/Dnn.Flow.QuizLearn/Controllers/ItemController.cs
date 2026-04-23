@@ -62,7 +62,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [HttpPost]
         public ActionResult Start(AssessmentStartViewModel model)
         {
-            return Content("POST Start lefutott");
             if (model == null || !ModelState.IsValid)
             {
                 model = model ?? new AssessmentStartViewModel();
@@ -105,16 +104,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
             };
             var sessionId = _assessmentService.StartAssessmentSession(sessionInfo, selectedSkills);
 
-            var questionLevelId = model.SelectedLevelId ?? 1;
-            var skillTypeId = selectedSkills.First();
-            var paceTypeId = model.PaceTypeId ?? 1;
-
             var rules = _recommendationService.GetMatchingRules(
                 ModuleContext.ModuleId,
                 model.LanguageId,
-                questionLevelId,
-                skillTypeId,
-                paceTypeId,
+                model.SelectedLevelId ?? 1,
+                selectedSkills.First(),
+                model.PaceTypeId ?? 1,
                 model.SecondaryLanguageId);
 
             ViewBag.SessionId = sessionId;
