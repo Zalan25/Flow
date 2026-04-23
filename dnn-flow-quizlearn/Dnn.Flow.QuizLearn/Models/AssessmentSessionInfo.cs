@@ -7,9 +7,9 @@ namespace Dnn.Flow.QuizLearn.Models
         public int AssessmentModeId { get; set; }
         public int LanguageId { get; set; }
 
-        public int SecondaryLanguageId { get; set; }  
+        public int? SecondaryLanguageId { get; set; }  
         public int SelectedLevelId { get; set; }      
-        public int UserId { get; set; }               
+        public int? UserId { get; set; }               
 
         public int PaceTypeId { get; set; }
 

@@ -11,8 +11,8 @@
 */
 
 using Dnn.Flow.QuizLearn.Components;
-using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Data;
+using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services;
 using DotNetNuke.Data;
 using DotNetNuke.Entities.Users;
@@ -20,6 +20,7 @@ using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -82,17 +83,26 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return RedirectToDefaultRoute();
         }
 
+
         [ModuleAction(ControlKey = "Edit", TitleKey = "AddItem")]
         public ActionResult Index()
         {
-            //var items = ItemManager.Instance.GetItems(ModuleContext.ModuleId);
-            //return View(items);
-            var service = new LookupService();
-            var languages = service.GetLanguages();
+            var service = new RecommendationService();
+            var repository = new Data.SqlDataProvider();
 
-            ViewBag.TestMessage = "Nyelvek száma: " + languages.Count();
+            var exactRules = repository.FindExactRecommendationRules(382, 1, 1, 1, 1, null);
+            var fallbackRules = repository.FindFallbackRecommendationRules(382, 1, 1, 1, null);
+            var generalRules = repository.FindGeneralRecommendationRules(382, 1);
+
+            ViewBag.TestMessage =
+                "Exact: " + exactRules.Count() +
+                " | Fallback: " + fallbackRules.Count() +
+                " | General: " + generalRules.Count();
 
             return View();
         }
+
+
+       
     }
 }
