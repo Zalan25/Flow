@@ -4,7 +4,6 @@
 @using DotNetNuke.Web.Mvc.Helpers
 @using Dnn.Flow.QuizLearn.Models
 @using System
-@using System.Linq
 
 
 <h2>QuizLearn – Pilot</h2>
@@ -18,7 +17,6 @@
 
 @using (Html.BeginForm("Start", "Item", FormMethod.Post, new { }))
 {
-
     <input type="hidden" name="ModuleId" value="@Model.ModuleId" />
 
     <div>
