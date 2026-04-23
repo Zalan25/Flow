@@ -2,7 +2,6 @@
 using Dnn.Flow.QuizLearn.Services;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -16,8 +15,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
         private readonly AssessmentService _assessmentService;
         private readonly RecommendationService _recommendationService;
 
-
-
         public ItemController()
         {
             _lookupService = new LookupService();
@@ -25,69 +22,39 @@ namespace Dnn.Flow.QuizLearn.Controllers
             _recommendationService = new RecommendationService();
         }
 
-        [HttpGet]
+        // DNN MVC always routes through Index — handle both GET and POST here
         public ActionResult Index()
         {
-            //return RedirectToAction("Start");
-            var model = new AssessmentStartViewModel
+            if (Request.HttpMethod == "POST")
             {
-                ModuleId = ModuleContext.ModuleId,
-                Languages = _lookupService.GetLanguages(),
-                Levels = _lookupService.GetLevels(),
-                Skills = _lookupService.GetSkills(),
-                PaceTypes = _lookupService.GetPaceTypes(),
-                SelectedSkillTypeIds = new List<int>()
-            };
-
-            
-            return View("Start", model);
-        }
-
-        [HttpGet]
-        public ActionResult Start()
-        {
-            var model = new AssessmentStartViewModel
-            {
-                ModuleId = ModuleContext.ModuleId,
-                Languages = _lookupService.GetLanguages(),
-                Levels = _lookupService.GetLevels(),
-                Skills = _lookupService.GetSkills(),
-                PaceTypes = _lookupService.GetPaceTypes(),
-                SelectedSkillTypeIds = new List<int>()
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult Start(AssessmentStartViewModel model)
-        {
-            if (model == null || !ModelState.IsValid)
-            {
-                model = model ?? new AssessmentStartViewModel();
-
-                model.ModuleId = ModuleContext.ModuleId;
-                model.Languages = _lookupService.GetLanguages();
-                model.Levels = _lookupService.GetLevels();
-                model.Skills = _lookupService.GetSkills();
-                model.PaceTypes = _lookupService.GetPaceTypes();
-                model.SelectedSkillTypeIds = model.SelectedSkillTypeIds ?? new List<int>();
-
-                return View(model);
+                return HandleStartPost();
             }
 
-            var selectedSkills = model.SelectedSkillTypeIds ?? new List<int>();
+            return View("Start", BuildStartViewModel());
+        }
 
-            if (!selectedSkills.Any())
+        private ActionResult HandleStartPost()
+        {
+            var model = new AssessmentStartViewModel
             {
-                model.ModuleId = ModuleContext.ModuleId;
-                model.Languages = _lookupService.GetLanguages();
-                model.Levels = _lookupService.GetLevels();
-                model.Skills = _lookupService.GetSkills();
-                model.PaceTypes = _lookupService.GetPaceTypes();
+                ModuleId = ModuleContext.ModuleId,
+                AssessmentModeId = int.TryParse(Request.Form["AssessmentModeId"], out int modeId) ? modeId : 0,
+                LanguageId = int.TryParse(Request.Form["LanguageId"], out int langId) ? langId : 0,
+                SecondaryLanguageId = int.TryParse(Request.Form["SecondaryLanguageId"], out int secLangId) ? (int?)secLangId : null,
+                SelectedLevelId = int.TryParse(Request.Form["SelectedLevelId"], out int levelId) ? (int?)levelId : null,
+                PaceTypeId = int.TryParse(Request.Form["PaceTypeId"], out int paceId) ? (int?)paceId : null,
+                SelectedSkillTypeIds = Request.Form.GetValues("SelectedSkillTypeIds")
+                                        ?.Select(x => int.TryParse(x, out int sid) ? sid : 0)
+                                        .Where(x => x > 0)
+                                        .ToList() ?? new List<int>()
+            };
 
+            if (!model.SelectedSkillTypeIds.Any())
+            {
+                var fresh = BuildStartViewModel();
+                fresh.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
                 ModelState.AddModelError("", "Legalább egy készséget ki kell választani.");
-                return View(model);
+                return View("Start", fresh);
             }
 
             var sessionInfo = new AssessmentSessionInfo
@@ -102,13 +69,14 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 NeedLevelTest = false,
                 Status = "Started"
             };
-            var sessionId = _assessmentService.StartAssessmentSession(sessionInfo, selectedSkills);
+
+            var sessionId = _assessmentService.StartAssessmentSession(sessionInfo, model.SelectedSkillTypeIds);
 
             var rules = _recommendationService.GetMatchingRules(
                 ModuleContext.ModuleId,
                 model.LanguageId,
                 model.SelectedLevelId ?? 1,
-                selectedSkills.First(),
+                model.SelectedSkillTypeIds.First(),
                 model.PaceTypeId ?? 1,
                 model.SecondaryLanguageId);
 
@@ -116,35 +84,19 @@ namespace Dnn.Flow.QuizLearn.Controllers
             ViewBag.RuleCount = rules == null ? 0 : rules.Count();
 
             return View("Recommendation", rules);
-
         }
 
-        [HttpGet]
-        public ActionResult Recommendation(
-            int sessionId,
-            int languageId,
-            int? questionLevelId,
-            int skillTypeId,
-            int? paceTypeId,
-            int? secondaryLanguageId)
+        private AssessmentStartViewModel BuildStartViewModel()
         {
-            if (!questionLevelId.HasValue || !paceTypeId.HasValue || skillTypeId <= 0)
+            return new AssessmentStartViewModel
             {
-                return Content("Hiányzó recommendation paraméter.");
-            }
-
-            var rules = _recommendationService.GetMatchingRules(
-                ModuleContext.ModuleId,
-                languageId,
-                questionLevelId.Value,
-                skillTypeId,
-                paceTypeId.Value,
-                secondaryLanguageId);
-
-            ViewBag.SessionId = sessionId;
-            ViewBag.RuleCount = rules == null ? 0 : rules.Count();
-
-            return View(rules);
+                ModuleId = ModuleContext.ModuleId,
+                Languages = _lookupService.GetLanguages(),
+                Levels = _lookupService.GetLevels(),
+                Skills = _lookupService.GetSkills(),
+                PaceTypes = _lookupService.GetPaceTypes(),
+                SelectedSkillTypeIds = new List<int>()
+            };
         }
     }
 }
