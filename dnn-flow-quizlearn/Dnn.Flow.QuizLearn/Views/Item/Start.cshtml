@@ -5,12 +5,10 @@
 
 @if (!ViewData.ModelState.IsValid)
 {
-    <div>
-        @Html.ValidationSummary()
-    </div>
+    <div>@Html.ValidationSummary()</div>
 }
 
-<form method="post" action="@Url.Action("Start", "Item")">
+<form method="post" action="@Request.RawUrl">
     <input type="hidden" name="ModuleId" value="@Model.ModuleId" />
 
     <div>
