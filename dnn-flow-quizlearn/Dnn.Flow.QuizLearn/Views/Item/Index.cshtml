@@ -1,87 +1,73 @@
-﻿@*@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<IEnumerable<Dnn.Flow.QuizLearn.Models.Item>>*@
-
-@using System.Text.RegularExpressions
-@using DotNetNuke.Web.Mvc.Helpers
-@*using System.Linq*@@
-@using System.Collections.Generic
-
-@Model Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel
-
-@{
-    ViewBag.Title = "QuizLearn Pilot";
-}
+﻿@model Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel
+@using System.Web.Mvc
 
 <h2>QuizLearn – Pilot</h2>
-<p>Válaszd ki a kívánt beállításokat, majd indítsd el az ajánlást.</p>
+<p>Válaszd ki a beállításokat.</p>
 
-@using (Html.BeginForm())
-{
-@Html.AntiForgeryToken()
+<form method="post">
+    <input type="hidden" name="ModuleId" value="@Model.ModuleId" />
 
-@Html.HiddenFor(m => m.ModuleId)
-
-<div style="margin-bottom: 12px;">
-    <label for="AssessmentModeId"><strong>Assessment mód</strong></label><br />
-    @Html.TextBoxFor(m => m.AssessmentModeId, new { @class = "form-control", type = "number", min = "1" })
-    <small>Add meg az AssessmentModeId értékét (pl. 1).</small>
-</div>
-
-<div style="margin-bottom: 12px;">
-    <label for="LanguageId"><strong>Tanulási nyelv</strong></label><br />
-    @Html.DropDownListFor(
-            m => m.LanguageId,
-            new SelectList(Model.Languages, "LanguageId", "Name"),
-            "-- válassz nyelvet --",
-            new { @class = "form-control" })
-</div>
-
-<div style="margin-bottom: 12px;">
-    <label for="SecondaryLanguageId"><strong>Másodlagos nyelv</strong></label><br />
-    @Html.DropDownListFor(
-            m => m.SecondaryLanguageId,
-            new SelectList(Model.Languages, "LanguageId", "Name"),
-            "-- nincs --",
-            new { @class = "form-control" })
-</div>
-
-<div style="margin-bottom: 12px;">
-    <label for="SelectedLevelId"><strong>Kiinduló szint</strong></label><br />
-    @Html.DropDownListFor(
-            m => m.SelectedLevelId,
-            new SelectList(Model.Levels, "QuestionLevelId", "LevelName"),
-            "-- válassz szintet --",
-            new { @class = "form-control" })
-</div>
-
-<div style="margin-bottom: 12px;">
-    <label for="PaceTypeId"><strong>Haladási tempó</strong></label><br />
-    @Html.DropDownListFor(
-            m => m.PaceTypeId,
-            new SelectList(Model.PaceTypes, "PaceTypeId", "PaceName"),
-            "-- válassz tempót --",
-            new { @class = "form-control" })
-</div>
-
-<div style="margin-bottom: 16px;">
-    <label><strong>Fejlesztendő készségek</strong></label><br />
-    @if (Model.Skills != null && Model.Skills.Any())
-        {
-            foreach (var skill in Model.Skills)
-            {
-    <div style="margin-bottom: 4px;">
-        <input type="checkbox"
-               name="SelectedSkillTypeIds"
-               value="@skill.SkillTypeId"
-               @(Model.SelectedSkillTypeIds != null && Model.SelectedSkillTypeIds.Contains(skill.SkillTypeId) ? "checked=\"checked\"" : "") />
-        <span>@skill.SkillName</span>
+    <div>
+        <label>Assessment mód</label>
+        <input type="text" name="AssessmentModeId" value="@Model.AssessmentModeId" />
     </div>
-            }
-        }
-        else
-        {
-    <p>Nincs elérhető skill adat.</p>
-        }
-</div>
 
-<button type="submit" class="dnnPrimaryAction">Ajánlás indítása</button>
-}
+    <div>
+        <label>Nyelv</label>
+        <select name="LanguageId">
+            <option value="">-- válassz nyelvet --</option>
+            @foreach (var language in Model.Languages)
+            {
+            <option value="@language.LanguageId">@language.Name</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label>Másodlagos nyelv</label>
+        <select name="SecondaryLanguageId">
+            <option value="">-- nincs --</option>
+            @foreach (var language in Model.Languages)
+            {
+            <option value="@language.LanguageId">@language.Name</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label>Szint</label>
+        <select name="SelectedLevelId">
+            <option value="">-- válassz szintet --</option>
+            @foreach (var level in Model.Levels)
+            {
+            <option value="@level.QuestionLevelId">@level.LevelName</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label>Tempó</label>
+        <select name="PaceTypeId">
+            <option value="">-- válassz tempót --</option>
+            @foreach (var pace in Model.PaceTypes)
+            {
+            <option value="@pace.PaceTypeId">@pace.PaceName</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label>Készségek</label>
+        @foreach (var skill in Model.Skills)
+        {
+        <div>
+            <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
+            <span>@skill.SkillName</span>
+        </div>
+        }
+    </div>
+
+    <div style="margin-top:15px;">
+        <button type="submit">Ajánlás indítása</button>
+    </div>
+</form>

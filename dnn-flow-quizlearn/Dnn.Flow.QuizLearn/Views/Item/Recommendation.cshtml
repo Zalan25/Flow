@@ -1,38 +1,21 @@
-﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<IEnumerable<Dnn.Flow.QuizLearn.Models.Item>>
-
-@using System.Text.RegularExpressions
-@using DotNetNuke.Web.Mvc.Helpers
-
-@using System.Linq
-@model IEnumerable<Dnn.Flow.QuizLearn.Models.RecommendationRuleInfo>
-
-    @{
-    ViewBag.Title = "Ajánlási eredmény";
-    }
+﻿@model IEnumerable<Dnn.Flow.QuizLearn.Models.RecommendationRuleInfo>
 
     <h2>Ajánlási eredmény</h2>
 
-    <p><strong>Session ID:</strong> @ViewBag.SessionId</p>
-    <p><strong>Talált szabályok száma:</strong> @ViewBag.RuleCount</p>
-
-    @if (Model == null || !Model.Any())
+    @if (Model == null)
 {
-    <div style="padding:10px; border:1px solid #ccc;">
-        Nincs találat a megadott paraméterekre.
-    </div>
+    <p>Nincs találat.</p>
 }
 else
 {
-    <table class="dnnTableDisplay" style="width:100%; border-collapse:collapse;">
+    <table border="1" cellpadding="5">
         <thead>
             <tr>
                 <th>Rule ID</th>
                 <th>Szint</th>
                 <th>Készség</th>
                 <th>Tempó</th>
-                <th>Match mód</th>
-                <th>SKU</th>
-                <th>Kategória</th>
+                <th>Match</th>
                 <th>Tag</th>
                 <th>Min</th>
                 <th>Max</th>
@@ -47,8 +30,6 @@ else
                 <td>@rule.SkillTypeId</td>
                 <td>@rule.PaceTypeId</td>
                 <td>@rule.MatchMode</td>
-                <td>@rule.HotcakesProductSKU</td>
-                <td>@rule.HotcakesCategoryKey</td>
                 <td>@rule.HotcakesTag</td>
                 <td>@rule.MinProducts</td>
                 <td>@rule.MaxProducts</td>
