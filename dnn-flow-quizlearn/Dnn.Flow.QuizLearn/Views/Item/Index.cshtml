@@ -3,8 +3,83 @@
 @using System.Text.RegularExpressions
 @using DotNetNuke.Web.Mvc.Helpers
 
-<h1>Lilla tesztel</h1>
+@model Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel
 
-<div style="color:yellow; font-weight:bold;">
-    @ViewBag.TestMessage
+@{
+    ViewBag.Title = "QuizLearn Pilot";
+}
+
+<h2>QuizLearn – Pilot</h2>
+<p>Válaszd ki a kívánt beállításokat, majd indítsd el az ajánlást.</p>
+
+@using (Html.BeginForm("Index", "Item", FormMethod.Post))
+{
+@Html.AntiForgeryToken()
+
+@Html.HiddenFor(m => m.ModuleId)
+
+<div style="margin-bottom: 12px;">
+    <label for="AssessmentModeId"><strong>Assessment mód</strong></label><br />
+    @Html.TextBoxFor(m => m.AssessmentModeId, new { @class = "form-control", type = "number", min = "1" })
+    <small>Add meg az AssessmentModeId értékét (pl. 1).</small>
 </div>
+
+<div style="margin-bottom: 12px;">
+    <label for="LanguageId"><strong>Tanulási nyelv</strong></label><br />
+    @Html.DropDownListFor(
+            m => m.LanguageId,
+            new SelectList(Model.Languages, "LanguageId", "Name"),
+            "-- válassz nyelvet --",
+            new { @class = "form-control" })
+</div>
+
+<div style="margin-bottom: 12px;">
+    <label for="SecondaryLanguageId"><strong>Másodlagos nyelv</strong></label><br />
+    @Html.DropDownListFor(
+            m => m.SecondaryLanguageId,
+            new SelectList(Model.Languages, "LanguageId", "Name"),
+            "-- nincs --",
+            new { @class = "form-control" })
+</div>
+
+<div style="margin-bottom: 12px;">
+    <label for="SelectedLevelId"><strong>Kiinduló szint</strong></label><br />
+    @Html.DropDownListFor(
+            m => m.SelectedLevelId,
+            new SelectList(Model.Levels, "QuestionLevelId", "LevelName"),
+            "-- válassz szintet --",
+            new { @class = "form-control" })
+</div>
+
+<div style="margin-bottom: 12px;">
+    <label for="PaceTypeId"><strong>Haladási tempó</strong></label><br />
+    @Html.DropDownListFor(
+            m => m.PaceTypeId,
+            new SelectList(Model.PaceTypes, "PaceTypeId", "PaceName"),
+            "-- válassz tempót --",
+            new { @class = "form-control" })
+</div>
+
+<div style="margin-bottom: 16px;">
+    <label><strong>Fejlesztendő készségek</strong></label><br />
+    @if (Model.Skills != null && Model.Skills.Any())
+        {
+            foreach (var skill in Model.Skills)
+            {
+    <div style="margin-bottom: 4px;">
+        <input type="checkbox"
+               name="SelectedSkillTypeIds"
+               value="@skill.SkillTypeId"
+               @(Model.SelectedSkillTypeIds != null && Model.SelectedSkillTypeIds.Contains(skill.SkillTypeId) ? "checked=\"checked\"" : "") />
+        <span>@skill.SkillName</span>
+    </div>
+            }
+        }
+        else
+        {
+    <p>Nincs elérhető skill adat.</p>
+        }
+</div>
+
+<button type="submit" class="dnnPrimaryAction">Ajánlás indítása</button>
+}

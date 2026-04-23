@@ -82,18 +82,27 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 Status = "Started"
             };
 
-            var sessionId = _assessmentService.StartAssessmentSession(
-                sessionInfo,
-                model.SelectedSkillTypeIds ?? new List<int>());
+            var selectedSkills = model.SelectedSkillTypeIds ?? new List<int>();
+
+            if (!selectedSkills.Any())
+            {
+                model.Languages = _lookupService.GetLanguages();
+                model.Levels = _lookupService.GetLevels();
+                model.Skills = _lookupService.GetSkills();
+                model.PaceTypes = _lookupService.GetPaceTypes();
+
+                ModelState.AddModelError("", "Legalább egy készséget ki kell választani.");
+                return View(model);
+            }
+
+            var sessionId = _assessmentService.StartAssessmentSession(sessionInfo, selectedSkills);
 
             return RedirectToAction("Recommendation", new
             {
                 sessionId = sessionId,
                 languageId = model.LanguageId,
                 questionLevelId = model.SelectedLevelId,
-                skillTypeId = model.SelectedSkillTypeIds != null && model.SelectedSkillTypeIds.Count > 0
-                    ? model.SelectedSkillTypeIds[0]
-                    : 0,
+                skillTypeId = selectedSkills.First(),
                 paceTypeId = model.PaceTypeId,
                 secondaryLanguageId = model.SecondaryLanguageId
             });
@@ -101,12 +110,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         [HttpGet]
         public ActionResult Recommendation(
-            int sessionId,
-            int languageId,
-            int? questionLevelId,
-            int skillTypeId,
-            int? paceTypeId,
-            int? secondaryLanguageId)
+        int sessionId,
+        int languageId,
+        int? questionLevelId,
+        int skillTypeId,
+        int? paceTypeId,
+        int? secondaryLanguageId)
         {
             if (!questionLevelId.HasValue || !paceTypeId.HasValue || skillTypeId <= 0)
             {
