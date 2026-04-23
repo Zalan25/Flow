@@ -13,6 +13,7 @@
 using Dnn.Flow.QuizLearn.Components;
 using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Data;
+using Dnn.Flow.QuizLearn.Services;
 using DotNetNuke.Data;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Framework.JavaScriptLibraries;

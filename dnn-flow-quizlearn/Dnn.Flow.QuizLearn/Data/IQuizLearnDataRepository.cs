@@ -17,25 +17,25 @@ namespace Dnn.Flow.QuizLearn.Data
         int AddAssessmentSessionSkill(int moduleId, int assessmentSessionId, int skillTypeId);
         int CompleteAssessmentSession(int moduleId, int assessmentSessionId, int? finalLevelId);
 
-        //// Szabályok
-        //IEnumerable<RecommendationRuleInfo> FindExactRecommendationRules(
-        //    int moduleId,
-        //    int languageId,
-        //    int questionLevelId,
-        //    int skillTypeId,
-        //    int paceTypeId,
-        //    int? secondaryLanguageId);
+        // Szabályok
+        IEnumerable<RecommendationRuleInfo> FindExactRecommendationRules(
+            int moduleId,
+            int languageId,
+            int questionLevelId,
+            int skillTypeId,
+            int paceTypeId,
+            int? secondaryLanguageId);
 
-        //IEnumerable<RecommendationRuleInfo> FindFallbackRecommendationRules(
-        //    int moduleId,
-        //    int languageId,
-        //    int questionLevelId,
-        //    int skillTypeId,
-        //    int? secondaryLanguageId);
+        IEnumerable<RecommendationRuleInfo> FindFallbackRecommendationRules(
+            int moduleId,
+            int languageId,
+            int questionLevelId,
+            int skillTypeId,
+            int? secondaryLanguageId);
 
-        //IEnumerable<RecommendationRuleInfo> FindGeneralRecommendationRules(
-        //    int moduleId,
-        //    int languageId);
+        IEnumerable<RecommendationRuleInfo> FindGeneralRecommendationRules(
+            int moduleId,
+            int languageId);
 
         // Eredmények
         int AddRecommendationResult(RecommendationResultInfo resultInfo);
