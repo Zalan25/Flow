@@ -78,10 +78,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 model.SelectedLevelId ?? 1,
                 model.SelectedSkillTypeIds.First(),
                 model.PaceTypeId ?? 1,
-                model.SecondaryLanguageId);
+                model.SecondaryLanguageId) as List<RecommendationRuleInfo>
+                ?? new List<RecommendationRuleInfo>();
 
             ViewBag.SessionId = sessionId;
-            ViewBag.RuleCount = rules == null ? 0 : rules.Count();
+            ViewBag.RuleCount = rules.Count;
 
             return View("Recommendation", rules);
         }
