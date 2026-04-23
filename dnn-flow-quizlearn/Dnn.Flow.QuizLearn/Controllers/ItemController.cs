@@ -28,6 +28,19 @@ namespace Dnn.Flow.QuizLearn.Controllers
         private readonly AssessmentService _assessmentService;
         private readonly RecommendationService _recommendationService;
 
+
+        [HttpGet]
+        public ActionResult Ping()
+        {
+            return Content("PING GET OK");
+        }
+
+        [HttpPost]
+        public ActionResult PingPost()
+        {
+            System.Diagnostics.Debugger.Launch();
+            return Content("PING POST OK");
+        }
         public ItemController()
         {
             _lookupService = new LookupService();
@@ -38,6 +51,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            return Content("GET Index működik");
             var model = new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
@@ -52,9 +66,10 @@ namespace Dnn.Flow.QuizLearn.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Index(AssessmentStartViewModel model)
         {
+            System.Diagnostics.Debugger.Launch();
+            return Content("POST biztosan lefutott");
             if (model == null || !ModelState.IsValid)
             {
                 model = model ?? new AssessmentStartViewModel();
@@ -106,6 +121,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 paceTypeId = model.PaceTypeId,
                 secondaryLanguageId = model.SecondaryLanguageId
             });
+
         }
 
         [HttpGet]
@@ -134,62 +150,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
             ViewBag.RuleCount = rules == null ? 0 : rules.Count();
 
             return View(rules);
+
         }
-
-
-
-        //public ActionResult Delete(int itemId)
-        //{
-        //    ItemManager.Instance.DeleteItem(itemId, ModuleContext.ModuleId);
-        //    return RedirectToDefaultRoute();
-        //}
-
-        //public ActionResult Edit(int itemId = -1)
-        //{
-        //    DotNetNuke.Framework.JavaScriptLibraries.JavaScript.RequestRegistration(CommonJs.DnnPlugins);
-
-        //    var userlist = UserController.GetUsers(PortalSettings.PortalId);
-        //    var users = from user in userlist.Cast<UserInfo>().ToList()
-        //                select new SelectListItem { Text = user.DisplayName, Value = user.UserID.ToString() };
-
-        //    ViewBag.Users = users;
-
-        //    var item = (itemId == -1)
-        //         ? new Item { ModuleId = ModuleContext.ModuleId }
-        //         : ItemManager.Instance.GetItem(itemId, ModuleContext.ModuleId);
-
-        //    return View(item);
-        //}
-
-        //[HttpPost]
-        //[DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryToken]
-        //public ActionResult Edit(Item item)
-        //{
-        //    if (item.ItemId == -1)
-        //    {
-        //        item.CreatedByUserId = User.UserID;
-        //        item.CreatedOnDate = DateTime.UtcNow;
-        //        item.LastModifiedByUserId = User.UserID;
-        //        item.LastModifiedOnDate = DateTime.UtcNow;
-
-        //        ItemManager.Instance.CreateItem(item);
-        //    }
-        //    else
-        //    {
-        //        var existingItem = ItemManager.Instance.GetItem(item.ItemId, item.ModuleId);
-        //        existingItem.LastModifiedByUserId = User.UserID;
-        //        existingItem.LastModifiedOnDate = DateTime.UtcNow;
-        //        existingItem.ItemName = item.ItemName;
-        //        existingItem.ItemDescription = item.ItemDescription;
-        //        existingItem.AssignedUserId = item.AssignedUserId;
-
-        //        ItemManager.Instance.UpdateItem(existingItem);
-        //    }
-
-        //    return RedirectToDefaultRoute();
-        //}
-
-
 
     }
 }
