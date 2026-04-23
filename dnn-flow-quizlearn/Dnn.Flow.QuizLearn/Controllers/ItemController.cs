@@ -14,6 +14,8 @@ using Dnn.Flow.QuizLearn.Components;
 using Dnn.Flow.QuizLearn.Data;
 using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using DotNetNuke.Data;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Framework.JavaScriptLibraries;
@@ -21,8 +23,12 @@ using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Services.Protocols;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
@@ -30,79 +36,160 @@ namespace Dnn.Flow.QuizLearn.Controllers
     [DnnHandleError]
     public class ItemController : DnnController
     {
-        
+        private readonly LookupService _lookupService;
+        private readonly AssessmentService _assessmentService;
+        private readonly RecommendationService _recommendationService;
 
-        public ActionResult Delete(int itemId)
+        public ItemController()
         {
-            ItemManager.Instance.DeleteItem(itemId, ModuleContext.ModuleId);
-            return RedirectToDefaultRoute();
+            _lookupService = new LookupService();
+            _assessmentService = new AssessmentService();
+            _recommendationService = new RecommendationService();
         }
 
-        public ActionResult Edit(int itemId = -1)
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index()
         {
-            DotNetNuke.Framework.JavaScriptLibraries.JavaScript.RequestRegistration(CommonJs.DnnPlugins);
+            var model = new AssessmentStartViewModel
+            {
+                ModuleId = ModuleContext.ModuleId,
+                Languages = _lookupService.GetLanguages(),
+                Levels = _lookupService.GetLevels(),
+                Skills = _lookupService.GetSkills(),
+                PaceTypes = _lookupService.GetPaceTypes(),
+                SelectedSkillTypeIds = new List<int>()
+            };
 
-            var userlist = UserController.GetUsers(PortalSettings.PortalId);
-            var users = from user in userlist.Cast<UserInfo>().ToList()
-                        select new SelectListItem { Text = user.DisplayName, Value = user.UserID.ToString() };
-
-            ViewBag.Users = users;
-
-            var item = (itemId == -1)
-                 ? new Item { ModuleId = ModuleContext.ModuleId }
-                 : ItemManager.Instance.GetItem(itemId, ModuleContext.ModuleId);
-
-            return View(item);
+            return View(model);
         }
 
         [HttpPost]
-        [DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryToken]
-        public ActionResult Edit(Item item)
+        public ActionResult Index(AssessmentStartViewModel model)
         {
-            if (item.ItemId == -1)
+            if (!ModelState.IsValid)
             {
-                item.CreatedByUserId = User.UserID;
-                item.CreatedOnDate = DateTime.UtcNow;
-                item.LastModifiedByUserId = User.UserID;
-                item.LastModifiedOnDate = DateTime.UtcNow;
+                model.ModuleId = ModuleContext.ModuleId;
+                model.Languages = _lookupService.GetLanguages();
+                model.Levels = _lookupService.GetLevels();
+                model.Skills = _lookupService.GetSkills();
+                model.PaceTypes = _lookupService.GetPaceTypes();
+                model.SelectedSkillTypeIds = model.SelectedSkillTypeIds ?? new List<int>();
 
-                ItemManager.Instance.CreateItem(item);
-            }
-            else
-            {
-                var existingItem = ItemManager.Instance.GetItem(item.ItemId, item.ModuleId);
-                existingItem.LastModifiedByUserId = User.UserID;
-                existingItem.LastModifiedOnDate = DateTime.UtcNow;
-                existingItem.ItemName = item.ItemName;
-                existingItem.ItemDescription = item.ItemDescription;
-                existingItem.AssignedUserId = item.AssignedUserId;
-
-                ItemManager.Instance.UpdateItem(existingItem);
+                return View(model);
             }
 
-            return RedirectToDefaultRoute();
+            var sessionInfo = new AssessmentSessionInfo
+            {
+                ModuleId = ModuleContext.ModuleId,
+                AssessmentModeId = model.AssessmentModeId,
+                LanguageId = model.LanguageId,
+                SecondaryLanguageId = model.SecondaryLanguageId,
+                SelectedLevelId = model.SelectedLevelId,
+                PaceTypeId = model.PaceTypeId,
+                UserId = null,
+                NeedLevelTest = false,
+                Status = "Started"
+            };
+
+            var sessionId = _assessmentService.StartAssessmentSession(
+                sessionInfo,
+                model.SelectedSkillTypeIds ?? new List<int>());
+
+            return RedirectToAction("Recommendation", new
+            {
+                sessionId = sessionId,
+                languageId = model.LanguageId,
+                questionLevelId = model.SelectedLevelId,
+                skillTypeId = model.SelectedSkillTypeIds != null && model.SelectedSkillTypeIds.Count > 0
+                    ? model.SelectedSkillTypeIds[0]
+                    : 0,
+                paceTypeId = model.PaceTypeId,
+                secondaryLanguageId = model.SecondaryLanguageId
+            });
+        }
+
+        [HttpGet]
+        public ActionResult Recommendation(
+            int sessionId,
+            int languageId,
+            int? questionLevelId,
+            int skillTypeId,
+            int? paceTypeId,
+            int? secondaryLanguageId)
+        {
+            if (!questionLevelId.HasValue || !paceTypeId.HasValue || skillTypeId <= 0)
+            {
+                return Content("Hiányzó recommendation paraméter.");
+            }
+
+            var rules = _recommendationService.GetMatchingRules(
+                ModuleContext.ModuleId,
+                languageId,
+                questionLevelId.Value,
+                skillTypeId,
+                paceTypeId.Value,
+                secondaryLanguageId);
+
+            ViewBag.SessionId = sessionId;
+            ViewBag.RuleCount = rules == null ? 0 : rules.Count();
+
+            return View(rules);
         }
 
 
-        [ModuleAction(ControlKey = "Edit", TitleKey = "AddItem")]
-        public ActionResult Index()
-        {
-            var service = new RecommendationService();
-            var repository = new Data.SqlDataProvider();
 
-            var exactRules = repository.FindExactRecommendationRules(382, 1, 1, 1, 1, null);
-            var fallbackRules = repository.FindFallbackRecommendationRules(382, 1, 1, 1, null);
-            var generalRules = repository.FindGeneralRecommendationRules(382, 1);
+        //public ActionResult Delete(int itemId)
+        //{
+        //    ItemManager.Instance.DeleteItem(itemId, ModuleContext.ModuleId);
+        //    return RedirectToDefaultRoute();
+        //}
 
-            ViewBag.TestMessage =
-                "Exact: " + exactRules.Count() +
-                " | Fallback: " + fallbackRules.Count() +
-                " | General: " + generalRules.Count();
+        //public ActionResult Edit(int itemId = -1)
+        //{
+        //    DotNetNuke.Framework.JavaScriptLibraries.JavaScript.RequestRegistration(CommonJs.DnnPlugins);
 
-            return View();
-        }
+        //    var userlist = UserController.GetUsers(PortalSettings.PortalId);
+        //    var users = from user in userlist.Cast<UserInfo>().ToList()
+        //                select new SelectListItem { Text = user.DisplayName, Value = user.UserID.ToString() };
+
+        //    ViewBag.Users = users;
+
+        //    var item = (itemId == -1)
+        //         ? new Item { ModuleId = ModuleContext.ModuleId }
+        //         : ItemManager.Instance.GetItem(itemId, ModuleContext.ModuleId);
+
+        //    return View(item);
+        //}
+
+        //[HttpPost]
+        //[DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryToken]
+        //public ActionResult Edit(Item item)
+        //{
+        //    if (item.ItemId == -1)
+        //    {
+        //        item.CreatedByUserId = User.UserID;
+        //        item.CreatedOnDate = DateTime.UtcNow;
+        //        item.LastModifiedByUserId = User.UserID;
+        //        item.LastModifiedOnDate = DateTime.UtcNow;
+
+        //        ItemManager.Instance.CreateItem(item);
+        //    }
+        //    else
+        //    {
+        //        var existingItem = ItemManager.Instance.GetItem(item.ItemId, item.ModuleId);
+        //        existingItem.LastModifiedByUserId = User.UserID;
+        //        existingItem.LastModifiedOnDate = DateTime.UtcNow;
+        //        existingItem.ItemName = item.ItemName;
+        //        existingItem.ItemDescription = item.ItemDescription;
+        //        existingItem.AssignedUserId = item.AssignedUserId;
+
+        //        ItemManager.Instance.UpdateItem(existingItem);
+        //    }
+
+        //    return RedirectToDefaultRoute();
+        //}
 
 
-       
+
     }
-}
