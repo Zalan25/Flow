@@ -172,6 +172,7 @@
     <Content Include="Providers\DataProviders\SqlDataProvider\00.00.02.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\00.00.03.SqlDataProvider" />
     <Content Include="Views\Item\Recommendation.cshtml" />
+    <Content Include="Views\Item\Start.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

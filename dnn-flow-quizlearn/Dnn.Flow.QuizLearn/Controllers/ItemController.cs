@@ -16,18 +16,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
         private readonly RecommendationService _recommendationService;
 
 
-        [HttpGet]
-        public ActionResult Ping()
-        {
-            return Content("PING GET OK");
-        }
 
-        [HttpPost]
-        public ActionResult PingPost()
-        {
-            System.Diagnostics.Debugger.Launch();
-            return Content("PING POST OK");
-        }
         public ItemController()
         {
             _lookupService = new LookupService();
@@ -38,7 +27,18 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            return RedirectToAction("Start");
+            //return RedirectToAction("Start");
+            var model = new AssessmentStartViewModel
+            {
+                ModuleId = ModuleContext.ModuleId,
+                Languages = _lookupService.GetLanguages(),
+                Levels = _lookupService.GetLevels(),
+                Skills = _lookupService.GetSkills(),
+                PaceTypes = _lookupService.GetPaceTypes(),
+                SelectedSkillTypeIds = new List<int>()
+            };
+
+            return View("Start", model);
         }
 
         [HttpGet]
@@ -58,11 +58,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Start(AssessmentStartViewModel model)
         {
-            System.Diagnostics.Debugger.Launch();
-            return Content("POST biztosan lefutott");
             if (model == null || !ModelState.IsValid)
             {
                 model = model ?? new AssessmentStartViewModel();
