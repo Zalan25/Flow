@@ -1,26 +1,13 @@
-﻿/*
-' Copyright (c) 2026 Flow
-'  All rights reserved.
-' 
-' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-' TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-' THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-' CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-' DEALINGS IN THE SOFTWARE.
-' 
-*/
-using Dnn.Flow.QuizLearn.Models;
+﻿using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using ValidateAntiForgeryTokenAttribute = DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryTokenAttribute;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
-
     [DnnHandleError]
     public class ItemController : DnnController
     {
@@ -38,6 +25,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            return RedirectToAction("Start");
+        }
+
+        [HttpGet]
+        public ActionResult Start()
+        {
             var model = new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
@@ -53,7 +46,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(AssessmentStartViewModel model)
+        public ActionResult Start(AssessmentStartViewModel model)
         {
             if (model == null || !ModelState.IsValid)
             {
@@ -69,23 +62,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View(model);
             }
 
-            var sessionInfo = new AssessmentSessionInfo
-            {
-                ModuleId = ModuleContext.ModuleId,
-                AssessmentModeId = model.AssessmentModeId,
-                LanguageId = model.LanguageId,
-                SecondaryLanguageId = model.SecondaryLanguageId,
-                SelectedLevelId = (int)model.SelectedLevelId,
-                PaceTypeId = (int)model.PaceTypeId,
-                UserId = null,
-                NeedLevelTest = false,
-                Status = "Started"
-            };
-
             var selectedSkills = model.SelectedSkillTypeIds ?? new List<int>();
 
             if (!selectedSkills.Any())
             {
+                model.ModuleId = ModuleContext.ModuleId;
                 model.Languages = _lookupService.GetLanguages();
                 model.Levels = _lookupService.GetLevels();
                 model.Skills = _lookupService.GetSkills();
@@ -95,27 +76,40 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View(model);
             }
 
+            var sessionInfo = new AssessmentSessionInfo
+            {
+                ModuleId = ModuleContext.ModuleId,
+                AssessmentModeId = model.AssessmentModeId,
+                LanguageId = model.LanguageId,
+                SecondaryLanguageId = model.SecondaryLanguageId,
+                SelectedLevelId = model.SelectedLevelId ?? 1,
+                PaceTypeId = model.PaceTypeId ?? 1,
+                UserId = null,
+                NeedLevelTest = false,
+                Status = "Started"
+            };
+
             var sessionId = _assessmentService.StartAssessmentSession(sessionInfo, selectedSkills);
 
             return RedirectToAction("Recommendation", new
             {
                 sessionId = sessionId,
                 languageId = model.LanguageId,
-                questionLevelId = model.SelectedLevelId,
+                questionLevelId = model.SelectedLevelId ?? 1,
                 skillTypeId = selectedSkills.First(),
-                paceTypeId = model.PaceTypeId,
+                paceTypeId = model.PaceTypeId ?? 1,
                 secondaryLanguageId = model.SecondaryLanguageId
             });
         }
 
         [HttpGet]
         public ActionResult Recommendation(
-        int sessionId,
-        int languageId,
-        int? questionLevelId,
-        int skillTypeId,
-        int? paceTypeId,
-        int? secondaryLanguageId)
+            int sessionId,
+            int languageId,
+            int? questionLevelId,
+            int skillTypeId,
+            int? paceTypeId,
+            int? secondaryLanguageId)
         {
             if (!questionLevelId.HasValue || !paceTypeId.HasValue || skillTypeId <= 0)
             {
@@ -135,61 +129,5 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             return View(rules);
         }
-
-
-
-        //public ActionResult Delete(int itemId)
-        //{
-        //    ItemManager.Instance.DeleteItem(itemId, ModuleContext.ModuleId);
-        //    return RedirectToDefaultRoute();
-        //}
-
-        //public ActionResult Edit(int itemId = -1)
-        //{
-        //    DotNetNuke.Framework.JavaScriptLibraries.JavaScript.RequestRegistration(CommonJs.DnnPlugins);
-
-        //    var userlist = UserController.GetUsers(PortalSettings.PortalId);
-        //    var users = from user in userlist.Cast<UserInfo>().ToList()
-        //                select new SelectListItem { Text = user.DisplayName, Value = user.UserID.ToString() };
-
-        //    ViewBag.Users = users;
-
-        //    var item = (itemId == -1)
-        //         ? new Item { ModuleId = ModuleContext.ModuleId }
-        //         : ItemManager.Instance.GetItem(itemId, ModuleContext.ModuleId);
-
-        //    return View(item);
-        //}
-
-        //[HttpPost]
-        //[DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryToken]
-        //public ActionResult Edit(Item item)
-        //{
-        //    if (item.ItemId == -1)
-        //    {
-        //        item.CreatedByUserId = User.UserID;
-        //        item.CreatedOnDate = DateTime.UtcNow;
-        //        item.LastModifiedByUserId = User.UserID;
-        //        item.LastModifiedOnDate = DateTime.UtcNow;
-
-        //        ItemManager.Instance.CreateItem(item);
-        //    }
-        //    else
-        //    {
-        //        var existingItem = ItemManager.Instance.GetItem(item.ItemId, item.ModuleId);
-        //        existingItem.LastModifiedByUserId = User.UserID;
-        //        existingItem.LastModifiedOnDate = DateTime.UtcNow;
-        //        existingItem.ItemName = item.ItemName;
-        //        existingItem.ItemDescription = item.ItemDescription;
-        //        existingItem.AssignedUserId = item.AssignedUserId;
-
-        //        ItemManager.Instance.UpdateItem(existingItem);
-        //    }
-
-        //    return RedirectToDefaultRoute();
-        //}
-
-
-
     }
 }

@@ -1,0 +1,95 @@
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
+@using DotNetNuke.Web.Mvc.Helpers
+
+<h2>QuizLearn – Pilot</h2>
+<p>Válaszd ki a beállításokat.</p>
+
+@if (!ViewData.ModelState.IsValid)
+{
+<div class="dnnFormMessage dnnFormError">
+    @Html.ValidationSummary()
+</div>
+}
+
+@using (Html.BeginForm("Start", "Item", FormMethod.Post, new { }))
+{
+@Html.AntiForgeryToken()
+<input type="hidden" name="ModuleId" value="@Model.ModuleId" />
+
+<div>
+    <label>Assessment mód</label>
+    <input type="text" name="AssessmentModeId" value="@Model.AssessmentModeId" />
+</div>
+
+<div>
+    <label>Nyelv</label>
+    <select name="LanguageId">
+        <option value="">-- válassz nyelvet --</option>
+        @foreach (var language in Model.Languages)
+            {
+        <option value="@language.LanguageId" @(Model.LanguageId == language.LanguageId ? "selected=\"selected\"" : "")>
+            @language.Name
+        </option>
+            }
+    </select>
+</div>
+
+<div>
+    <label>Másodlagos nyelv</label>
+    <select name="SecondaryLanguageId">
+        <option value="">-- nincs --</option>
+        @foreach (var language in Model.Languages)
+            {
+        <option value="@language.LanguageId" @(Model.SecondaryLanguageId == language.LanguageId ? "selected=\"selected\"" : "")>
+            @language.Name
+        </option>
+            }
+    </select>
+</div>
+
+<div>
+    <label>Szint</label>
+    <select name="SelectedLevelId">
+        <option value="">-- válassz szintet --</option>
+        @foreach (var level in Model.Levels)
+            {
+        <option value="@level.QuestionLevelId" @(Model.SelectedLevelId == level.QuestionLevelId ? "selected=\"selected\"" : "")>
+            @level.LevelName
+        </option>
+            }
+    </select>
+</div>
+
+<div>
+    <label>Tempó</label>
+    <select name="PaceTypeId">
+        <option value="">-- válassz tempót --</option>
+        @foreach (var pace in Model.PaceTypes)
+            {
+        <option value="@pace.PaceTypeId" @(Model.PaceTypeId == pace.PaceTypeId ? "selected=\"selected\"" : "")>
+            @pace.PaceName
+        </option>
+            }
+    </select>
+</div>
+
+<div>
+    <label>Készségek</label>
+    @foreach (var skill in Model.Skills)
+        {
+            var isChecked = Model.SelectedSkillTypeIds != null && Model.SelectedSkillTypeIds.Contains(skill.SkillTypeId);
+
+    <div>
+        <input type="checkbox"
+               name="SelectedSkillTypeIds"
+               value="@skill.SkillTypeId"
+               @(isChecked ? "checked=\"checked\"" : "") />
+        <span>@skill.SkillName</span>
+    </div>
+        }
+</div>
+
+<div style="margin-top:15px;">
+    <button type="submit">Ajánlás indítása</button>
+</div>
+}
