@@ -1,26 +1,13 @@
-﻿/*
-' Copyright (c) 2026 Flow
-'  All rights reserved.
-' 
-' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-' TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-' THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-' CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-' DEALINGS IN THE SOFTWARE.
-' 
-*/
-using Dnn.Flow.QuizLearn.Models;
+﻿using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using ValidateAntiForgeryTokenAttribute = DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryTokenAttribute;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
-
     [DnnHandleError]
     public class ItemController : DnnController
     {
@@ -51,7 +38,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            return Content("GET Index működik");
+            return RedirectToAction("Start");
+        }
+
+        [HttpGet]
+        public ActionResult Start()
+        {
             var model = new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
@@ -66,7 +58,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(AssessmentStartViewModel model)
+        [ValidateAntiForgeryToken]
+        public ActionResult Start(AssessmentStartViewModel model)
         {
             System.Diagnostics.Debugger.Launch();
             return Content("POST biztosan lefutott");
@@ -84,23 +77,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View(model);
             }
 
-            var sessionInfo = new AssessmentSessionInfo
-            {
-                ModuleId = ModuleContext.ModuleId,
-                AssessmentModeId = model.AssessmentModeId,
-                LanguageId = model.LanguageId,
-                SecondaryLanguageId = model.SecondaryLanguageId,
-                SelectedLevelId = (int)model.SelectedLevelId,
-                PaceTypeId = (int)model.PaceTypeId,
-                UserId = null,
-                NeedLevelTest = false,
-                Status = "Started"
-            };
-
             var selectedSkills = model.SelectedSkillTypeIds ?? new List<int>();
 
             if (!selectedSkills.Any())
             {
+                model.ModuleId = ModuleContext.ModuleId;
                 model.Languages = _lookupService.GetLanguages();
                 model.Levels = _lookupService.GetLevels();
                 model.Skills = _lookupService.GetSkills();
@@ -110,15 +91,28 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View(model);
             }
 
+            var sessionInfo = new AssessmentSessionInfo
+            {
+                ModuleId = ModuleContext.ModuleId,
+                AssessmentModeId = model.AssessmentModeId,
+                LanguageId = model.LanguageId,
+                SecondaryLanguageId = model.SecondaryLanguageId,
+                SelectedLevelId = model.SelectedLevelId ?? 1,
+                PaceTypeId = model.PaceTypeId ?? 1,
+                UserId = null,
+                NeedLevelTest = false,
+                Status = "Started"
+            };
+
             var sessionId = _assessmentService.StartAssessmentSession(sessionInfo, selectedSkills);
 
             return RedirectToAction("Recommendation", new
             {
                 sessionId = sessionId,
                 languageId = model.LanguageId,
-                questionLevelId = model.SelectedLevelId,
+                questionLevelId = model.SelectedLevelId ?? 1,
                 skillTypeId = selectedSkills.First(),
-                paceTypeId = model.PaceTypeId,
+                paceTypeId = model.PaceTypeId ?? 1,
                 secondaryLanguageId = model.SecondaryLanguageId
             });
 
@@ -126,12 +120,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         [HttpGet]
         public ActionResult Recommendation(
-        int sessionId,
-        int languageId,
-        int? questionLevelId,
-        int skillTypeId,
-        int? paceTypeId,
-        int? secondaryLanguageId)
+            int sessionId,
+            int languageId,
+            int? questionLevelId,
+            int skillTypeId,
+            int? paceTypeId,
+            int? secondaryLanguageId)
         {
             if (!questionLevelId.HasValue || !paceTypeId.HasValue || skillTypeId <= 0)
             {
@@ -150,8 +144,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
             ViewBag.RuleCount = rules == null ? 0 : rules.Count();
 
             return View(rules);
-
         }
-
     }
 }
