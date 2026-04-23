@@ -35,7 +35,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public ActionResult Index()
         {
             var model = new AssessmentStartViewModel
