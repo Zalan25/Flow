@@ -1,10 +1,11 @@
-﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<IEnumerable<Dnn.Flow.QuizLearn.Models.Item>>
+﻿@*@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<IEnumerable<Dnn.Flow.QuizLearn.Models.Item>>*@
 
 @using System.Text.RegularExpressions
 @using DotNetNuke.Web.Mvc.Helpers
-@using System.Linq
+@*using System.Linq*@@
+@using System.Collections.Generic
 
-@model Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel
+@Model Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel
 
 @{
     ViewBag.Title = "QuizLearn Pilot";
@@ -13,7 +14,7 @@
 <h2>QuizLearn – Pilot</h2>
 <p>Válaszd ki a kívánt beállításokat, majd indítsd el az ajánlást.</p>
 
-@using (Html.BeginForm("Index", "Item", FormMethod.Post))
+@using (Html.BeginForm())
 {
 @Html.AntiForgeryToken()
 
