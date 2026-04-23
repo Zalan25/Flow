@@ -16,6 +16,7 @@ using DotNetNuke.Web.Mvc.Framework.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using ValidateAntiForgeryTokenAttribute = DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryTokenAttribute;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
@@ -51,10 +52,13 @@ namespace Dnn.Flow.QuizLearn.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(AssessmentStartViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (model == null || !ModelState.IsValid)
             {
+                model = model ?? new AssessmentStartViewModel();
+
                 model.ModuleId = ModuleContext.ModuleId;
                 model.Languages = _lookupService.GetLanguages();
                 model.Levels = _lookupService.GetLevels();
@@ -179,3 +183,4 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
 
     }
+}
