@@ -86,8 +86,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
         {
             //var items = ItemManager.Instance.GetItems(ModuleContext.ModuleId);
             //return View(items);
-            var provider = new Data.SqlDataProvider();
-            var languages = provider.GetAllActiveLanguages();
+            var service = new LookupService();
+            var languages = service.GetLanguages();
 
             ViewBag.TestMessage = "Nyelvek száma: " + languages.Count();
 
