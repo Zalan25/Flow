@@ -254,11 +254,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
                         1
                     );
 
-                    return RedirectToAction("Question", new
-                    {
-                        sessionId = sessionId,
-                        questionNumber = 1
-                    });
+                    return Redirect(Url.Action("Question", "Item")
+                        + "?sessionId=" + sessionId
+                        + "&questionNumber=1");
                 }
             }
 
@@ -296,26 +294,37 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("StartAssessment", fresh);
             }
 
+
             _assessmentService.StartTestAttempt(
                 ModuleContext.ModuleId,
                 sessionId,
                 1
             );
 
-            return RedirectToAction("Question", new
-            {
-                sessionId = sessionId,
-                questionNumber = 1
-            });
+            return Redirect(Url.Action("Question", "Item")
+                + "?sessionId=" + sessionId
+                + "&questionNumber=1");
         }
 
-        public ActionResult Question(int sessionId, int questionNumber)
+        public ActionResult Question(int? sessionId, int? questionNumber)
         {
-            var model = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+            if (!sessionId.HasValue || sessionId.Value <= 0)
+            {
+                return View("StartAssessment", BuildStartViewModel(GetModuleMode()));
+            }
+
+            var currentQuestionNumber = questionNumber.HasValue && questionNumber.Value > 0
+                ? questionNumber.Value
+                : 1;
+
+            var model = _assessmentService.GetQuestionForAssessment(
+                sessionId.Value,
+                currentQuestionNumber
+            );
 
             if (model == null)
             {
-                return RedirectToAction("AssessmentResult", new { sessionId = sessionId });
+                return Redirect(Url.Action("AssessmentResult", "Item") + "?sessionId=" + sessionId.Value);
             }
 
             return View("Question", model);
@@ -343,11 +352,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             _assessmentService.SaveAnswer(moduleId, sessionId, questionId, answerId);
 
-            return RedirectToAction("Question", new
-            {
-                sessionId = sessionId,
-                questionNumber = questionNumber + 1
-            });
+            return Redirect(Url.Action("Question", "Item")
+                + "?sessionId=" + sessionId
+                + "&questionNumber=1");
 
         }
 
