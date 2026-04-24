@@ -47,7 +47,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         public ActionResult Start()
         {
-            return View("Start", BuildStartViewModel(moduleMode));
+            var mode = GetModuleMode();
+
+            return View("Start", BuildStartViewModel(mode));
         }
 
         public ActionResult StartAssessment()
