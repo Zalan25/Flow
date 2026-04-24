@@ -477,6 +477,32 @@ namespace Dnn.Flow.QuizLearn.Data
 
             return answers;
         }
+        public int StartTestAttempt(int moduleId, int assessmentSessionId, int testId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttempts_Start"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId),
+                new System.Data.SqlClient.SqlParameter("@TestId", testId));
+
+            return Convert.ToInt32(result);
+        }
+
+        public int AddTestAttemptAnswer(int moduleId, int assessmentSessionId, int questionId, int answerId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttemptAnswers_Add"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId),
+                new System.Data.SqlClient.SqlParameter("@QuestionId", questionId),
+                new System.Data.SqlClient.SqlParameter("@SelectedAnswerId", answerId));
+
+            return Convert.ToInt32(result);
+        }
     }
 }
 

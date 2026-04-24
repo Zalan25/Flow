@@ -36,6 +36,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return HandleStartLevelTestPost();
                 }
 
+                if (assessmentAction == "AnswerQuestion")
+                {
+                    return HandleAnswerQuestionPost();
+                }
+
                 return HandleStartPost(mode);
             }
 
@@ -231,12 +236,20 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         private ActionResult HandleStartLevelTestPost()
         {
+
             int sessionId;
 
             if (int.TryParse(Request.Form["SessionId"], out sessionId) && sessionId > 0)
             {
                 return RedirectToAction("Question", new { sessionId = sessionId, questionNumber = 1 });
             }
+            int testId = 1; // ideiglenesen fix
+
+            _assessmentService.StartTestAttempt(
+                ModuleContext.ModuleId,
+                sessionId,
+                testId
+            );
 
             int languageId;
 
@@ -277,10 +290,40 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (model == null)
             {
+                ViewBag.SessionId = sessionId;
                 return View("AssessmentResult");
             }
 
             return View("Question", model);
+        }
+
+        private ActionResult HandleAnswerQuestionPost()
+        {
+            int sessionId =0;
+            int questionId = 0;
+            int questionNumber =1 ;
+            int answerId = 0;
+            int moduleId = ModuleContext.ModuleId;
+
+            if (!int.TryParse(Request.Form["SessionId"], out sessionId) ||
+                !int.TryParse(Request.Form["QuestionId"], out questionId) ||
+                !int.TryParse(Request.Form["QuestionNumber"], out questionNumber) ||
+                !int.TryParse(Request.Form["AnswerId"], out answerId))
+            {
+                ModelState.AddModelError("", "Kérlek, válassz egy választ.");
+
+                var model = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+
+                return View("Question", model);
+            }
+
+            _assessmentService.SaveAnswer(moduleId, sessionId, questionId, answerId);
+
+            return RedirectToAction("Question", new
+            {
+                sessionId = sessionId,
+                questionNumber = questionNumber + 1
+            });
         }
     }
 }

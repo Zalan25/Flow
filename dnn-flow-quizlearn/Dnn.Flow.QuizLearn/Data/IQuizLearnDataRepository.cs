@@ -46,10 +46,10 @@ namespace Dnn.Flow.QuizLearn.Data
 
         // Szintfelmérő kérdések
         AssessmentSessionInfo GetAssessmentSessionById(int assessmentSessionId);
-
         IEnumerable<QuestionInfo> GetQuestionsForAssessment(int moduleId,int languageId);
-
         IEnumerable<AnswerInfo> GetAnswersByQuestionId(int moduleId,int questionId);
+        int StartTestAttempt(int moduleId, int assessmentSessionId, int testId);
+        int AddTestAttemptAnswer(int moduleId, int assessmentSessionId, int questionId, int answerId);
 
     }
 }

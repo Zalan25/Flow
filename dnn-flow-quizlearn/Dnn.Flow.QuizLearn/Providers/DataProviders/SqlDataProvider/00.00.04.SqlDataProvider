@@ -1094,6 +1094,37 @@ GO
 /* ---------------------------------------------
    New SP
    --------------------------------------------- */
+CREATE PROCEDURE {databaseOwner}{objectQualifier}lm_TestAttempts_Start
+    @ModuleId INT,
+    @AssessmentSessionId INT,
+    @TestId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO {databaseOwner}{objectQualifier}lm_test_attempts
+    (
+        ModuleId,
+        AssessmentSessionId,
+        TestId,
+        StartedOn,
+        IsCompleted,
+        TotalScore
+    )
+    VALUES
+    (
+        @ModuleId,
+        @AssessmentSessionId,
+        @TestId,
+        SYSUTCDATETIME(),
+        0,
+        0
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT);
+END
+GO
+
 CREATE PROCEDURE {databaseOwner}{objectQualifier}lm_AssessmentSessions_GetById
     @AssessmentSessionId INT
 AS
@@ -1129,5 +1160,104 @@ BEGIN
     WHERE ModuleId = @ModuleId
       AND QuestionId = @QuestionId
     ORDER BY AnswerOrder, AnswerId;
+END
+GO
+
+
+/* Levezetés*/
+CREATE PROCEDURE {databaseOwner}{objectQualifier}lm_TestAttemptAnswers_Add
+    @ModuleId INT,
+    @AssessmentSessionId INT,
+    @QuestionId INT,
+    @SelectedAnswerId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TestAttemptId INT;
+    DECLARE @IsCorrect BIT;
+    DECLARE @EarnedPoints INT;
+
+    SELECT TOP 1
+        @TestAttemptId = TestAttemptId
+    FROM {databaseOwner}{objectQualifier}lm_test_attempts
+    WHERE ModuleId = @ModuleId
+      AND AssessmentSessionId = @AssessmentSessionId
+      AND IsCompleted = 0
+    ORDER BY TestAttemptId DESC;
+
+    IF @TestAttemptId IS NULL
+    BEGIN
+        RAISERROR('No active test attempt found for this assessment session.', 16, 1);
+        RETURN;
+    END;
+
+    SELECT
+        @IsCorrect = a.IsCorrect,
+        @EarnedPoints =
+            CASE
+                WHEN a.IsCorrect = 1 THEN q.Points
+                ELSE 0
+            END
+    FROM {databaseOwner}{objectQualifier}lm_answers a
+    INNER JOIN {databaseOwner}{objectQualifier}lm_questions q
+        ON q.QuestionId = a.QuestionId
+       AND q.ModuleId = a.ModuleId
+    WHERE a.ModuleId = @ModuleId
+      AND a.QuestionId = @QuestionId
+      AND a.AnswerId = @SelectedAnswerId;
+
+    IF @IsCorrect IS NULL
+    BEGIN
+        RAISERROR('Selected answer does not belong to the given question.', 16, 1);
+        RETURN;
+    END;
+
+    IF EXISTS (
+        SELECT 1
+        FROM {databaseOwner}{objectQualifier}lm_test_attempt_answers
+        WHERE ModuleId = @ModuleId
+          AND TestAttemptId = @TestAttemptId
+          AND QuestionId = @QuestionId
+    )
+    BEGIN
+        UPDATE {databaseOwner}{objectQualifier}lm_test_attempt_answers
+        SET SelectedAnswerId = @SelectedAnswerId,
+            IsCorrect = @IsCorrect,
+            EarnedPoints = @EarnedPoints,
+            AnsweredOn = SYSUTCDATETIME()
+        WHERE ModuleId = @ModuleId
+          AND TestAttemptId = @TestAttemptId
+          AND QuestionId = @QuestionId;
+
+        SELECT TestAttemptAnswerId
+        FROM {databaseOwner}{objectQualifier}lm_test_attempt_answers
+        WHERE ModuleId = @ModuleId
+          AND TestAttemptId = @TestAttemptId
+          AND QuestionId = @QuestionId;
+
+        RETURN;
+    END;
+
+    INSERT INTO {databaseOwner}{objectQualifier}lm_test_attempt_answers
+    (
+        ModuleId,
+        TestAttemptId,
+        QuestionId,
+        SelectedAnswerId,
+        IsCorrect,
+        EarnedPoints
+    )
+    VALUES
+    (
+        @ModuleId,
+        @TestAttemptId,
+        @QuestionId,
+        @SelectedAnswerId,
+        @IsCorrect,
+        @EarnedPoints
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT);
 END
 GO

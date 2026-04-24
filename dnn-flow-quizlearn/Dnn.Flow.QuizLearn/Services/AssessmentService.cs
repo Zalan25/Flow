@@ -105,5 +105,13 @@ namespace Dnn.Flow.QuizLearn.Services
                 Answers = answers
             };
         }
+        public int StartTestAttempt(int moduleId, int assessmentSessionId, int testId)
+        {
+            return _repository.StartTestAttempt(moduleId, assessmentSessionId, testId);
+        }
+        public void SaveAnswer(int moduleId, int sessionId, int questionId, int answerId)
+        {
+             _repository.AddTestAttemptAnswer(moduleId, sessionId, questionId, answerId);
+        }
     }
 }
