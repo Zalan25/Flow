@@ -61,5 +61,49 @@ namespace Dnn.Flow.QuizLearn.Services
             }
             return 5;
         }
+
+        public AssessmentQuestionViewModel GetQuestionForAssessment(int sessionId, int questionNumber)
+        {
+            var session = _repository.GetAssessmentSessionById(sessionId);
+
+            if (session == null)
+            {
+                return null;
+            }
+
+            var questions = _repository.GetQuestionsForAssessment(session.ModuleId, session.LanguageId)
+                .ToList();
+
+            if (!questions.Any())
+            {
+                return null;
+            }
+
+            if (questionNumber < 1 || questionNumber > questions.Count)
+            {
+                return null;
+            }
+
+            var question = questions[questionNumber - 1];
+
+            var answers = _repository.GetAnswersByQuestionId(session.ModuleId, question.QuestionId)
+                .Select(a => new AnswerOptionViewModel
+                {
+                    AnswerId = a.AnswerId,
+                    AnswerText = a.AnswerText
+                })
+                .ToList();
+
+            return new AssessmentQuestionViewModel
+            {
+                SessionId = sessionId,
+                QuestionId = question.QuestionId,
+                QuestionNumber = questionNumber,
+                TotalQuestions = questions.Count,
+                QuestionText = question.QuestionText,
+                LevelName = null,
+                Answers = answers
+            };
+        }
     }
 }
