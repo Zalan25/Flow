@@ -47,7 +47,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         public ActionResult Start()
         {
-            return View("Start", BuildStartViewModel());
+            return View("Start", BuildStartViewModel(moduleMode));
         }
 
         public ActionResult StartAssessment()
@@ -96,14 +96,14 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (model.LanguageId <= 0)
             {
-                var fresh = BuildStartViewModel();
+                var fresh = BuildStartViewModel(moduleMode);
                 ModelState.AddModelError("", "A nyelv kiválasztása kötelező.");
                 return View("Start", fresh);
             }
 
             if (!model.SelectedSkillTypeIds.Any())
             {
-                var fresh = BuildStartViewModel();
+                var fresh = BuildStartViewModel(moduleMode);
                 fresh.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
                 ModelState.AddModelError("", "Legalább egy készséget ki kell választani.");
                 return View("Start", fresh);
