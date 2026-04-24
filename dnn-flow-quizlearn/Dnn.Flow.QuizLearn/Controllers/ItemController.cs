@@ -129,7 +129,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 AssessmentModeId = model.AssessmentModeId,
                 LanguageId = model.LanguageId,
                 SecondaryLanguageId = model.SecondaryLanguageId,
-                SelectedLevelId = model.SelectedLevelId,
+                SelectedLevelId = model.SelectedLevelId ?? 1,
                 PaceTypeId = model.PaceTypeId ?? 1,
                 UserId = null,
                 NeedLevelTest = needLevelTest,
