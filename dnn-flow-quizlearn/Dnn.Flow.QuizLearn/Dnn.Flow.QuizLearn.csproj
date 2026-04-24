@@ -182,6 +182,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Item\StartAssessment.cshtml" />
     <Content Include="Views\Item\Question.cshtml" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\00.00.04.SqlDataProvider" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
