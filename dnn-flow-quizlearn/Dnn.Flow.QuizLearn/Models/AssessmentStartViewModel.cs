@@ -15,7 +15,15 @@ namespace Dnn.Flow.QuizLearn.Models
         public bool NeedLevelTest { get; set; }
         public List<int> SelectedSkillTypeIds { get; set; }
         public QuizLearnMode ModuleMode { get; set; }
+        public int? SessionId { get; set; }
 
+        public bool HasExistingSession
+        {
+            get
+            {
+                return SessionId.HasValue && SessionId.Value > 0;
+            }
+        }
         public bool IsRecommendationOnlyMode
         {
             get

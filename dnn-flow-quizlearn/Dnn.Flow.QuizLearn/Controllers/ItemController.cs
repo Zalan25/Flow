@@ -36,7 +36,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             switch (mode)
             {
                 case QuizLearnMode.LevelAssessment:
-                    return View("StartAssessment");
+                    return View("StartAssessment", BuildStartViewModel(mode));
 
                 case QuizLearnMode.Recommendation:
                 case QuizLearnMode.RecommendationWithLevelAssessment:
@@ -110,9 +110,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("Start", fresh);
             }
 
-            var needLevelTest =
-                moduleMode == QuizLearnMode.LevelAssessment ||
-                (moduleMode == QuizLearnMode.RecommendationWithLevelAssessment && !model.SelectedLevelId.HasValue);
+            var vm = BuildStartViewModel(moduleMode);
+            vm.SessionId = sessionId;
+            vm.LanguageId = model.LanguageId;
+
+            return View("StartAssessment", vm);
 
             var sessionInfo = new AssessmentSessionInfo
             {

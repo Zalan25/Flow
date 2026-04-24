@@ -1,21 +1,28 @@
-﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
-@using Dnn.Flow.QuizLearn.Models
+﻿<form method="post">
+    @Html.AntiForgeryToken()
 
-<div class="quizlearn-assessment-start">
-    <h2>Szintfelmérő indítása</h2>
+    <input type="hidden" name="AssessmentAction" value="StartLevelTest" />
 
-    <p>
-        A rendszer szintfelmérő módba lépett.
-    </p>
-
-    @if (ViewBag.SessionId != null)
+    @if (Model.HasExistingSession)
     {
-        <p>
-            Session azonosító: @ViewBag.SessionId
-        </p>
+    <input type="hidden" name="SessionId" value="@Model.SessionId" />
+    <input type="hidden" name="LanguageId" value="@Model.LanguageId" />
+
+    <p>A szintfelmérő a kiválasztott nyelv alapján indul.</p>
+    }
+    else
+    {
+    <label>Válassz nyelvet:</label>
+
+    <select name="LanguageId">
+        <option value="">-- Válassz nyelvet --</option>
+
+        @foreach (var lang in Model.Languages)
+            {
+        <option value="@lang.LanguageId">@lang.Name</option>
+            }
+    </select>
     }
 
-    <p>
-        Következő lépésként ide kerülnek majd a szintfelmérő kérdések.
-    </p>
-</div>
+    <button type="submit">Indítás</button>
+</form>
