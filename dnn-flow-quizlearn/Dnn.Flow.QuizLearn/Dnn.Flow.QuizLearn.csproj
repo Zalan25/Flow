@@ -144,6 +144,7 @@
     <Content Include="Documentation\Documentation.html" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\00.00.08.SqlDataProvider" />
     <Content Include="ReleaseNotes.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +192,6 @@
     <Content Include="Providers\DataProviders\SqlDataProvider\00.00.05.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\00.00.06.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\00.00.07.SqlDataProvider" />
-    <Content Include="Providers\DataProviders\SqlDataProvider\00.00.08.SqlDataProvider" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
