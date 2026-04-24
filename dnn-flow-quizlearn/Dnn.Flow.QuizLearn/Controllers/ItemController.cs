@@ -61,7 +61,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         private ActionResult HandleStartPost(QuizLearnMode moduleMode)
         {
-
             var model = new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
@@ -110,11 +109,19 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("Start", fresh);
             }
 
-            var vm = BuildStartViewModel(moduleMode);
-            vm.SessionId = sessionId;
-            vm.LanguageId = model.LanguageId;
+            var needLevelTest =
+                moduleMode == QuizLearnMode.LevelAssessment ||
+                (
+                    moduleMode == QuizLearnMode.RecommendationWithLevelAssessment &&
+                    !model.SelectedLevelId.HasValue
+                );
 
-            return View("StartAssessment", vm);
+            if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue)
+            {
+                var fresh = BuildStartViewModel(moduleMode);
+                ModelState.AddModelError("", "Termékajánló módban a szint kiválasztása kötelező.");
+                return View("Start", fresh);
+            }
 
             var sessionInfo = new AssessmentSessionInfo
             {
@@ -122,7 +129,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 AssessmentModeId = model.AssessmentModeId,
                 LanguageId = model.LanguageId,
                 SecondaryLanguageId = model.SecondaryLanguageId,
-                SelectedLevelId = model.SelectedLevelId ?? 1,
+                SelectedLevelId = model.SelectedLevelId,
                 PaceTypeId = model.PaceTypeId ?? 1,
                 UserId = null,
                 NeedLevelTest = needLevelTest,
@@ -136,13 +143,15 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (needLevelTest)
             {
-                ViewBag.SessionId = sessionId;
-                ViewBag.LanguageId = model.LanguageId;
-                ViewBag.SecondaryLanguageId = model.SecondaryLanguageId;
-                ViewBag.PaceTypeId = model.PaceTypeId;
-                ViewBag.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
+                var vm = BuildStartViewModel(moduleMode);
+                vm.SessionId = sessionId;
+                vm.LanguageId = model.LanguageId;
+                vm.SecondaryLanguageId = model.SecondaryLanguageId;
+                vm.PaceTypeId = model.PaceTypeId;
+                vm.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
+                vm.NeedLevelTest = true;
 
-                return View("StartAssessment");
+                return View("StartAssessment", vm);
             }
 
             var rules = GetRecommendationRulesForAllSelectedSkills(model);
