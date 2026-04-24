@@ -1,0 +1,130 @@
+﻿IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_assessment_session_questions]', N'U') IS NULL
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    (
+        SessionQuestionId INT IDENTITY(1,1) NOT NULL,
+        ModuleId INT NOT NULL,
+        AssessmentSessionId INT NOT NULL,
+        QuestionId INT NOT NULL,
+        QuestionOrder INT NOT NULL,
+
+        CONSTRAINT PK_{objectQualifier}lm_assessment_session_questions
+            PRIMARY KEY CLUSTERED (SessionQuestionId),
+
+        CONSTRAINT FK_{objectQualifier}lm_asq_session
+            FOREIGN KEY (AssessmentSessionId)
+            REFERENCES {databaseOwner}[{objectQualifier}lm_assessment_sessions](AssessmentSessionId),
+
+        CONSTRAINT FK_{objectQualifier}lm_asq_question
+            FOREIGN KEY (QuestionId)
+            REFERENCES {databaseOwner}[{objectQualifier}lm_questions](QuestionId)
+    );
+END
+GO
+
+IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Generate]', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Generate;
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Generate
+    @ModuleId INT,
+    @AssessmentSessionId INT,
+    @LanguageId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    WHERE AssessmentSessionId = @AssessmentSessionId;
+
+    DECLARE @order INT = 1;
+
+    -- A1
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    SELECT TOP 5
+        @ModuleId,
+        @AssessmentSessionId,
+        QuestionId,
+        ROW_NUMBER() OVER (ORDER BY NEWID()) + @order - 1
+    FROM {databaseOwner}[{objectQualifier}lm_questions]
+    WHERE ModuleId = @ModuleId AND LanguageId = @LanguageId AND QuestionLevelId = 1
+    ORDER BY NEWID();
+
+    SET @order += 5;
+
+    -- A2
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    SELECT TOP 5
+        @ModuleId,
+        @AssessmentSessionId,
+        QuestionId,
+        ROW_NUMBER() OVER (ORDER BY NEWID()) + @order - 1
+    FROM {databaseOwner}[{objectQualifier}lm_questions]
+    WHERE ModuleId = @ModuleId AND LanguageId = @LanguageId AND QuestionLevelId = 2
+    ORDER BY NEWID();
+
+    SET @order += 5;
+
+    -- B1
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    SELECT TOP 5
+        @ModuleId,
+        @AssessmentSessionId,
+        QuestionId,
+        ROW_NUMBER() OVER (ORDER BY NEWID()) + @order - 1
+    FROM {databaseOwner}[{objectQualifier}lm_questions]
+    WHERE ModuleId = @ModuleId AND LanguageId = @LanguageId AND QuestionLevelId = 3
+    ORDER BY NEWID();
+
+    SET @order += 5;
+
+    -- B2
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    SELECT TOP 3
+        @ModuleId,
+        @AssessmentSessionId,
+        QuestionId,
+        ROW_NUMBER() OVER (ORDER BY NEWID()) + @order - 1
+    FROM {databaseOwner}[{objectQualifier}lm_questions]
+    WHERE ModuleId = @ModuleId AND LanguageId = @LanguageId AND QuestionLevelId = 4
+    ORDER BY NEWID();
+
+    SET @order += 3;
+
+    -- C1
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    SELECT TOP 2
+        @ModuleId,
+        @AssessmentSessionId,
+        QuestionId,
+        ROW_NUMBER() OVER (ORDER BY NEWID()) + @order - 1
+    FROM {databaseOwner}[{objectQualifier}lm_questions]
+    WHERE ModuleId = @ModuleId AND LanguageId = @LanguageId AND QuestionLevelId = 5
+    ORDER BY NEWID();
+END
+GO
+
+IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Get]', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Get;
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Get
+    @AssessmentSessionId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        q.QuestionId,
+        q.QuestionText,
+        q.QuestionLevelId,
+        q.QuestionTypeId,
+        q.Points
+    FROM {databaseOwner}[{objectQualifier}lm_assessment_session_questions] sq
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_questions] q
+        ON q.QuestionId = sq.QuestionId
+       AND q.ModuleId = sq.ModuleId
+    WHERE sq.AssessmentSessionId = @AssessmentSessionId
+    ORDER BY sq.QuestionOrder;
+END
+GO
