@@ -1,24 +1,26 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewModel>
 
-@using System.Web.Mvc
-@using System.Web.Mvc.Html
-@using DotNetNuke.Web.Mvc.Helpers
+<form method="post" action="@Request.RawUrl">
+    @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-@Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="Mode">Modul működési módja</label>
+        <select name="Mode" id="Mode" class="form-control">
+            @foreach (var item in Model.AvailableModes)
+            {
+                if (item.Value == Model.Mode.ToString())
+                {
+                    <option value="@item.Value" selected="selected">@item.Text</option>
+                }
+                else
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            }
+        </select>
+    </div>
 
-<div class="form-group">
-    <label for="Mode">Modul működési módja</label>
-
-    @Html.DropDownListFor(
-        m => m.Mode,
-        Model.AvailableModes,
-        new { @class = "form-control" }
-    )
-</div>
-
-<button type="submit" class="btn btn-primary">
-    Beállítások mentése
-</button>
-}
+    <button type="submit" class="btn btn-primary">
+        Beállítások mentése
+    </button>
+</form>
