@@ -55,7 +55,7 @@
             this.pnlHeader.Controls.Add(this.lblMainTitle);
             this.pnlHeader.Location = new System.Drawing.Point(-2, 1);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(877, 330);
+            this.pnlHeader.Size = new System.Drawing.Size(1385, 395);
             this.pnlHeader.TabIndex = 0;
             // 
             // btnBack
@@ -77,7 +77,7 @@
             this.btnFinalSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFinalSave.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFinalSave.ForeColor = System.Drawing.Color.White;
-            this.btnFinalSave.Location = new System.Drawing.Point(578, 62);
+            this.btnFinalSave.Location = new System.Drawing.Point(1086, 62);
             this.btnFinalSave.Name = "btnFinalSave";
             this.btnFinalSave.Size = new System.Drawing.Size(213, 103);
             this.btnFinalSave.TabIndex = 1;
@@ -104,7 +104,7 @@
             this.pnlMainContent.Controls.Add(this.pnlStartCard);
             this.pnlMainContent.Location = new System.Drawing.Point(1, 222);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Size = new System.Drawing.Size(873, 608);
+            this.pnlMainContent.Size = new System.Drawing.Size(1381, 673);
             this.pnlMainContent.TabIndex = 1;
             // 
             // pnlStartCard
@@ -120,7 +120,7 @@
             this.pnlStartCard.Controls.Add(this.lblTestName);
             this.pnlStartCard.Location = new System.Drawing.Point(86, 47);
             this.pnlStartCard.Name = "pnlStartCard";
-            this.pnlStartCard.Size = new System.Drawing.Size(702, 519);
+            this.pnlStartCard.Size = new System.Drawing.Size(1210, 584);
             this.pnlStartCard.TabIndex = 0;
             // 
             // btnAddQuestions
@@ -132,9 +132,9 @@
             this.btnAddQuestions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddQuestions.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddQuestions.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.btnAddQuestions.Location = new System.Drawing.Point(216, 357);
+            this.btnAddQuestions.Location = new System.Drawing.Point(216, 422);
             this.btnAddQuestions.Name = "btnAddQuestions";
-            this.btnAddQuestions.Size = new System.Drawing.Size(244, 119);
+            this.btnAddQuestions.Size = new System.Drawing.Size(752, 119);
             this.btnAddQuestions.TabIndex = 4;
             this.btnAddQuestions.Text = "+ Kérdések hozzáadása";
             this.btnAddQuestions.UseVisualStyleBackColor = false;
@@ -161,7 +161,7 @@
             this.txtDescription.Location = new System.Drawing.Point(100, 274);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(418, 54);
+            this.txtDescription.Size = new System.Drawing.Size(926, 54);
             this.txtDescription.TabIndex = 2;
             // 
             // textBox1
@@ -173,7 +173,7 @@
             this.textBox1.Location = new System.Drawing.Point(100, 95);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(418, 54);
+            this.textBox1.Size = new System.Drawing.Size(926, 54);
             this.textBox1.TabIndex = 1;
             // 
             // lblTestName
@@ -192,7 +192,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 829);
+            this.ClientSize = new System.Drawing.Size(1382, 894);
             this.Controls.Add(this.pnlMainContent);
             this.Controls.Add(this.pnlHeader);
             this.MinimumSize = new System.Drawing.Size(900, 900);
@@ -221,7 +221,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label lblTestName;
         private System.Windows.Forms.Button btnAddQuestions;
-        private System.Windows.Forms.Button btnBack;
+        public System.Windows.Forms.Button btnBack;
     }
 }
 

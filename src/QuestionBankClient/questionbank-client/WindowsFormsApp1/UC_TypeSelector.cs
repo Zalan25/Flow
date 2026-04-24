@@ -32,7 +32,10 @@ namespace QuestionBankClient
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-
+            pnlCenter.Controls.Clear();
+            var uc = new UC_Typselector_mid { Dock = DockStyle.Fill };
+            pnlCenter.Controls.Add(uc);
+            
         }
     }
 }
