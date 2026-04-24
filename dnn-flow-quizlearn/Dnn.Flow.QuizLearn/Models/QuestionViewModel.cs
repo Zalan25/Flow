@@ -8,6 +8,18 @@ namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models
     public class QuestionViewModel
     {
 
+        public int SessionId { get; set; }
 
+        public int QuestionId { get; set; }
+
+        public int QuestionNumber { get; set; }
+
+        public int TotalQuestions { get; set; }
+
+        public string QuestionText { get; set; }
+
+        public string LevelName { get; set; }
+
+        public List<AnswerOptionViewModel> Answers { get; set; }
     }
 }

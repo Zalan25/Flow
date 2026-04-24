@@ -273,10 +273,14 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         public ActionResult Question(int sessionId, int questionNumber)
         {
-            ViewBag.SessionId = sessionId;
-            ViewBag.QuestionNumber = questionNumber;
+            var model = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
 
-            return View("Question");
+            if (model == null)
+            {
+                return View("AssessmentResult");
+            }
+
+            return View("Question", model);
         }
     }
 }
