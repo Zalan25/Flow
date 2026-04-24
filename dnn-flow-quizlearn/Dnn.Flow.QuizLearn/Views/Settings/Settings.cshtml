@@ -1,28 +1,10 @@
-﻿@*@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage <Dnn.Flow.QuizLearn.Settings>*@
-@*@using DotNetNuke.Web.Mvc.Helpers*@
-@*<h2 id="dnnSitePanel-BasicSettings" class="dnnFormSectionHead"><a href="" class="dnnSectionExpanded">@Dnn.LocalizeString("BasicSettings")</a></h2>
-    <fieldset>
-        <div class="dnnFormItem">
-            <div class="dnnLabel" style="position: relative;">
-                @Html.LabelFor(m => Model.Setting1, new { @class = "col-md-2 control-label" })
-            </div>
-            @Html.CheckBoxFor(m => Model.Setting1)
-        </div>
-        <div class="dnnFormItem">
-            <div class="dnnLabel" style="position: relative;">
-                @Html.LabelFor(m => Model.Setting2, new { @class = "col-md-2 control-label" })
-            </div>
-            @Html.TextBoxFor(m => Model.Setting2)
-        </div>
-    </fieldset>*@
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewModel>
 
-@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewModel>
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 @using DotNetNuke.Web.Mvc.Helpers
-@using Dnn.Flow.QuizLearn.Models
 
-@using (Html.BeginForm("Settings", "Settings", FormMethod.Post))
+@using (Html.BeginForm())
 {
 @Html.AntiForgeryToken()
 
@@ -40,4 +22,3 @@
     Beállítások mentése
 </button>
 }
-
