@@ -286,6 +286,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 sessionInfo,
                 new List<int>()
             );
+            _assessmentService.GenerateSessionQuestions(
+                ModuleContext.ModuleId,
+                sessionId,
+                languageId
+                );
 
             if (sessionId <= 0)
             {
@@ -354,6 +359,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
             int.TryParse(Request.Form["QuestionId"], out questionId);
             int.TryParse(Request.Form["QuestionNumber"], out questionNumber);
             int.TryParse(Request.Form["QuestionTypeId"], out questionTypeId);
+
+
 
             if (sessionId <= 0 || questionId <= 0)
             {

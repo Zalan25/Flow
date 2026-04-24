@@ -69,7 +69,7 @@ namespace Dnn.Flow.QuizLearn.Services
                 return null;
             }
 
-            var questions = _repository.GetQuestionsForAssessment(session.ModuleId, session.LanguageId).ToList();
+            var questions = _repository.GetSessionQuestions(sessionId).ToList();
 
             if (!questions.Any())
             {
@@ -146,6 +146,12 @@ namespace Dnn.Flow.QuizLearn.Services
             }
 
             _repository.GradeMultipleChoiceAnswer(moduleId, testAttemptAnswerId);
+        }
+
+        //random generálás
+        public void GenerateSessionQuestions(int moduleId, int sessionId, int languageId)
+        {
+            _repository.GenerateSessionQuestions(moduleId, sessionId, languageId);
         }
 
         //public void SaveTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer)

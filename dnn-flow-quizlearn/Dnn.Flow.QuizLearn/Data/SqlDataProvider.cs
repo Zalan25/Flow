@@ -574,6 +574,45 @@ namespace Dnn.Flow.QuizLearn.Data
         }
 
 
+        // Randomizált kérdések generálása egy sessionhöz
+        public void GenerateSessionQuestions(int moduleId, int sessionId, int languageId)
+        {
+            SqlHelper.ExecuteNonQuery(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("AssessmentSessionQuestions_Generate"),
+                new SqlParameter("@ModuleId", moduleId),
+                new SqlParameter("@AssessmentSessionId", sessionId),
+                new SqlParameter("@LanguageId", languageId)
+            );
+        }
+        public IEnumerable<QuestionInfo> GetSessionQuestions(int assessmentSessionId)
+        {
+            var questions = new List<QuestionInfo>();
+
+            using (IDataReader reader = SqlHelper.ExecuteReader(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("AssessmentSessionQuestions_Get"),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId)))
+            {
+                while (reader.Read())
+                {
+                    questions.Add(new QuestionInfo
+                    {
+                        QuestionId = Null.SetNullInteger(reader["QuestionId"]),
+                        QuestionText = Null.SetNullString(reader["QuestionText"]),
+                        QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
+                        QuestionTypeId = Null.SetNullInteger(reader["QuestionTypeId"]),
+                        Points = Null.SetNullInteger(reader["Points"])
+                    });
+                }
+            }
+
+            return questions;
+        }
+
+
         // Kiértékelés
         public IEnumerable<AttemptAnswerSummaryInfo> GetAttemptAnswerSummary(int moduleId, int assessmentSessionId)
         {
