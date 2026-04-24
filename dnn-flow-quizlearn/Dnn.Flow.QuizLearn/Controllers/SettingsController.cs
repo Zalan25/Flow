@@ -60,7 +60,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 ((int)model.Mode).ToString()
             );
 
-            return RedirectToDefaultRoute();
+            TempData["SettingsSaved"] = true;
+
+            return RedirectToAction("Settings");
         }
         /// <summary>
         /// 

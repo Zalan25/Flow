@@ -16,6 +16,14 @@ namespace Dnn.Flow.QuizLearn.Models
         public List<int> SelectedSkillTypeIds { get; set; }
         public QuizLearnMode ModuleMode { get; set; }
 
+        public bool IsRecommendationOnlyMode
+        {
+            get
+            {
+                return ModuleMode == QuizLearnMode.Recommendation;
+            }
+        }
+
         public IEnumerable<LanguageInfo> Languages { get; set; }
         public IEnumerable<QuestionLevelInfo> Levels { get; set; }
         public IEnumerable<SkillTypeInfo> Skills { get; set; }

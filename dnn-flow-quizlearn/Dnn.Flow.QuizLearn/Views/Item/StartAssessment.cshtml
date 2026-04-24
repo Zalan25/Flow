@@ -1,4 +1,5 @@
-﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewmodel>
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
+@using Dnn.Flow.QuizLearn.Models
 
 <div class="quizlearn-assessment-start">
     <h2>Szintfelmérő indítása</h2>
@@ -9,9 +10,9 @@
 
     @if (ViewBag.SessionId != null)
     {
-    <p>
-        Session azonosító: @ViewBag.SessionId
-    </p>
+        <p>
+            Session azonosító: @ViewBag.SessionId
+        </p>
     }
 
     <p>

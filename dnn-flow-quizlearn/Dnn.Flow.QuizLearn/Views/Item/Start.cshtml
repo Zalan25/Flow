@@ -1,5 +1,6 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
 @using DotNetNuke.Web.Mvc.Helpers
+@using Dnn.Flow.QuizLearn.Models
 
 <h2>QuizLearn – Pilot</h2>
 
@@ -22,7 +23,7 @@
             <option value="">-- válassz nyelvet --</option>
             @foreach (var language in Model.Languages)
             {
-            <option value="@language.LanguageId">@language.Name</option>
+                <option value="@language.LanguageId">@language.Name</option>
             }
         </select>
     </div>
@@ -33,7 +34,7 @@
             <option value="">-- nincs --</option>
             @foreach (var language in Model.Languages)
             {
-            <option value="@language.LanguageId">@language.Name</option>
+                <option value="@language.LanguageId">@language.Name</option>
             }
         </select>
     </div>
@@ -42,22 +43,22 @@
 
     <select id="SelectedLevelId" name="SelectedLevelId" class="form-control">
 
-        @if (Model.ModuleMode == (Dnn.Flow.QuizLearn.Models.QuizLearnMode.Recommendation))
-    {
-        <option value="">-- Válassz szintet --</option>
-    }
-    else
-    {
-        <option value="">-- Nem tudom / szintfelmérőt kérek --</option>
-    }
+        @if (Model.IsRecommendationOnlyMode)
+        {
+            <option value="">-- Válassz szintet --</option>
+        }
+        else
+        {
+            <option value="">-- Nem tudom / szintfelmérőt kérek --</option>
+        }
 
         @foreach (var level in Model.Levels)
-    {
-        <option value="@level.LevelId"
-                @(Model.SelectedLevelId == level.LevelId ? "selected" : "")>
-            @level.Name
-        </option>
-    }
+        {
+            <option value="@level.QuestionLevelId"
+                    @(Model.SelectedLevelId == level.QuestionLevelId ? "selected" : "")>
+                @level.LevelName
+            </option>
+        }
 
     </select>
 
@@ -67,7 +68,7 @@
             <option value="">-- válassz tempót --</option>
             @foreach (var pace in Model.PaceTypes)
             {
-            <option value="@pace.PaceTypeId">@pace.PaceName</option>
+                <option value="@pace.PaceTypeId">@pace.PaceName</option>
             }
         </select>
     </div>
@@ -76,10 +77,10 @@
         <label>Készségek</label>
         @foreach (var skill in Model.Skills)
         {
-        <div>
-            <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
-            <span>@skill.SkillName</span>
-        </div>
+            <div>
+                <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
+                <span>@skill.SkillName</span>
+            </div>
         }
     </div>
 

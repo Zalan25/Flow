@@ -176,6 +176,7 @@
     <Content Include="Views\Item\Recommendation.cshtml" />
     <Content Include="Views\Item\Start.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Item\StartAssessment.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
