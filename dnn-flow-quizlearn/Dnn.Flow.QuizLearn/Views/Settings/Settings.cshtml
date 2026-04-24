@@ -1,7 +1,5 @@
-﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage <Dnn.Flow.QuizLearn.Settings>
-
-@using DotNetNuke.Web.Mvc.Helpers
-
+﻿@*@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage <Dnn.Flow.QuizLearn.Settings>*@
+@*@using DotNetNuke.Web.Mvc.Helpers*@
 @*<h2 id="dnnSitePanel-BasicSettings" class="dnnFormSectionHead"><a href="" class="dnnSectionExpanded">@Dnn.LocalizeString("BasicSettings")</a></h2>
     <fieldset>
         <div class="dnnFormItem">
@@ -18,6 +16,11 @@
         </div>
     </fieldset>*@
 
+@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewModel>
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using DotNetNuke.Web.Mvc.Helpers
+@using Dnn.Flow.QuizLearn.Models
 
 @using (Html.BeginForm("Settings", "Settings", FormMethod.Post))
 {
