@@ -17,11 +17,14 @@ namespace QuestionBankClient
             InitializeComponent();
         }
         private int qCount = 0;
+        // Form1.cs-be a qCount mellé:
+        public Quiz ActiveQuiz = new Quiz();
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
+        
 
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -62,5 +65,6 @@ namespace QuestionBankClient
         {
 
         }
+        
     }
 }
