@@ -31,8 +31,13 @@ namespace QuestionBankClient
         private void btnAddAns_Click(object sender, EventArgs e)
         {
             var parent = (Form1)this.ParentForm;
-            parent.AddCorrectAnswer(txtCorrectAnswer.Text);
+            
             txtCorrectAnswer.Clear();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

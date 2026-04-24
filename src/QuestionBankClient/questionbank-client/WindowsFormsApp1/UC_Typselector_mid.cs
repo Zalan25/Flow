@@ -19,7 +19,15 @@ namespace QuestionBankClient
 
         private void btnShort_Click(object sender, EventArgs e)
         {
+            // Megkeressük a panelt név alapján bárhol a szülő formon belül
+            var panel = this.ParentForm.Controls.Find("pnlright", true).FirstOrDefault() as Panel;
 
+            if (panel != null)
+            {
+                panel.Controls.Clear();
+                UC_Shortans_settings mid = new UC_Shortans_settings { Dock = DockStyle.Fill };
+                panel.Controls.Add(mid);
+            }
         }
 
         private void btnLong_Click(object sender, EventArgs e)

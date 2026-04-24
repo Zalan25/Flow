@@ -44,7 +44,8 @@
             this.flowLayoutPanel2.AutoSize = true;
             this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(59, 10);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(30, 5);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(0, 0);
             this.flowLayoutPanel2.TabIndex = 17;
@@ -60,17 +61,19 @@
             this.panel1.Controls.Add(this.btnDrop);
             this.panel1.Controls.Add(this.btnTF);
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(854, 767);
+            this.panel1.Size = new System.Drawing.Size(428, 399);
             this.panel1.TabIndex = 0;
             // 
             // btnShort
             // 
             this.btnShort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnShort.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnShort.Location = new System.Drawing.Point(325, 117);
+            this.btnShort.Location = new System.Drawing.Point(30, 61);
+            this.btnShort.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnShort.Name = "btnShort";
-            this.btnShort.Size = new System.Drawing.Size(205, 84);
+            this.btnShort.Size = new System.Drawing.Size(362, 44);
             this.btnShort.TabIndex = 11;
             this.btnShort.Text = "Rövid válasz";
             this.btnShort.UseVisualStyleBackColor = true;
@@ -80,9 +83,10 @@
             // 
             this.btnLong.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLong.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLong.Location = new System.Drawing.Point(325, 222);
+            this.btnLong.Location = new System.Drawing.Point(30, 115);
+            this.btnLong.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnLong.Name = "btnLong";
-            this.btnLong.Size = new System.Drawing.Size(205, 84);
+            this.btnLong.Size = new System.Drawing.Size(362, 44);
             this.btnLong.TabIndex = 12;
             this.btnLong.Text = "Hosszú válasz";
             this.btnLong.UseVisualStyleBackColor = true;
@@ -92,9 +96,10 @@
             // 
             this.btnMulti.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMulti.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMulti.Location = new System.Drawing.Point(325, 340);
+            this.btnMulti.Location = new System.Drawing.Point(30, 177);
+            this.btnMulti.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnMulti.Name = "btnMulti";
-            this.btnMulti.Size = new System.Drawing.Size(205, 84);
+            this.btnMulti.Size = new System.Drawing.Size(362, 44);
             this.btnMulti.TabIndex = 13;
             this.btnMulti.Text = "Feleletválasztós";
             this.btnMulti.UseVisualStyleBackColor = true;
@@ -103,9 +108,10 @@
             // 
             this.btnDrop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDrop.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnDrop.Location = new System.Drawing.Point(325, 452);
+            this.btnDrop.Location = new System.Drawing.Point(30, 235);
+            this.btnDrop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnDrop.Name = "btnDrop";
-            this.btnDrop.Size = new System.Drawing.Size(205, 84);
+            this.btnDrop.Size = new System.Drawing.Size(362, 44);
             this.btnDrop.TabIndex = 14;
             this.btnDrop.Text = "Legördülő lista";
             this.btnDrop.UseVisualStyleBackColor = true;
@@ -114,22 +120,24 @@
             // 
             this.btnTF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTF.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnTF.Location = new System.Drawing.Point(325, 561);
+            this.btnTF.Location = new System.Drawing.Point(30, 292);
+            this.btnTF.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnTF.Name = "btnTF";
-            this.btnTF.Size = new System.Drawing.Size(205, 84);
+            this.btnTF.Size = new System.Drawing.Size(362, 44);
             this.btnTF.TabIndex = 15;
             this.btnTF.Text = "Igaz-Hamis";
             this.btnTF.UseVisualStyleBackColor = true;
             // 
             // UC_Typselector_mid
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.flowLayoutPanel2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "UC_Typselector_mid";
-            this.Size = new System.Drawing.Size(857, 770);
+            this.Size = new System.Drawing.Size(428, 400);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

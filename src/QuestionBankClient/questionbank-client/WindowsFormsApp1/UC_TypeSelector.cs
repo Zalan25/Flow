@@ -37,5 +37,17 @@ namespace QuestionBankClient
             pnlCenter.Controls.Add(uc);
             
         }
+
+        private void btnShort_Click(object sender, EventArgs e)
+        {
+            pnlright.Controls.Clear();
+            UC_Typselector_mid mid = new UC_Typselector_mid { Dock = DockStyle.Fill };
+            pnlright.Controls.Add(mid);
+        }
+
+        private void UC_TypeSelector_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
