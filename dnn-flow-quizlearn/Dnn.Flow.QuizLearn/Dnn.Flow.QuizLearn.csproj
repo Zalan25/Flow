@@ -109,6 +109,7 @@
     <Compile Include="Data\IQuizLearnDataRepository.cs" />
     <Compile Include="Data\SqlDataProvider.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Models\AnswerInfo.cs" />
     <Compile Include="Models\AnswerOptionViewModel.cs" />
     <Compile Include="Models\AssessmentModeInfo.cs" />
     <Compile Include="Models\QuestionInfo.cs" />
