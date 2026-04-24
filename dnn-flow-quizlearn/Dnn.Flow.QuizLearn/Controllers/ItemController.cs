@@ -238,12 +238,15 @@ namespace Dnn.Flow.QuizLearn.Controllers
         {
             int sessionId = 0;
 
-            // 1. Csak akkor használunk meglévő SessionId-t, ha tényleg létezik az adatbázisban
             if (int.TryParse(Request.Form["SessionId"], out sessionId) && sessionId > 0)
             {
                 var existingSession = _assessmentService.GetAssessmentSessionById(sessionId);
 
-                if (existingSession != null)
+                if (existingSession == null)
+                {
+                    sessionId = 0;
+                }
+                else
                 {
                     _assessmentService.StartTestAttempt(
                         ModuleContext.ModuleId,
@@ -257,12 +260,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
                         questionNumber = 1
                     });
                 }
-
-                // Ha a hidden SessionId régi / hibás / nem létező, eldobjuk
-                sessionId = 0;
             }
 
-            // 2. Ha nincs érvényes session, akkor nyelv alapján újat hozunk létre
             int languageId = 0;
 
             if (!int.TryParse(Request.Form["LanguageId"], out languageId) || languageId <= 0)
@@ -297,7 +296,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("StartAssessment", fresh);
             }
 
-            // 3. Csak a sikeresen létrejött session után indítunk test attemptet
             _assessmentService.StartTestAttempt(
                 ModuleContext.ModuleId,
                 sessionId,
