@@ -51,6 +51,7 @@ namespace Dnn.Flow.QuizLearn.Data
         int StartTestAttempt(int moduleId, int assessmentSessionId, int testId);
         int AddTestAttemptAnswer(int moduleId, int assessmentSessionId, int questionId, int answerId);
         IEnumerable<AttemptAnswerSummaryInfo> GetAttemptAnswerSummary(int moduleId, int assessmentSessionId);
+        void AddTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer);
 
 
     }

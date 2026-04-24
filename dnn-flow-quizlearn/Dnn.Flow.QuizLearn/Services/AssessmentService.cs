@@ -37,31 +37,27 @@ namespace Dnn.Flow.QuizLearn.Services
 
         public int? DetermineFinalLevel(int a1CorrectCount, int a2CorrectCount, int b1CorrectCount, int b2CorrectCount, int c1CorrectCount)
         {
-            if (a1CorrectCount < 3)
+            if (c1CorrectCount >= 3 && b2CorrectCount >= 3 && b1CorrectCount >= 3)
             {
-                return 1; // A1
+                return 5; // C1
             }
 
-            if (a2CorrectCount < 3)
+            if (b2CorrectCount >= 3 && b1CorrectCount >= 3)
             {
-                return 2; // A2
+                return 4; // B2
             }
-
-            if (b1CorrectCount < 3)
+            
+            if (b1CorrectCount >= 3)
             {
                 return 3; // B1
             }
 
-            if (b2CorrectCount < 3)
+            if (a2CorrectCount >= 3)
             {
-                return 4; // B2
+                return 2; // A2
             }
 
-            if (c1CorrectCount < 3)
-            {
-                return 4; // C1
-            }
-            return 5;
+            return 1; // A1
         }
 
         public QuestionViewModel GetQuestionForAssessment(int sessionId, int questionNumber)
@@ -99,6 +95,7 @@ namespace Dnn.Flow.QuizLearn.Services
             {
                 SessionId = sessionId,
                 QuestionId = question.QuestionId,
+                QuestionTypeId = question.QuestionTypeId,
                 QuestionNumber = questionNumber,
                 TotalQuestions = questions.Count,
                 QuestionText = question.QuestionText,
@@ -106,6 +103,12 @@ namespace Dnn.Flow.QuizLearn.Services
                 Answers = answers
             };
         }
+
+        public void SaveTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer)
+        {
+            _repository.AddTextAnswer(moduleId, sessionId, questionId, textAnswer);
+        }
+
         public AssessmentSessionInfo GetAssessmentSessionById(int sessionId)
         {
             return _repository.GetAssessmentSessionById(sessionId);

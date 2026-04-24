@@ -506,6 +506,19 @@ namespace Dnn.Flow.QuizLearn.Data
             return Convert.ToInt32(result);
         }
 
+        public void AddTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer)
+        {
+            SqlHelper.ExecuteNonQuery(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttemptTextAnswers_Add"),
+                new SqlParameter("@ModuleId", moduleId),
+                new SqlParameter("@AssessmentSessionId", sessionId),
+                new SqlParameter("@QuestionId", questionId),
+                new SqlParameter("@TextAnswer", textAnswer)
+            );
+        }
+
 
         // Kiértékelés
         public IEnumerable<AttemptAnswerSummaryInfo> GetAttemptAnswerSummary(int moduleId, int assessmentSessionId)

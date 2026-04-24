@@ -348,27 +348,88 @@ namespace Dnn.Flow.QuizLearn.Controllers
             int sessionId = 0;
             int questionId = 0;
             int questionNumber = 1;
-            int answerId = 0;
+            int questionTypeId = 1;
 
-            if (!int.TryParse(Request.Form["SessionId"], out sessionId) ||
-                !int.TryParse(Request.Form["QuestionId"], out questionId) ||
-                !int.TryParse(Request.Form["QuestionNumber"], out questionNumber) ||
-                !int.TryParse(Request.Form["AnswerId"], out answerId))
+            int.TryParse(Request.Form["SessionId"], out sessionId);
+            int.TryParse(Request.Form["QuestionId"], out questionId);
+            int.TryParse(Request.Form["QuestionNumber"], out questionNumber);
+            int.TryParse(Request.Form["QuestionTypeId"], out questionTypeId);
+
+            if (sessionId <= 0 || questionId <= 0)
             {
-                var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
-
-                ModelState.AddModelError("", "Kérlek, válassz egy választ.");
-
-                return View("Question", currentModel);
+                return View("StartAssessment", BuildStartViewModel(GetModuleMode()));
             }
 
-            _assessmentService.SaveAnswer(
-                ModuleContext.ModuleId,
-                sessionId,
-                questionId,
-                answerId
-            );
+            // ====== SINGLE / TRUE FALSE ======
+            if (questionTypeId == (int)QuestionType.SingleChoice ||
+                questionTypeId == (int)QuestionType.TrueFalse)
+            {
+                int answerId;
 
+                if (!int.TryParse(Request.Form["AnswerId"], out answerId))
+                {
+                    var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+                    ModelState.AddModelError("", "Kérlek válassz egy választ.");
+                    return View("Question", currentModel);
+                }
+
+                _assessmentService.SaveAnswer(
+                    ModuleContext.ModuleId,
+                    sessionId,
+                    questionId,
+                    answerId
+                );
+            }
+
+            // ====== MULTIPLE CHOICE ======
+            else if (questionTypeId == (int)QuestionType.MultipleChoice)
+            {
+                var selectedAnswers = Request.Form.GetValues("SelectedAnswerIds");
+
+                if (selectedAnswers == null || selectedAnswers.Length == 0)
+                {
+                    var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+                    ModelState.AddModelError("", "Válassz legalább egy opciót.");
+                    return View("Question", currentModel);
+                }
+
+                foreach (var ans in selectedAnswers)
+                {
+                    int answerId;
+                    if (int.TryParse(ans, out answerId))
+                    {
+                        _assessmentService.SaveAnswer(
+                            ModuleContext.ModuleId,
+                            sessionId,
+                            questionId,
+                            answerId
+                        );
+                    }
+                }
+            }
+
+            // ====== TEXT / TRANSLATION ======
+            else
+            {
+                var textAnswer = Request.Form["TextAnswer"];
+
+                if (string.IsNullOrWhiteSpace(textAnswer))
+                {
+                    var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+                    ModelState.AddModelError("", "Írj be választ.");
+                    return View("Question", currentModel);
+                }
+
+                // DEMÓ: félautomata pontozás (kulcsszó alapú)
+                _assessmentService.SaveTextAnswer(
+                    ModuleContext.ModuleId,
+                    sessionId,
+                    questionId,
+                    textAnswer
+                );
+            }
+
+            // ====== KÖVETKEZŐ KÉRDÉS ======
             var nextQuestionNumber = questionNumber + 1;
 
             var nextModel = _assessmentService.GetQuestionForAssessment(

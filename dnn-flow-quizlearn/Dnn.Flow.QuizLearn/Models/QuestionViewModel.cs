@@ -22,5 +22,24 @@ namespace Dnn.Flow.QuizLearn.Models
 
         public List<AnswerOptionViewModel> Answers { get; set; }
 
+        public int QuestionTypeId { get; set; }
+
+        public bool AllowsMultipleAnswers
+        {
+            get
+            {
+                return QuestionTypeId == (int)QuestionType.MultipleChoice;
+            }
+        }
+
+        public bool RequiresTextAnswer
+        {
+            get
+            {
+                return QuestionTypeId == (int)QuestionType.TextAnswer
+                    || QuestionTypeId == (int)QuestionType.Translation;
+            }
+        }
+
     }
 }

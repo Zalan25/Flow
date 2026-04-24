@@ -1,14 +1,23 @@
-﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.QuestionViewModel>
-@using System.Web.Mvc
-@using System.Web.Mvc.Html
-@using DotNetNuke.Web.Mvc.Helpers
-
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentQuestionViewModel>
 
 <div class="quizlearn-question">
 
     <h2>Kérdés @Model.QuestionNumber / @Model.TotalQuestions</h2>
 
-    <p>@Model.QuestionText</p>
+    <p><strong>@Model.QuestionText</strong></p>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+    <div class="alert alert-danger">
+        @foreach (var state in ViewData.ModelState.Values)
+            {
+                foreach (var error in state.Errors)
+                {
+        <div>@error.ErrorMessage</div>
+                }
+            }
+    </div>
+    }
 
     <form method="post">
         @Html.AntiForgeryToken()
@@ -17,21 +26,50 @@
         <input type="hidden" name="SessionId" value="@Model.SessionId" />
         <input type="hidden" name="QuestionId" value="@Model.QuestionId" />
         <input type="hidden" name="QuestionNumber" value="@Model.QuestionNumber" />
+        <input type="hidden" name="QuestionTypeId" value="@Model.QuestionTypeId" />
 
-        @foreach (var answer in Model.Answers)
+        @if (Model.RequiresTextAnswer)
         {
-            <div>
-                <label>
-                    <input type="radio"
-                           name="AnswerId"
-                           value="@answer.AnswerId" />
-                    @answer.AnswerText
-                </label>
-            </div>
+        <div class="form-group">
+            <label for="TextAnswer">Válaszod:</label>
+            <textarea id="TextAnswer"
+                      name="TextAnswer"
+                      class="form-control"
+                      rows="4"></textarea>
+        </div>
+        }
+        else if (Model.AllowsMultipleAnswers)
+        {
+            foreach (var answer in Model.Answers)
+            {
+        <div>
+            <label>
+                <input type="checkbox"
+                       name="SelectedAnswerIds"
+                       value="@answer.AnswerId" />
+                @answer.AnswerText
+            </label>
+        </div>
+            }
+        }
+        else
+        {
+            foreach (var answer in Model.Answers)
+            {
+        <div>
+            <label>
+                <input type="radio"
+                       name="AnswerId"
+                       value="@answer.AnswerId" />
+                @answer.AnswerText
+            </label>
+        </div>
+            }
         }
 
         <button type="submit" class="btn btn-primary">
             Tovább
         </button>
     </form>
+
 </div>
