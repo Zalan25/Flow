@@ -111,6 +111,7 @@
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Models\AnswerOptionViewModel.cs" />
     <Compile Include="Models\AssessmentModeInfo.cs" />
+    <Compile Include="Models\QuestionInfo.cs" />
     <Compile Include="Models\QuestionViewModel.cs" />
     <Compile Include="Models\AssessmentSessionInfo.cs" />
     <Compile Include="Models\AssessmentStartViewModel.cs" />
