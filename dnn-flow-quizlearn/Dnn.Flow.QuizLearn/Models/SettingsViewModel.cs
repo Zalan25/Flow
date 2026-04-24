@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+//using System.Web.WebPages.Html;
 using Dnn.Flow.QuizLearn.Models;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
@@ -11,23 +12,23 @@ namespace Dnn.Flow.QuizLearn.Models
     {
         public QuizLearnMode Mode { get; set; }
 
-        public IEnumerable<SelectedListItem> AvailableModes
+        public IEnumerable<SelectListItem> AvailableModes
         {
             get
             {
-                return new List<SelectedListItem>
+                return new List<SelectListItem>
                 {
-                    new SelectedListItem
+                    new SelectListItem
                     {
                         Value = ((int)QuizLearnMode.Recommendation).ToString(),
                         Text = "Csak termék ajánló"
                     },
-                    new SelectedListItem
+                    new SelectListItem
                     {
                         Value = ((int)QuizLearnMode.LevelAssessment).ToString(),
                         Text = "Csak szintfelmérő"
                     },
-                    new SelectedListItem
+                    new SelectListItem
                     {
                         Value = ((int)QuizLearnMode.RecommendationWithLevelAssessment).ToString(),
                         Text = "Termék ajánló szintfelmérővel"

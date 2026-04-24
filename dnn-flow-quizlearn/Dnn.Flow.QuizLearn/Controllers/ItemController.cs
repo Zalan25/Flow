@@ -38,7 +38,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return StartAssessment();
 
                 case QuizLearnMode.Recommendation:
-                case QuizLearnMode.RecommendationWithAssessment:
+                case QuizLearnMode.RecommendationWithLevelAssessment:
                 default:
                     return Start();
             }
@@ -108,7 +108,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             var needLevelTest =
                 moduleMode == QuizLearnMode.LevelAssessment ||
-                (moduleMode == QuizLearnMode.RecommendationWithAssessment && !model.SelectedLevelId.HasValue);
+                (moduleMode == QuizLearnMode.RecommendationWithLevelAssessment && !model.SelectedLevelId.HasValue);
 
             var sessionInfo = new AssessmentSessionInfo
             {
@@ -116,7 +116,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 AssessmentModeId = model.AssessmentModeId,
                 LanguageId = model.LanguageId,
                 SecondaryLanguageId = model.SecondaryLanguageId,
-                SelectedLevelId = model.SelectedLevelId,
+                SelectedLevelId = model.SelectedLevelId ?? 1,
                 PaceTypeId = model.PaceTypeId ?? 1,
                 UserId = null,
                 NeedLevelTest = needLevelTest,
@@ -167,7 +167,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             }
 
             return result
-                .GroupBy(x => x.RuleId)
+                .GroupBy(x => x.RecommendationRuleId)
                 .Select(g => g.First())
                 .ToList();
         }
@@ -193,12 +193,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (!int.TryParse(modeValue, out parsedMode))
             {
-                return QuizLearnMode.RecommendationWithAssessment;
+                return QuizLearnMode.RecommendationWithLevelAssessment;
             }
 
             if (!Enum.IsDefined(typeof(QuizLearnMode), parsedMode))
             {
-                return QuizLearnMode.RecommendationWithAssessment;
+                return QuizLearnMode.RecommendationWithLevelAssessment;
             }
 
             return (QuizLearnMode)parsedMode;
