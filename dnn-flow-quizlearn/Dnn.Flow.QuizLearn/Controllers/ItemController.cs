@@ -41,7 +41,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 case QuizLearnMode.Recommendation:
                 case QuizLearnMode.RecommendationWithLevelAssessment:
                 default:
-                    return View("Start", BuildStartViewModel(mode);
+                    return View("Start", BuildStartViewModel(mode));
             }
         }
 
@@ -89,7 +89,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     ?.Select(x => int.TryParse(x, out int sid) ? sid : 0)
                     .Where(x => x > 0)
                     .Distinct()
-                    .ToList() ?? new List<int>()
+                    .ToList() ?? new List<int>(),
 
                 ModuleMode = moduleMode
             };
