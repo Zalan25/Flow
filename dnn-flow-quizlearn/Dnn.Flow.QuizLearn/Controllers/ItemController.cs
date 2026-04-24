@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
@@ -25,22 +26,22 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         public ActionResult Index()
         {
+            var mode = GetModuleMode();
             if (Request.HttpMethod == "POST")
             {
-                return HandleStartPost();
+                return HandleStartPost(mode);
             }
 
-            var mode = GetModuleMode();
 
             switch (mode)
             {
                 case QuizLearnMode.LevelAssessment:
-                    return StartAssessment();
+                    return View("StartAssessment");
 
                 case QuizLearnMode.Recommendation:
                 case QuizLearnMode.RecommendationWithLevelAssessment:
                 default:
-                    return Start();
+                    return View("Start", BuildStartViewModel(mode);
             }
         }
 
@@ -56,7 +57,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return View("StartAssessment");
         }
 
-        private ActionResult HandleStartPost()
+        private ActionResult HandleStartPost(QuizLearnMode moduleMode)
         {
             var moduleMode = GetModuleMode();
 
@@ -89,6 +90,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     .Where(x => x > 0)
                     .Distinct()
                     .ToList() ?? new List<int>()
+
+                ModuleMode = moduleMode
             };
 
             if (model.LanguageId <= 0)
@@ -132,6 +135,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
             {
                 ViewBag.SessionId = sessionId;
                 ViewBag.LanguageId = model.LanguageId;
+                ViewBag.SecondaryLanguageId = model.SecondaryLanguageId;
+                ViewBag.PaceTypeId = model.PaceTypeId;
                 ViewBag.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
 
                 return View("StartAssessment");
@@ -172,7 +177,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 .ToList();
         }
 
-        private AssessmentStartViewModel BuildStartViewModel()
+        private AssessmentStartViewModel BuildStartViewModel(QuizLearnMode mode)
         {
             return new AssessmentStartViewModel
             {
@@ -181,7 +186,8 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 Levels = _lookupService.GetLevels(),
                 Skills = _lookupService.GetSkills(),
                 PaceTypes = _lookupService.GetPaceTypes(),
-                SelectedSkillTypeIds = new List<int>()
+                SelectedSkillTypeIds = new List<int>(),
+                ModuleMode = mode
             };
         }
 

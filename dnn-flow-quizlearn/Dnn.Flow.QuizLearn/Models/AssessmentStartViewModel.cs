@@ -14,6 +14,7 @@ namespace Dnn.Flow.QuizLearn.Models
         public int? PaceTypeId { get; set; }
         public bool NeedLevelTest { get; set; }
         public List<int> SelectedSkillTypeIds { get; set; }
+        public QuizLearnMode ModuleMode { get; set; }
 
         public IEnumerable<LanguageInfo> Languages { get; set; }
         public IEnumerable<QuestionLevelInfo> Levels { get; set; }
