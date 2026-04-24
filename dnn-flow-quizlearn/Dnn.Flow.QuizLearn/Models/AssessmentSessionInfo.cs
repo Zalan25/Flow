@@ -5,6 +5,7 @@ namespace Dnn.Flow.QuizLearn.Models
     {
         public int ModuleId { get; set; }
         public int AssessmentModeId { get; set; }
+        public int AssessmentSessionId { get; set; }
         public int LanguageId { get; set; }
 
         public int? SecondaryLanguageId { get; set; }  

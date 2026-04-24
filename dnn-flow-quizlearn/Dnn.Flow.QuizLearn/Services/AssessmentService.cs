@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Dnn.Flow.QuizLearn.Data;
 using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services.Interfaces;
@@ -62,7 +63,7 @@ namespace Dnn.Flow.QuizLearn.Services
             return 5;
         }
 
-        public AssessmentQuestionViewModel GetQuestionForAssessment(int sessionId, int questionNumber)
+        public QuestionViewModel GetQuestionForAssessment(int sessionId, int questionNumber)
         {
             var session = _repository.GetAssessmentSessionById(sessionId);
 
@@ -71,8 +72,7 @@ namespace Dnn.Flow.QuizLearn.Services
                 return null;
             }
 
-            var questions = _repository.GetQuestionsForAssessment(session.ModuleId, session.LanguageId)
-                .ToList();
+            var questions = _repository.GetQuestionsForAssessment(session.ModuleId, session.LanguageId).ToList();
 
             if (!questions.Any())
             {
@@ -94,7 +94,7 @@ namespace Dnn.Flow.QuizLearn.Services
                 })
                 .ToList();
 
-            return new AssessmentQuestionViewModel
+            return new QuestionViewModel
             {
                 SessionId = sessionId,
                 QuestionId = question.QuestionId,

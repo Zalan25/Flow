@@ -12,6 +12,7 @@ namespace Dnn.Flow.QuizLearn.Data
         IEnumerable<PaceTypeInfo> GetAllPaceTypes();
         AssessmentModeInfo GetAssessmentModeByKey(string modeKey);
 
+
         // Sessions
         int AddAssessmentSession(AssessmentSessionInfo sessionInfo);
         int AddAssessmentSessionSkill(int moduleId, int assessmentSessionId, int skillTypeId);
@@ -46,9 +47,9 @@ namespace Dnn.Flow.QuizLearn.Data
         // Szintfelmérő kérdések
         AssessmentSessionInfo GetAssessmentSessionById(int assessmentSessionId);
 
-        IEnumerable<QuestionInfo> GetQuestionsForAssessment(int languageId);
+        IEnumerable<QuestionInfo> GetQuestionsForAssessment(int moduleId,int languageId);
 
-        IEnumerable<AnswerInfo> GetAnswersByQuestionId(int questionId)
+        IEnumerable<AnswerInfo> GetAnswersByQuestionId(int moduleId,int questionId);
 
     }
 }

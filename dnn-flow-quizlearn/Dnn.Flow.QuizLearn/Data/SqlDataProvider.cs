@@ -1,5 +1,4 @@
 ﻿using Dnn.Flow.QuizLearn.Models;
-using Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Framework.Providers;
 using Microsoft.ApplicationBlocks.Data;
@@ -407,9 +406,9 @@ namespace Dnn.Flow.QuizLearn.Data
                         ModuleId = Null.SetNullInteger(reader["ModuleId"]),
                         AssessmentModeId = Null.SetNullInteger(reader["AssessmentModeId"]),
                         LanguageId = Null.SetNullInteger(reader["LanguageId"]),
-                        SecondaryLanguageId = reader["SecondaryLanguageId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["SecondaryLanguageId"]),
-                        SelectedLevelId = reader["SelectedLevelId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["SelectedLevelId"]),
-                        PaceTypeId = reader["PaceTypeId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["PaceTypeId"]),
+                        SecondaryLanguageId = Null.SetNullInteger(reader["SecondaryLanguageId"]),
+                        SelectedLevelId = Null.SetNullInteger(reader["SelectedLevelId"]),
+                        PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
                         UserId = reader["UserId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["UserId"]),
                         NeedLevelTest = Null.SetNullBoolean(reader["NeedLevelTest"]),
                         Status = Null.SetNullString(reader["Status"])
@@ -428,8 +427,8 @@ namespace Dnn.Flow.QuizLearn.Data
                 _connectionString,
                 CommandType.StoredProcedure,
                 GetFullyQualifiedName("Questions_GetForAssessment"),
-                moduleId,
-                languageId))
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@LanguageId", languageId)))
             {
                 while (reader.Read())
                 {
@@ -459,8 +458,8 @@ namespace Dnn.Flow.QuizLearn.Data
                 _connectionString,
                 CommandType.StoredProcedure,
                 GetFullyQualifiedName("Answers_GetByQuestionId"),
-                moduleId,
-                questionId))
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@QuestionId", questionId)))
             {
                 while (reader.Read())
                 {
