@@ -1,0 +1,21 @@
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
+@using Dnn.Flow.QuizLearn.Models
+
+<div class="quizlearn-assessment-start">
+    <h2>Szintfelmérő indítása</h2>
+
+    <p>
+        A rendszer szintfelmérő módba lépett.
+    </p>
+
+    @if (ViewBag.SessionId != null)
+    {
+        <p>
+            Session azonosító: @ViewBag.SessionId
+        </p>
+    }
+
+    <p>
+        Következő lépésként ide kerülnek majd a szintfelmérő kérdések.
+    </p>
+</div>

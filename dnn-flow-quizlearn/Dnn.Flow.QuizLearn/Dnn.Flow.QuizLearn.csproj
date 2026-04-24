@@ -14,7 +14,7 @@
     <RootNamespace>Dnn.QuizLearn.Dnn.Flow.QuizLearn</RootNamespace>
     <AssemblyName>Dnn.Flow.QuizLearn</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -116,10 +116,12 @@
     <Compile Include="Models\LanguageInfo.cs" />
     <Compile Include="Models\PaceTypeInfo.cs" />
     <Compile Include="Models\QuestionLevelInfo.cs" />
+    <Compile Include="Models\QuizLearnMode.cs" />
     <Compile Include="Models\RecommendationResultInfo.cs" />
     <Compile Include="Models\RecommendationResultItemInfo.cs" />
     <Compile Include="Models\RecommendationRuleInfo.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\SettingsViewModel.cs" />
     <Compile Include="Models\SkillTypeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AssessmentService.cs" />
@@ -174,6 +176,7 @@
     <Content Include="Views\Item\Recommendation.cshtml" />
     <Content Include="Views\Item\Start.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Item\StartAssessment.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

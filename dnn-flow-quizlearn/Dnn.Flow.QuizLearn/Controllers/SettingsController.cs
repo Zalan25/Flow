@@ -15,6 +15,12 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
 using System.Web.Mvc;
+using System;
+using System.Collections.Generic;
+using Dnn.Flow.QuizLearn.Models;
+using DotNetNuke.Entities.Modules;
+using ValidateAntiForgeryTokenAttribute = DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryTokenAttribute;
+
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
@@ -22,34 +28,70 @@ namespace Dnn.Flow.QuizLearn.Controllers
     [DnnHandleError]
     public class SettingsController : DnnController
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
+
         public ActionResult Settings()
         {
-            var settings = new Models.Settings();
-            settings.Setting1 = ModuleContext.Configuration.ModuleSettings.GetValueOrDefault("Dnn.Flow.QuizLearn_Setting1", false);
-            settings.Setting2 = ModuleContext.Configuration.ModuleSettings.GetValueOrDefault("Dnn.Flow.QuizLearn_Setting2", System.DateTime.Now);
+            var modeValue = ModuleContext.Configuration.ModuleSettings["QuizLearnMode"] as string;
 
-            return View(settings);
+            QuizLearnMode mode;
+
+            if (!Enum.TryParse(modeValue, out mode))
+            {
+                mode = QuizLearnMode.RecommendationWithLevelAssessment;
+            }
+
+            var model = new SettingsViewModel
+            {
+                Mode = mode
+            };
+
+            return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Settings(SettingsViewModel model)
+        {
+            var moduleController = new ModuleController();
+
+            moduleController.UpdateModuleSetting(
+                ModuleContext.ModuleId,
+                "QuizLearnMode",
+                ((int)model.Mode).ToString()
+            );
+
+            TempData["SettingsSaved"] = true;
+
+            return RedirectToAction("Settings");
+        }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="supportsTokens"></param>
         /// <returns></returns>
-        [HttpPost]
-        [ValidateInput(false)]
-        [DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryToken]
-        public ActionResult Settings(Models.Settings settings)
-        {
-            ModuleContext.Configuration.ModuleSettings["Dnn.Flow.QuizLearn_Setting1"] = settings.Setting1.ToString();
-            ModuleContext.Configuration.ModuleSettings["Dnn.Flow.QuizLearn_Setting2"] = settings.Setting2.ToUniversalTime().ToString("u");
+        //[HttpGet]
+        //public ActionResult Settings()
+        //{
+        //    var settings = new Models.Settings();
+        //    settings.Setting1 = ModuleContext.Configuration.ModuleSettings.GetValueOrDefault("Dnn.Flow.QuizLearn_Setting1", false);
+        //    settings.Setting2 = ModuleContext.Configuration.ModuleSettings.GetValueOrDefault("Dnn.Flow.QuizLearn_Setting2", System.DateTime.Now);
 
-            return RedirectToDefaultRoute();
-        }
+        //    return View(settings);
+        //}
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="supportsTokens"></param>
+        ///// <returns></returns>
+        //[HttpPost]
+        //[ValidateInput(false)]
+        //[DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryToken]
+        //public ActionResult Settings(Models.Settings settings)
+        //{
+        //    ModuleContext.Configuration.ModuleSettings["Dnn.Flow.QuizLearn_Setting1"] = settings.Setting1.ToString();
+        //    ModuleContext.Configuration.ModuleSettings["Dnn.Flow.QuizLearn_Setting2"] = settings.Setting2.ToUniversalTime().ToString("u");
+
+        //    return RedirectToDefaultRoute();
+        //}
     }
 }

@@ -1,20 +1,18 @@
-﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage <Dnn.Flow.QuizLearn.Settings>
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewModel>
 
-@using DotNetNuke.Web.Mvc.Helpers
+<div class="form-group">
+    <label for="Mode">Modul működési módja</label>
 
-<h2 id="dnnSitePanel-BasicSettings" class="dnnFormSectionHead"><a href="" class="dnnSectionExpanded">@Dnn.LocalizeString("BasicSettings")</a></h2>
-<fieldset>
-    <div class="dnnFormItem">
-        <div class="dnnLabel" style="position: relative;">
-            @Html.LabelFor(m => Model.Setting1, new { @class = "col-md-2 control-label" })
-        </div>
-        @Html.CheckBoxFor(m => Model.Setting1)
-    </div>
-    <div class="dnnFormItem">
-        <div class="dnnLabel" style="position: relative;">
-            @Html.LabelFor(m => Model.Setting2, new { @class = "col-md-2 control-label" })
-        </div>
-        @Html.TextBoxFor(m => Model.Setting2)
-    </div>
-</fieldset>
+    <select id="Mode" name="Mode" class="form-control">
+        @foreach (var item in Model.AvailableModes)
+        {
+            <option value="@item.Value" @(item.Value == ((int)Model.Mode).ToString() ? "selected" : "")>
+                @item.Text
+            </option>
+        }
+    </select>
+</div>
 
+<div class="alert alert-info">
+    Válaszd ki a működési módot, majd alul kattints a DNN Update gombra.
+</div>

@@ -1,5 +1,6 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
 @using DotNetNuke.Web.Mvc.Helpers
+@using Dnn.Flow.QuizLearn.Models
 
 <h2>QuizLearn – Pilot</h2>
 
@@ -38,16 +39,28 @@
         </select>
     </div>
 
-    <div>
-        <label>Szint</label>
-        <select name="SelectedLevelId">
-            <option value="">-- válassz szintet --</option>
-            @foreach (var level in Model.Levels)
-            {
-                <option value="@level.QuestionLevelId">@level.LevelName</option>
-            }
-        </select>
-    </div>
+    <label for="SelectedLevelId">Milyen szinten vagy most?</label>
+
+    <select id="SelectedLevelId" name="SelectedLevelId" class="form-control">
+
+        @if (Model.IsRecommendationOnlyMode)
+        {
+            <option value="">-- Válassz szintet --</option>
+        }
+        else
+        {
+            <option value="">-- Nem tudom / szintfelmérőt kérek --</option>
+        }
+
+        @foreach (var level in Model.Levels)
+        {
+            <option value="@level.QuestionLevelId"
+                    @(Model.SelectedLevelId == level.QuestionLevelId ? "selected" : "")>
+                @level.LevelName
+            </option>
+        }
+
+    </select>
 
     <div>
         <label>Tempó</label>

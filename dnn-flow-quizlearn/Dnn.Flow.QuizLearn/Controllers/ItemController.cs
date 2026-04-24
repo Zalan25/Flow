@@ -2,9 +2,11 @@
 using Dnn.Flow.QuizLearn.Services;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
@@ -22,40 +24,95 @@ namespace Dnn.Flow.QuizLearn.Controllers
             _recommendationService = new RecommendationService();
         }
 
-        // DNN MVC always routes through Index — handle both GET and POST here
         public ActionResult Index()
         {
+            var mode = GetModuleMode();
             if (Request.HttpMethod == "POST")
             {
-                return HandleStartPost();
+                return HandleStartPost(mode);
             }
 
-            return View("Start", BuildStartViewModel());
+
+            switch (mode)
+            {
+                case QuizLearnMode.LevelAssessment:
+                    return View("StartAssessment");
+
+                case QuizLearnMode.Recommendation:
+                case QuizLearnMode.RecommendationWithLevelAssessment:
+                default:
+                    return View("Start", BuildStartViewModel(mode));
+            }
         }
 
-        private ActionResult HandleStartPost()
+        public ActionResult Start()
         {
+            var mode = GetModuleMode();
+
+            return View("Start", BuildStartViewModel(mode));
+        }
+
+        public ActionResult StartAssessment()
+        {
+            ViewBag.ModuleMode = GetModuleMode();
+
+            return View("StartAssessment");
+        }
+
+        private ActionResult HandleStartPost(QuizLearnMode moduleMode)
+        {
+
             var model = new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
-                AssessmentModeId = int.TryParse(Request.Form["AssessmentModeId"], out int modeId) ? modeId : 0,
-                LanguageId = int.TryParse(Request.Form["LanguageId"], out int langId) ? langId : 0,
-                SecondaryLanguageId = int.TryParse(Request.Form["SecondaryLanguageId"], out int secLangId) ? (int?)secLangId : null,
-                SelectedLevelId = int.TryParse(Request.Form["SelectedLevelId"], out int levelId) ? (int?)levelId : null,
-                PaceTypeId = int.TryParse(Request.Form["PaceTypeId"], out int paceId) ? (int?)paceId : null,
+
+                AssessmentModeId = int.TryParse(Request.Form["AssessmentModeId"], out int modeId)
+                    ? modeId
+                    : 0,
+
+                LanguageId = int.TryParse(Request.Form["LanguageId"], out int langId)
+                    ? langId
+                    : 0,
+
+                SecondaryLanguageId = int.TryParse(Request.Form["SecondaryLanguageId"], out int secLangId)
+                    ? (int?)secLangId
+                    : null,
+
+                SelectedLevelId = int.TryParse(Request.Form["SelectedLevelId"], out int levelId)
+                    ? (int?)levelId
+                    : null,
+
+                PaceTypeId = int.TryParse(Request.Form["PaceTypeId"], out int paceId)
+                    ? (int?)paceId
+                    : null,
+
                 SelectedSkillTypeIds = Request.Form.GetValues("SelectedSkillTypeIds")
-                                        ?.Select(x => int.TryParse(x, out int sid) ? sid : 0)
-                                        .Where(x => x > 0)
-                                        .ToList() ?? new List<int>()
+                    ?.Select(x => int.TryParse(x, out int sid) ? sid : 0)
+                    .Where(x => x > 0)
+                    .Distinct()
+                    .ToList() ?? new List<int>(),
+
+                ModuleMode = moduleMode
             };
+
+            if (model.LanguageId <= 0)
+            {
+                var fresh = BuildStartViewModel(moduleMode);
+                ModelState.AddModelError("", "A nyelv kiválasztása kötelező.");
+                return View("Start", fresh);
+            }
 
             if (!model.SelectedSkillTypeIds.Any())
             {
-                var fresh = BuildStartViewModel();
+                var fresh = BuildStartViewModel(moduleMode);
                 fresh.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
                 ModelState.AddModelError("", "Legalább egy készséget ki kell választani.");
                 return View("Start", fresh);
             }
+
+            var needLevelTest =
+                moduleMode == QuizLearnMode.LevelAssessment ||
+                (moduleMode == QuizLearnMode.RecommendationWithLevelAssessment && !model.SelectedLevelId.HasValue);
 
             var sessionInfo = new AssessmentSessionInfo
             {
@@ -66,20 +123,27 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 SelectedLevelId = model.SelectedLevelId ?? 1,
                 PaceTypeId = model.PaceTypeId ?? 1,
                 UserId = null,
-                NeedLevelTest = false,
+                NeedLevelTest = needLevelTest,
                 Status = "Started"
             };
 
-            var sessionId = _assessmentService.StartAssessmentSession(sessionInfo, model.SelectedSkillTypeIds);
+            var sessionId = _assessmentService.StartAssessmentSession(
+                sessionInfo,
+                model.SelectedSkillTypeIds
+            );
 
-            var rules = _recommendationService.GetMatchingRules(
-                ModuleContext.ModuleId,
-                model.LanguageId,
-                model.SelectedLevelId ?? 1,
-                model.SelectedSkillTypeIds.First(),
-                model.PaceTypeId ?? 1,
-                model.SecondaryLanguageId) as List<RecommendationRuleInfo>
-                ?? new List<RecommendationRuleInfo>();
+            if (needLevelTest)
+            {
+                ViewBag.SessionId = sessionId;
+                ViewBag.LanguageId = model.LanguageId;
+                ViewBag.SecondaryLanguageId = model.SecondaryLanguageId;
+                ViewBag.PaceTypeId = model.PaceTypeId;
+                ViewBag.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
+
+                return View("StartAssessment");
+            }
+
+            var rules = GetRecommendationRulesForAllSelectedSkills(model);
 
             ViewBag.SessionId = sessionId;
             ViewBag.RuleCount = rules.Count;
@@ -87,7 +151,34 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return View("Recommendation", rules);
         }
 
-        private AssessmentStartViewModel BuildStartViewModel()
+        private List<RecommendationRuleInfo> GetRecommendationRulesForAllSelectedSkills(AssessmentStartViewModel model)
+        {
+            var result = new List<RecommendationRuleInfo>();
+
+            foreach (var skillTypeId in model.SelectedSkillTypeIds)
+            {
+                var rulesForSkill = _recommendationService.GetMatchingRules(
+                    ModuleContext.ModuleId,
+                    model.LanguageId,
+                    model.SelectedLevelId ?? 1,
+                    skillTypeId,
+                    model.PaceTypeId ?? 1,
+                    model.SecondaryLanguageId
+                ) as List<RecommendationRuleInfo>;
+
+                if (rulesForSkill != null)
+                {
+                    result.AddRange(rulesForSkill);
+                }
+            }
+
+            return result
+                .GroupBy(x => x.RecommendationRuleId)
+                .Select(g => g.First())
+                .ToList();
+        }
+
+        private AssessmentStartViewModel BuildStartViewModel(QuizLearnMode mode)
         {
             return new AssessmentStartViewModel
             {
@@ -96,8 +187,28 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 Levels = _lookupService.GetLevels(),
                 Skills = _lookupService.GetSkills(),
                 PaceTypes = _lookupService.GetPaceTypes(),
-                SelectedSkillTypeIds = new List<int>()
+                SelectedSkillTypeIds = new List<int>(),
+                ModuleMode = mode
             };
+        }
+
+        private QuizLearnMode GetModuleMode()
+        {
+            var modeValue = ModuleContext.Configuration.ModuleSettings["QuizLearnMode"] as string;
+
+            int parsedMode;
+
+            if (!int.TryParse(modeValue, out parsedMode))
+            {
+                return QuizLearnMode.RecommendationWithLevelAssessment;
+            }
+
+            if (!Enum.IsDefined(typeof(QuizLearnMode), parsedMode))
+            {
+                return QuizLearnMode.RecommendationWithLevelAssessment;
+            }
+
+            return (QuizLearnMode)parsedMode;
         }
     }
 }
