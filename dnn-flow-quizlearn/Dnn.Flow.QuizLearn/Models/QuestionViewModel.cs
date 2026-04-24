@@ -21,5 +21,6 @@ namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models
         public string LevelName { get; set; }
 
         public List<AnswerOptionViewModel> Answers { get; set; }
+
     }
 }
