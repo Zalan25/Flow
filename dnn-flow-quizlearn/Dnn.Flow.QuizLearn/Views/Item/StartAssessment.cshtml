@@ -1,28 +1,59 @@
-﻿<form method="post">
-    @Html.AntiForgeryToken()
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
 
-    <input type="hidden" name="AssessmentAction" value="StartLevelTest" />
+<div class="quizlearn-assessment-start">
+    <h2>Szintfelmérő indítása</h2>
 
-    @if (Model.HasExistingSession)
+    <p>
+        A szintfelmérő segít meghatározni, hogy jelenleg milyen nyelvi szinten vagy.
+    </p>
+
+    @if (!ViewData.ModelState.IsValid)
     {
-    <input type="hidden" name="SessionId" value="@Model.SessionId" />
-    <input type="hidden" name="LanguageId" value="@Model.LanguageId" />
-
-    <p>A szintfelmérő a kiválasztott nyelv alapján indul.</p>
-    }
-    else
-    {
-    <label>Válassz nyelvet:</label>
-
-    <select name="LanguageId">
-        <option value="">-- Válassz nyelvet --</option>
-
-        @foreach (var lang in Model.Languages)
+    <div class="alert alert-danger">
+        @foreach (var state in ViewData.ModelState.Values)
             {
-        <option value="@lang.LanguageId">@lang.Name</option>
+                foreach (var error in state.Errors)
+                {
+        <div>@error.ErrorMessage</div>
+                }
             }
-    </select>
+    </div>
     }
 
-    <button type="submit">Indítás</button>
-</form>
+    <form method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="AssessmentAction" value="StartLevelTest" />
+
+        @if (Model.HasExistingSession)
+        {
+        <input type="hidden" name="SessionId" value="@Model.SessionId" />
+        <input type="hidden" name="LanguageId" value="@Model.LanguageId" />
+
+        <p>
+            A szintfelmérő a korábban kiválasztott nyelv alapján indul.
+        </p>
+        }
+        else
+        {
+        <div class="form-group">
+            <label for="LanguageId">Milyen nyelvből szeretnél szintfelmérőt?</label>
+
+            <select id="LanguageId" name="LanguageId" class="form-control">
+                <option value="">-- Válassz nyelvet --</option>
+
+                @foreach (var language in Model.Languages)
+                    {
+                <option value="@language.LanguageId">
+                    @language.Name
+                </option>
+                    }
+            </select>
+        </div>
+        }
+
+        <button type="submit" class="btn btn-primary">
+            Szintfelmérő indítása
+        </button>
+    </form>
+</div>

@@ -26,9 +26,15 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         public ActionResult Index()
         {
-            var mode = GetModuleMode();
             if (Request.HttpMethod == "POST")
             {
+                var assessmentAction = Request.Form["AssessmentAction"];
+
+                if (assessmentAction == "StartLevelTest")
+                {
+                    return HandleStartLevelTestPost();
+                }
+
                 return HandleStartPost(mode);
             }
 
@@ -220,6 +226,56 @@ namespace Dnn.Flow.QuizLearn.Controllers
             }
 
             return (QuizLearnMode)parsedMode;
+        }
+
+        private ActionResult HandleStartLevelTestPost()
+        {
+            int sessionId;
+
+            if (int.TryParse(Request.Form["SessionId"], out sessionId) && sessionId > 0)
+            {
+                return RedirectToAction("Question", new { sessionId = sessionId, questionNumber = 1 });
+            }
+
+            int languageId;
+
+            if (!int.TryParse(Request.Form["LanguageId"], out languageId) || languageId <= 0)
+            {
+                var mode = GetModuleMode();
+                var fresh = BuildStartViewModel(mode);
+
+                ModelState.AddModelError("", "A nyelv kiválasztása kötelező a szintfelmérő indításához.");
+
+                return View("StartAssessment", fresh);
+            }
+
+            var sessionInfo = new AssessmentSessionInfo
+            {
+                ModuleId = ModuleContext.ModuleId,
+                AssessmentModeId = 2,
+                LanguageId = languageId,
+                SecondaryLanguageId = null,
+                SelectedLevelId = null,
+                PaceTypeId = 1,
+                UserId = null,
+                NeedLevelTest = true,
+                Status = "Started"
+            };
+
+            sessionId = _assessmentService.StartAssessmentSession(
+                sessionInfo,
+                new List<int>()
+            );
+
+            return RedirectToAction("Question", new { sessionId = sessionId, questionNumber = 1 });
+        }
+
+        public ActionResult Question(int sessionId, int questionNumber)
+        {
+            ViewBag.SessionId = sessionId;
+            ViewBag.QuestionNumber = questionNumber;
+
+            return View("Question");
         }
     }
 }
