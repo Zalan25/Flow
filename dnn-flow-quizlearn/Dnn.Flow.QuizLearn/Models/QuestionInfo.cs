@@ -9,13 +9,17 @@ namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models
     {
         public int QuestionId { get; set; }
 
+        public int ModuleId { get; set; }
+
+        public string QuestionText { get; set; }
+
         public int LanguageId { get; set; }
 
         public int QuestionLevelId { get; set; }
 
-        public int SkillTypeId { get; set; }
+        public int QuestionTypeId { get; set; }
 
-        public string QuestionText { get; set; }
+        public int SkillTypeId { get; set; }
 
         public int Points { get; set; }
 

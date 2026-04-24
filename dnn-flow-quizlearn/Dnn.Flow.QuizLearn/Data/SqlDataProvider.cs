@@ -1,10 +1,12 @@
 ﻿using Dnn.Flow.QuizLearn.Models;
+using Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Framework.Providers;
 using Microsoft.ApplicationBlocks.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 
 
 namespace Dnn.Flow.QuizLearn.Data
@@ -383,5 +385,10 @@ namespace Dnn.Flow.QuizLearn.Data
             }
             return rules;
         }
+        //---------------------
+        // Quiz
+        //---------------------
+
+
     }
 }

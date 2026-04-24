@@ -9,6 +9,8 @@ namespace Dnn.QuizLearn.Dnn.Flow.QuizLearn.Models
     {
         public int AnswerId { get; set; }
 
+        public int ModuleId { get; set; }
+
         public int QuestionId { get; set; }
 
         public string AnswerText { get; set; }
