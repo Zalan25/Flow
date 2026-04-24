@@ -59,7 +59,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         private ActionResult HandleStartPost(QuizLearnMode moduleMode)
         {
-            var moduleMode = GetModuleMode();
 
             var model = new AssessmentStartViewModel
             {
