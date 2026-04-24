@@ -360,28 +360,25 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("StartAssessment", BuildStartViewModel(GetModuleMode()));
             }
 
-            // ====== SINGLE / TRUE FALSE ======
             if (questionTypeId == (int)QuestionType.SingleChoice ||
                 questionTypeId == (int)QuestionType.TrueFalse)
             {
-                int answerId;
+                int answerId = 0;
 
-                if (!int.TryParse(Request.Form["AnswerId"], out answerId))
+                if (!int.TryParse(Request.Form["AnswerId"], out answerId) || answerId <= 0)
                 {
                     var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
-                    ModelState.AddModelError("", "Kérlek válassz egy választ.");
+                    ModelState.AddModelError("", "Kérlek, válassz egy választ.");
                     return View("Question", currentModel);
                 }
 
-                _assessmentService.SaveAnswer(
+                _assessmentService.SaveSingleChoiceAnswer(
                     ModuleContext.ModuleId,
                     sessionId,
                     questionId,
                     answerId
                 );
             }
-
-            // ====== MULTIPLE CHOICE ======
             else if (questionTypeId == (int)QuestionType.MultipleChoice)
             {
                 var selectedAnswers = Request.Form.GetValues("SelectedAnswerIds");
@@ -393,23 +390,28 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return View("Question", currentModel);
                 }
 
-                foreach (var ans in selectedAnswers)
-                {
-                    int answerId;
-                    if (int.TryParse(ans, out answerId))
-                    {
-                        _assessmentService.SaveAnswer(
-                            ModuleContext.ModuleId,
-                            sessionId,
-                            questionId,
-                            answerId
-                        );
-                    }
-                }
-            }
+                var selectedAnswerIds = selectedAnswers
+                    .Select(x => int.TryParse(x, out int id) ? id : 0)
+                    .Where(x => x > 0)
+                    .Distinct()
+                    .ToList();
 
-            // ====== TEXT / TRANSLATION ======
-            else
+                if (!selectedAnswerIds.Any())
+                {
+                    var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+                    ModelState.AddModelError("", "Érvénytelen válaszopció.");
+                    return View("Question", currentModel);
+                }
+
+                _assessmentService.SaveMultipleChoiceAnswer(
+                    ModuleContext.ModuleId,
+                    sessionId,
+                    questionId,
+                    selectedAnswerIds
+                );
+            }
+            else if (questionTypeId == (int)QuestionType.Essay ||
+                     questionTypeId == (int)QuestionType.Translation)
             {
                 var textAnswer = Request.Form["TextAnswer"];
 
@@ -420,16 +422,20 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return View("Question", currentModel);
                 }
 
-                // DEMÓ: félautomata pontozás (kulcsszó alapú)
                 _assessmentService.SaveTextAnswer(
                     ModuleContext.ModuleId,
                     sessionId,
                     questionId,
-                    textAnswer
+                    textAnswer.Trim()
                 );
             }
+            else
+            {
+                var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+                ModelState.AddModelError("", "Ismeretlen kérdéstípus.");
+                return View("Question", currentModel);
+            }
 
-            // ====== KÖVETKEZŐ KÉRDÉS ======
             var nextQuestionNumber = questionNumber + 1;
 
             var nextModel = _assessmentService.GetQuestionForAssessment(

@@ -506,17 +506,71 @@ namespace Dnn.Flow.QuizLearn.Data
             return Convert.ToInt32(result);
         }
 
-        public void AddTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer)
+
+        public int AddTextAnswer(int moduleId, int assessmentSessionId, int questionId, string textAnswer)
         {
-            SqlHelper.ExecuteNonQuery(
+            object result = SqlHelper.ExecuteScalar(
                 _connectionString,
                 CommandType.StoredProcedure,
-                GetFullyQualifiedName("TestAttemptTextAnswers_Add"),
-                new SqlParameter("@ModuleId", moduleId),
-                new SqlParameter("@AssessmentSessionId", sessionId),
-                new SqlParameter("@QuestionId", questionId),
-                new SqlParameter("@TextAnswer", textAnswer)
-            );
+                GetFullyQualifiedName("TestAttemptAnswers_AddText"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId),
+                new System.Data.SqlClient.SqlParameter("@QuestionId", questionId),
+                new System.Data.SqlClient.SqlParameter("@TextAnswer", textAnswer));
+
+            return Convert.ToInt32(result);
+        }
+        // Többválaszos kérdés válaszainak mentése
+        public int AddSingleChoiceAnswer(int moduleId, int assessmentSessionId, int questionId, int selectedAnswerId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttemptAnswers_AddSingle"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId),
+                new System.Data.SqlClient.SqlParameter("@QuestionId", questionId),
+                new System.Data.SqlClient.SqlParameter("@SelectedAnswerId", selectedAnswerId));
+
+            return Convert.ToInt32(result);
+        }
+
+        public int StartMultipleChoiceAnswer(int moduleId, int assessmentSessionId, int questionId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttemptAnswers_StartMultiple"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId),
+                new System.Data.SqlClient.SqlParameter("@QuestionId", questionId));
+
+            return Convert.ToInt32(result);
+        }
+
+        public int AddMultipleChoiceAnswerOption(int moduleId, int testAttemptAnswerId, int answerId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttemptAnswerOptions_Add"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@TestAttemptAnswerId", testAttemptAnswerId),
+                new System.Data.SqlClient.SqlParameter("@AnswerId", answerId));
+
+            return Convert.ToInt32(result);
+        }
+
+        public int GradeMultipleChoiceAnswer(int moduleId, int testAttemptAnswerId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttemptAnswers_GradeMultiple"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@TestAttemptAnswerId", testAttemptAnswerId));
+
+            return Convert.ToInt32(result);
         }
 
 

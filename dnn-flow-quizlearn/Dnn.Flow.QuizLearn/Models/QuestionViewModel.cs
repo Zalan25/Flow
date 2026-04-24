@@ -36,7 +36,7 @@ namespace Dnn.Flow.QuizLearn.Models
         {
             get
             {
-                return QuestionTypeId == (int)QuestionType.TextAnswer
+                return QuestionTypeId == (int)QuestionType.Essay
                     || QuestionTypeId == (int)QuestionType.Translation;
             }
         }

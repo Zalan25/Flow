@@ -122,6 +122,36 @@ namespace Dnn.Flow.QuizLearn.Services
              _repository.AddTestAttemptAnswer(moduleId, sessionId, questionId, answerId);
         }
 
+        // Többválaszos kérdés mentése
+        public void SaveSingleChoiceAnswer(int moduleId, int sessionId, int questionId, int answerId)
+        {
+            _repository.AddSingleChoiceAnswer(moduleId, sessionId, questionId, answerId);
+        }
+
+        public void SaveMultipleChoiceAnswer(int moduleId, int sessionId, int questionId, IEnumerable<int> answerIds)
+        {
+            var testAttemptAnswerId = _repository.StartMultipleChoiceAnswer(
+                moduleId,
+                sessionId,
+                questionId
+            );
+
+            foreach (var answerId in answerIds)
+            {
+                _repository.AddMultipleChoiceAnswerOption(
+                    moduleId,
+                    testAttemptAnswerId,
+                    answerId
+                );
+            }
+
+            _repository.GradeMultipleChoiceAnswer(moduleId, testAttemptAnswerId);
+        }
+
+        //public void SaveTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer)
+        //{
+        //    _repository.AddTextAnswer(moduleId, sessionId, questionId, textAnswer);
+        //}
 
         //Eredmény kiszámítása a szintfelmérő teszt után
         private int DetermineFinalLevel(

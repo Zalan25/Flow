@@ -14,6 +14,9 @@ namespace Dnn.Flow.QuizLearn.Services.Interfaces
         void SaveAnswer(int moduleId,int sessionId, int questionId, int answerId);
         ResultViewModel CalculateResult(int moduleId, int sessionId);
         AssessmentSessionInfo GetAssessmentSessionById(int sessionId);
+        void SaveSingleChoiceAnswer(int moduleId, int sessionId, int questionId, int answerId);
+        void SaveMultipleChoiceAnswer(int moduleId, int sessionId, int questionId, IEnumerable<int> answerIds);
+        void SaveTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer);
 
     }
 }
