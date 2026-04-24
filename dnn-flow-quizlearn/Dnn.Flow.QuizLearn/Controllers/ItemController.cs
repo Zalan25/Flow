@@ -236,30 +236,39 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         private ActionResult HandleStartLevelTestPost()
         {
+            int sessionId = 0;
 
-            int sessionId;
-
+            // 1. Csak akkor használunk meglévő SessionId-t, ha tényleg létezik az adatbázisban
             if (int.TryParse(Request.Form["SessionId"], out sessionId) && sessionId > 0)
             {
-                return RedirectToAction("Question", new { sessionId = sessionId, questionNumber = 1 });
+                var existingSession = _assessmentService.GetAssessmentSessionById(sessionId);
+
+                if (existingSession != null)
+                {
+                    _assessmentService.StartTestAttempt(
+                        ModuleContext.ModuleId,
+                        sessionId,
+                        1
+                    );
+
+                    return RedirectToAction("Question", new
+                    {
+                        sessionId = sessionId,
+                        questionNumber = 1
+                    });
+                }
+
+                // Ha a hidden SessionId régi / hibás / nem létező, eldobjuk
+                sessionId = 0;
             }
-            int testId = 1; // ideiglenesen fix
 
-            _assessmentService.StartTestAttempt(
-                ModuleContext.ModuleId,
-                sessionId,
-                testId
-            );
-
-            int languageId;
+            // 2. Ha nincs érvényes session, akkor nyelv alapján újat hozunk létre
+            int languageId = 0;
 
             if (!int.TryParse(Request.Form["LanguageId"], out languageId) || languageId <= 0)
             {
-                var mode = GetModuleMode();
-                var fresh = BuildStartViewModel(mode);
-
-                ModelState.AddModelError("", "A nyelv kiválasztása kötelező a szintfelmérő indításához.");
-
+                var fresh = BuildStartViewModel(GetModuleMode());
+                ModelState.AddModelError("", "A nyelv kiválasztása kötelező.");
                 return View("StartAssessment", fresh);
             }
 
@@ -281,7 +290,25 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 new List<int>()
             );
 
-            return RedirectToAction("Question", new { sessionId = sessionId, questionNumber = 1 });
+            if (sessionId <= 0)
+            {
+                var fresh = BuildStartViewModel(GetModuleMode());
+                ModelState.AddModelError("", "A szintfelmérő session létrehozása sikertelen.");
+                return View("StartAssessment", fresh);
+            }
+
+            // 3. Csak a sikeresen létrejött session után indítunk test attemptet
+            _assessmentService.StartTestAttempt(
+                ModuleContext.ModuleId,
+                sessionId,
+                1
+            );
+
+            return RedirectToAction("Question", new
+            {
+                sessionId = sessionId,
+                questionNumber = 1
+            });
         }
 
         public ActionResult Question(int sessionId, int questionNumber)

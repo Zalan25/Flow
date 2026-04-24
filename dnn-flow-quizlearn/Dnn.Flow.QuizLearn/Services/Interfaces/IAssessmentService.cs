@@ -13,6 +13,7 @@ namespace Dnn.Flow.QuizLearn.Services.Interfaces
         int? DetermineFinalLevel(int a1CorrectCount, int a2CorrectCount, int b1CorrectCount, int b2CorrectCount, int c1CorrectCount);
         void SaveAnswer(int moduleId,int sessionId, int questionId, int answerId);
         ResultViewModel CalculateResult(int moduleId, int sessionId);
+        AssessmentSessionInfo GetAssessmentSessionById(int sessionId);
 
     }
 }

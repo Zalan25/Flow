@@ -16,17 +16,18 @@ namespace Dnn.Flow.QuizLearn.Services
 
         public int StartAssessmentSession(AssessmentSessionInfo sessionInfo, IEnumerable<int> selectedSkillTypeIds)
         {
-            var assessmentSessionId = _repository.AddAssessmentSession(sessionInfo);
+            var sessionId = _repository.AddAssessmentSession(sessionInfo);
 
             foreach (var skillTypeId in selectedSkillTypeIds)
             {
                 _repository.AddAssessmentSessionSkill(
                     sessionInfo.ModuleId,
-                    assessmentSessionId,
-                    skillTypeId);
+                    sessionId,
+                    skillTypeId
+                );
             }
 
-            return assessmentSessionId;
+            return sessionId;
         }
 
         public int CompleteAssessmentSession(int moduleId, int assessmentSessionId, int? finalLevelId)
@@ -105,6 +106,10 @@ namespace Dnn.Flow.QuizLearn.Services
                 Answers = answers
             };
         }
+        public AssessmentSessionInfo GetAssessmentSessionById(int sessionId)
+        {
+            return _repository.GetAssessmentSessionById(sessionId);
+        }
         public int StartTestAttempt(int moduleId, int assessmentSessionId, int testId)
         {
             return _repository.StartTestAttempt(moduleId, assessmentSessionId, testId);
@@ -113,6 +118,7 @@ namespace Dnn.Flow.QuizLearn.Services
         {
              _repository.AddTestAttemptAnswer(moduleId, sessionId, questionId, answerId);
         }
+
 
         //Eredmény kiszámítása a szintfelmérő teszt után
         private int DetermineFinalLevel(
