@@ -42,5 +42,13 @@ namespace Dnn.Flow.QuizLearn.Data
         int AddRecommendationResultItem(RecommendationResultItemInfo itemInfo);
 
 
+
+        // Szintfelmérő kérdések
+        AssessmentSessionInfo GetAssessmentSessionById(int assessmentSessionId);
+
+        IEnumerable<QuestionInfo> GetQuestionsForAssessment(int languageId);
+
+        IEnumerable<AnswerInfo> GetAnswersByQuestionId(int questionId)
+
     }
 }

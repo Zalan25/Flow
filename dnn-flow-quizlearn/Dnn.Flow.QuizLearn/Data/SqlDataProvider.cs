@@ -4,6 +4,7 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Framework.Providers;
 using Microsoft.ApplicationBlocks.Data;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -388,7 +389,96 @@ namespace Dnn.Flow.QuizLearn.Data
         //---------------------
         // Quiz
         //---------------------
+        public AssessmentSessionInfo GetAssessmentSessionById(int assessmentSessionId)
+        {
+            var sessions = new List<AssessmentSessionInfo>();
 
+            using (IDataReader reader = SqlHelper.ExecuteReader(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("AssessmentSessions_GetById"),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId)))
+            {
+                while (reader.Read())
+                {
+                    sessions.Add(new AssessmentSessionInfo
+                    {
+                        AssessmentSessionId = Null.SetNullInteger(reader["AssessmentSessionId"]),
+                        ModuleId = Null.SetNullInteger(reader["ModuleId"]),
+                        AssessmentModeId = Null.SetNullInteger(reader["AssessmentModeId"]),
+                        LanguageId = Null.SetNullInteger(reader["LanguageId"]),
+                        SecondaryLanguageId = reader["SecondaryLanguageId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["SecondaryLanguageId"]),
+                        SelectedLevelId = reader["SelectedLevelId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["SelectedLevelId"]),
+                        PaceTypeId = reader["PaceTypeId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["PaceTypeId"]),
+                        UserId = reader["UserId"] == DBNull.Value ? (int?)null : Null.SetNullInteger(reader["UserId"]),
+                        NeedLevelTest = Null.SetNullBoolean(reader["NeedLevelTest"]),
+                        Status = Null.SetNullString(reader["Status"])
+                    });
+                }
+            }
 
+            return sessions.FirstOrDefault();
+        }
+
+        public IEnumerable<QuestionInfo> GetQuestionsForAssessment(int moduleId, int languageId)
+        {
+            var questions = new List<QuestionInfo>();
+
+            using (IDataReader reader = SqlHelper.ExecuteReader(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("Questions_GetForAssessment"),
+                moduleId,
+                languageId))
+            {
+                while (reader.Read())
+                {
+                    questions.Add(new QuestionInfo
+                    {
+                        QuestionId = Null.SetNullInteger(reader["QuestionId"]),
+                        ModuleId = Null.SetNullInteger(reader["ModuleId"]),
+                        QuestionText = Null.SetNullString(reader["QuestionText"]),
+                        LanguageId = Null.SetNullInteger(reader["LanguageId"]),
+                        QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
+                        QuestionTypeId = Null.SetNullInteger(reader["QuestionTypeId"]),
+                        SkillTypeId = Null.SetNullInteger(reader["SkillTypeId"]),
+                        Points = Null.SetNullInteger(reader["Points"]),
+                        IsActive = Null.SetNullBoolean(reader["IsActive"])
+                    });
+                }
+            }
+
+            return questions;
+        }
+
+        public IEnumerable<AnswerInfo> GetAnswersByQuestionId(int moduleId, int questionId)
+        {
+            var answers = new List<AnswerInfo>();
+
+            using (IDataReader reader = SqlHelper.ExecuteReader(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("Answers_GetByQuestionId"),
+                moduleId,
+                questionId))
+            {
+                while (reader.Read())
+                {
+                    answers.Add(new AnswerInfo
+                    {
+                        AnswerId = Null.SetNullInteger(reader["AnswerId"]),
+                        ModuleId = Null.SetNullInteger(reader["ModuleId"]),
+                        QuestionId = Null.SetNullInteger(reader["QuestionId"]),
+                        AnswerText = Null.SetNullString(reader["AnswerText"]),
+                        IsCorrect = Null.SetNullBoolean(reader["IsCorrect"]),
+                        AnswerOrder = Null.SetNullInteger(reader["AnswerOrder"])
+                    });
+                }
+            }
+
+            return answers;
+        }
     }
 }
+
+

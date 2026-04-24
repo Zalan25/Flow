@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Dnn.Flow.QuizLearn" type="Module" version="00.00.03">
+    <package name="Dnn.Flow.QuizLearn" type="Module" version="00.00.04">
       <friendlyName>Dnn.Flow.QuizLearn</friendlyName>
       <description>Dnn.Flow.QuizLearn</description>
       <iconFile>~/Icons/Sigma/Software_32X32_Standard.png</iconFile>
@@ -21,13 +21,13 @@
             <basePath>DesktopModules\MVC\Dnn.Flow.QuizLearn</basePath>
             <script type="Install">
               <path>Providers\DataProviders\SqlDataProvider</path>
-              <name>00.00.03.SqlDataProvider</name>
-              <version>00.00.03</version>
+              <name>00.00.04.SqlDataProvider</name>
+              <version>00.00.04</version>
             </script>
             <script type="UnInstall">
               <path>Providers\DataProviders\SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>00.00.03</version>
+              <version>00.00.04</version>
             </script>
           </scripts>
         </component>
