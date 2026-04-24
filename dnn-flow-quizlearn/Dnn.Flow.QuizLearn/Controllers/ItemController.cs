@@ -26,6 +26,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         public ActionResult Index()
         {
+            var mode = GetModuleMode();
             if (Request.HttpMethod == "POST")
             {
                 var assessmentAction = Request.Form["AssessmentAction"];
