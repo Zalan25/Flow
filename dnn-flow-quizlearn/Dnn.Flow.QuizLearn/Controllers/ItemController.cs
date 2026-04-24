@@ -306,8 +306,20 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 + "&questionNumber=1");
         }
 
-        public ActionResult Question(int? sessionId, int? questionNumber)
+        
+        
+            public ActionResult Question(int? sessionId, int? questionNumber)
         {
+            if (Request.HttpMethod == "POST")
+            {
+                var assessmentAction = Request.Form["AssessmentAction"];
+
+                if (assessmentAction == "AnswerQuestion")
+                {
+                    return HandleAnswerQuestionPost();
+                }
+            }
+
             if (!sessionId.HasValue || sessionId.Value <= 0)
             {
                 return View("StartAssessment", BuildStartViewModel(GetModuleMode()));
@@ -330,32 +342,46 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return View("Question", model);
         }
 
+
         private ActionResult HandleAnswerQuestionPost()
         {
-            int sessionId =0;
+            int sessionId = 0;
             int questionId = 0;
-            int questionNumber =1 ;
+            int questionNumber = 1;
             int answerId = 0;
-            int moduleId = ModuleContext.ModuleId;
 
             if (!int.TryParse(Request.Form["SessionId"], out sessionId) ||
                 !int.TryParse(Request.Form["QuestionId"], out questionId) ||
                 !int.TryParse(Request.Form["QuestionNumber"], out questionNumber) ||
                 !int.TryParse(Request.Form["AnswerId"], out answerId))
             {
+                var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
+
                 ModelState.AddModelError("", "Kérlek, válassz egy választ.");
 
-                var model = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
-
-                return View("Question", model);
+                return View("Question", currentModel);
             }
 
-            _assessmentService.SaveAnswer(moduleId, sessionId, questionId, answerId);
+            _assessmentService.SaveAnswer(
+                ModuleContext.ModuleId,
+                sessionId,
+                questionId,
+                answerId
+            );
 
-            return Redirect(Url.Action("Question", "Item")
-                + "?sessionId=" + sessionId
-                + "&questionNumber=1");
+            var nextQuestionNumber = questionNumber + 1;
 
+            var nextModel = _assessmentService.GetQuestionForAssessment(
+                sessionId,
+                nextQuestionNumber
+            );
+
+            if (nextModel == null)
+            {
+                return Redirect(Url.Action("AssessmentResult", "Item") + "?sessionId=" + sessionId);
+            }
+
+            return View("Question", nextModel);
         }
 
         // eredmények
