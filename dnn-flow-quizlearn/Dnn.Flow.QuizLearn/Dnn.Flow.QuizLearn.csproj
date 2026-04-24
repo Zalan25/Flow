@@ -112,6 +112,8 @@
     <Compile Include="Models\AnswerInfo.cs" />
     <Compile Include="Models\AnswerOptionViewModel.cs" />
     <Compile Include="Models\AssessmentModeInfo.cs" />
+    <Compile Include="Models\ResultViewModel.cs" />
+    <Compile Include="Models\AttemptAnswerSummaryInfo.cs" />
     <Compile Include="Models\QuestionInfo.cs" />
     <Compile Include="Models\QuestionViewModel.cs" />
     <Compile Include="Models\AssessmentSessionInfo.cs" />
@@ -183,6 +185,7 @@
     <Content Include="Views\Item\StartAssessment.cshtml" />
     <Content Include="Views\Item\Question.cshtml" />
     <Content Include="Providers\DataProviders\SqlDataProvider\00.00.04.SqlDataProvider" />
+    <Content Include="Views\Item\AssessmentResult.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

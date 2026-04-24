@@ -50,6 +50,7 @@ namespace Dnn.Flow.QuizLearn.Data
         IEnumerable<AnswerInfo> GetAnswersByQuestionId(int moduleId,int questionId);
         int StartTestAttempt(int moduleId, int assessmentSessionId, int testId);
         int AddTestAttemptAnswer(int moduleId, int assessmentSessionId, int questionId, int answerId);
+        IEnumerable<AttemptAnswerSummaryInfo> GetAttemptAnswerSummary(int moduleId, int assessmentSessionId);
 
     }
 }

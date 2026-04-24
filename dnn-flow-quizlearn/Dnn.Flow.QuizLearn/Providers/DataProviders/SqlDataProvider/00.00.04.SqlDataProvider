@@ -1092,7 +1092,7 @@ END
 GO
 
 /* ---------------------------------------------
-   New SP
+  By Id lekérdezések
    --------------------------------------------- */
 CREATE PROCEDURE {databaseOwner}{objectQualifier}lm_TestAttempts_Start
     @ModuleId INT,
@@ -1164,7 +1164,7 @@ END
 GO
 
 
-/* Levezetés*/
+/* Tesztek */
 CREATE PROCEDURE {databaseOwner}{objectQualifier}lm_TestAttemptAnswers_Add
     @ModuleId INT,
     @AssessmentSessionId INT,
@@ -1259,5 +1259,35 @@ BEGIN
     );
 
     SELECT CAST(SCOPE_IDENTITY() AS INT);
+END
+GO
+
+/* ---------------------------------------------
+     Eredmények összegzése egy tesztkísérlethez
+   --------------------------------------------- */
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}lm_TestAttemptAnswers_GetSummary
+    @ModuleId INT,
+    @AssessmentSessionId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        q.QuestionId,
+        q.QuestionLevelId,
+        q.Points,
+        taa.IsCorrect,
+        taa.EarnedPoints
+    FROM {databaseOwner}{objectQualifier}lm_test_attempts ta
+    INNER JOIN {databaseOwner}{objectQualifier}lm_test_attempt_answers taa
+        ON taa.TestAttemptId = ta.TestAttemptId
+       AND taa.ModuleId = ta.ModuleId
+    INNER JOIN {databaseOwner}{objectQualifier}lm_questions q
+        ON q.QuestionId = taa.QuestionId
+       AND q.ModuleId = taa.ModuleId
+    WHERE ta.ModuleId = @ModuleId
+      AND ta.AssessmentSessionId = @AssessmentSessionId
+    ORDER BY q.QuestionLevelId, q.QuestionId;
 END
 GO

@@ -1,0 +1,19 @@
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.ResultViewModel>
+
+<div class="quizlearn-assessment-result">
+    <h2>Szintfelmérő eredmény</h2>
+
+    <p>Összpontszám: @Model.TotalScore / 50</p>
+
+    <p>Javasolt szint: <strong>@Model.FinalLevelName</strong></p>
+
+    <h3>Részletes eredmény</h3>
+
+    <ul>
+        <li>A1 helyes válaszok: @Model.A1Correct</li>
+        <li>A2 helyes válaszok: @Model.A2Correct</li>
+        <li>B1 helyes válaszok: @Model.B1Correct</li>
+        <li>B2 helyes válaszok: @Model.B2Correct</li>
+        <li>C1 helyes válaszok: @Model.C1Correct</li>
+    </ul>
+</div>

@@ -290,8 +290,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (model == null)
             {
-                ViewBag.SessionId = sessionId;
-                return View("AssessmentResult");
+                return RedirectToAction("AssessmentResult", new { sessionId = sessionId });
             }
 
             return View("Question", model);
@@ -324,6 +323,15 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 sessionId = sessionId,
                 questionNumber = questionNumber + 1
             });
+
+        }
+
+        // eredmények
+        public ActionResult AssessmentResult(int sessionId)
+        {
+            var model = _assessmentService.CalculateResult(ModuleContext.ModuleId, sessionId);
+
+            return View("AssessmentResult", model);
         }
     }
 }

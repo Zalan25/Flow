@@ -386,7 +386,7 @@ namespace Dnn.Flow.QuizLearn.Data
             return rules;
         }
         //---------------------
-        // Quiz
+        // Kérdések
         //---------------------
         public AssessmentSessionInfo GetAssessmentSessionById(int assessmentSessionId)
         {
@@ -477,6 +477,8 @@ namespace Dnn.Flow.QuizLearn.Data
 
             return answers;
         }
+
+        // Teszt kitöltés
         public int StartTestAttempt(int moduleId, int assessmentSessionId, int testId)
         {
             object result = SqlHelper.ExecuteScalar(
@@ -502,6 +504,35 @@ namespace Dnn.Flow.QuizLearn.Data
                 new System.Data.SqlClient.SqlParameter("@SelectedAnswerId", answerId));
 
             return Convert.ToInt32(result);
+        }
+
+
+        // Kiértékelés
+        public IEnumerable<AttemptAnswerSummaryInfo> GetAttemptAnswerSummary(int moduleId, int assessmentSessionId)
+        {
+            var answers = new List<AttemptAnswerSummaryInfo>();
+
+            using (IDataReader reader = SqlHelper.ExecuteReader(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttemptAnswers_GetSummary"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId)))
+            {
+                while (reader.Read())
+                {
+                    answers.Add(new AttemptAnswerSummaryInfo
+                    {
+                        QuestionId = Null.SetNullInteger(reader["QuestionId"]),
+                        QuestionLevelId = Null.SetNullInteger(reader["QuestionLevelId"]),
+                        Points = Null.SetNullInteger(reader["Points"]),
+                        IsCorrect = Null.SetNullBoolean(reader["IsCorrect"]),
+                        EarnedPoints = Null.SetNullInteger(reader["EarnedPoints"])
+                    });
+                }
+            }
+
+            return answers;
         }
     }
 }
