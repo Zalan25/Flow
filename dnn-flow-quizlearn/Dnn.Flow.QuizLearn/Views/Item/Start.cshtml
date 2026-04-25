@@ -1,90 +1,249 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
-@using DotNetNuke.Web.Mvc.Helpers
 @using Dnn.Flow.QuizLearn.Models
-<link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/quizlearn.css" />
-<h2>QuizLearn – Pilot</h2>
+
+<link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/start.css" />
 
 @if (!ViewData.ModelState.IsValid)
 {
-    <div>@Html.ValidationSummary()</div>
+<div class="ql-validation-box">
+    @foreach (var state in ViewData.ModelState.Values)
+        {
+            foreach (var error in state.Errors)
+            {
+    <div>@error.ErrorMessage</div>
+            }
+        }
+</div>
 }
 
-<form method="post" action="@Request.RawUrl">
+<form method="post" action="@Request.RawUrl" class="ql-start-form" id="qlStartForm">
     <input type="hidden" name="ModuleId" value="@Model.ModuleId" />
+    <input type="hidden" name="AssessmentModeId" value="@Model.AssessmentModeId" />
 
-    <div>
-        <label>Assessment mód</label>
-        <input type="text" name="AssessmentModeId" value="@Model.AssessmentModeId" />
-    </div>
+    <section class="ql-card ql-step-panel is-active" data-step="1">
+        <div class="ql-progress" aria-label="Lépések">
+            <span class="ql-progress-step is-current">1</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step">2</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step">3</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step">4</span>
+        </div>
 
-    <div>
-        <label>Nyelv</label>
-        <select name="LanguageId">
-            <option value="">-- válassz nyelvet --</option>
+        <h1 class="ql-title">Milyen nyelvet szeretnél tanulni?</h1>
+
+        <div class="ql-language-grid">
             @foreach (var language in Model.Languages)
             {
-                <option value="@language.LanguageId">@language.Name</option>
-            }
-        </select>
-    </div>
+                var languageName = (language.Name ?? "").Trim();
+                var flagClass = "ql-flag-default";
+                var flagText = "🌐";
 
-    <div>
-        <label>Másodlagos nyelv</label>
-        <select name="SecondaryLanguageId">
-            <option value="">-- nincs --</option>
-            @foreach (var language in Model.Languages)
+                if (languageName == "Angol") { flagClass = "ql-flag-uk"; flagText = "🇬🇧"; }
+                else if (languageName == "Japán") { flagClass = "ql-flag-japan"; flagText = "🇯🇵"; }
+                else if (languageName == "Görög") { flagClass = "ql-flag-greece"; flagText = "🇬🇷"; }
+                else if (languageName == "Török") { flagClass = "ql-flag-turkey"; flagText = "🇹🇷"; }
+                else if (languageName == "Kínai") { flagClass = "ql-flag-china"; flagText = "🇨🇳"; }
+                else if (languageName == "Horvát") { flagClass = "ql-flag-croatia"; flagText = "🇭🇷"; }
+                else if (languageName == "Orosz") { flagClass = "ql-flag-russia"; flagText = "🇷🇺"; }
+                else if (languageName == "Portugál") { flagClass = "ql-flag-portugal"; flagText = "🇵🇹"; }
+
+            <label class="ql-option ql-language-option">
+                <input type="radio" name="LanguageId" value="@language.LanguageId" required />
+                <span class="ql-option-content">
+                    <span class="ql-flag @flagClass">@flagText</span>
+                    <span>@language.Name</span>
+                </span>
+            </label>
+            }
+        </div>
+
+        <div class="ql-actions">
+            <button type="button" class="ql-btn ql-next" data-next="2">Következő</button>
+        </div>
+    </section>
+
+    <section class="ql-card ql-step-panel" data-step="2">
+        <div class="ql-progress" aria-label="Lépések">
+            <span class="ql-progress-step is-done">1</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step is-current">2</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step">3</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step">4</span>
+        </div>
+
+        <h1 class="ql-title">Miben szeretnél fejlődni?</h1>
+
+        <div class="ql-skill-grid">
+            @foreach (var skill in Model.Skills)
             {
-                <option value="@language.LanguageId">@language.Name</option>
+                var skillName = (skill.SkillName ?? "").Trim();
+                var icon = "✦";
+
+                if (skillName == "Olvasás") { icon = "📖"; }
+                else if (skillName == "Gyakorlás") { icon = "📈"; }
+                else if (skillName == "Szókincs") { icon = "💬"; }
+                else if (skillName == "Hallás utáni értés") { icon = "🎧"; }
+                else if (skillName == "Komplett tanulás") { icon = "🎯"; }
+
+            <label class="ql-option ql-skill-option">
+                <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
+                <span class="ql-option-content">
+                    <span class="ql-skill-name">@skill.SkillName</span>
+                    <span class="ql-icon">@icon</span>
+                </span>
+            </label>
             }
-        </select>
-    </div>
+        </div>
 
-    <label for="SelectedLevelId">Milyen szinten vagy most?</label>
+        <div class="ql-actions">
+            <button type="button" class="ql-btn ql-next" data-next="3">Következő</button>
+        </div>
+    </section>
 
-    <select id="SelectedLevelId" name="SelectedLevelId" class="form-control">
+    <section class="ql-card ql-step-panel" data-step="3">
+        <div class="ql-progress" aria-label="Lépések">
+            <span class="ql-progress-step is-done">1</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step is-done">2</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step is-current">3</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step">4</span>
+        </div>
 
-        @if (Model.IsRecommendationOnlyMode)
-        {
-            <option value="">-- Válassz szintet --</option>
-        }
-        else
-        {
-            <option value="">-- Nem tudom / szintfelmérőt kérek --</option>
-        }
+        <h1 class="ql-title">Hol tartasz most?</h1>
 
-        @foreach (var level in Model.Levels)
-        {
-            <option value="@level.QuestionLevelId"
-                    @(Model.SelectedLevelId == level.QuestionLevelId ? "selected" : "")>
-                @level.LevelName
-            </option>
-        }
+        <div class="ql-level-list">
+            @foreach (var level in Model.Levels)
+            {
+                var levelName = (level.LevelName ?? "").Trim();
+                var levelText = level.LevelName;
+                var icon = "💡";
 
-    </select>
+                if (levelName == "A1") { levelText = "Most kezdtem (A1)"; icon = "🚀"; }
+                else if (levelName == "A2") { levelText = "Már tanulom, de bizonytalan vagyok (A2)"; icon = "📖"; }
+                else if (levelName == "B1") { levelText = "Elboldogulok (B1)"; icon = "💡"; }
+                else if (levelName == "B2") { levelText = "Magabiztos vagyok (B2)"; icon = "📈"; }
+                else if (levelName == "C1") { levelText = "Szinte profi vagyok (C1)"; icon = "🎯"; }
 
-    <div>
-        <label>Tempó</label>
-        <select name="PaceTypeId">
-            <option value="">-- válassz tempót --</option>
+            <label class="ql-option ql-level-option">
+                <input type="radio" name="SelectedLevelId" value="@level.QuestionLevelId" @(Model.SelectedLevelId == level.QuestionLevelId ? "checked" : "") />
+                <span class="ql-option-content">
+                    <span class="ql-icon ql-level-icon">@icon</span>
+                    <span>@levelText</span>
+                </span>
+            </label>
+            }
+
+            @if (!Model.IsRecommendationOnlyMode)
+            {
+            <label class="ql-option ql-level-option ql-dark-option">
+                <input type="radio" name="SelectedLevelId" value="" @(Model.SelectedLevelId == null ? "checked" : "") />
+                <span class="ql-option-content">
+                    <span class="ql-icon ql-level-icon">?</span>
+                    <span>Nem tudom - Szintfelmérő kitöltése</span>
+                </span>
+            </label>
+            }
+        </div>
+
+        <div class="ql-actions">
+            <button type="button" class="ql-btn ql-next" data-next="4">Következő</button>
+        </div>
+    </section>
+
+    <section class="ql-card ql-step-panel" data-step="4">
+        <div class="ql-progress" aria-label="Lépések">
+            <span class="ql-progress-step is-done">1</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step is-done">2</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step is-done">3</span>
+            <span class="ql-progress-line"></span>
+            <span class="ql-progress-step is-current">4</span>
+        </div>
+
+        <h1 class="ql-title ql-title-two-line">Milyen tempóban szeretnél<br />haladni?</h1>
+
+        <div class="ql-pace-list">
             @foreach (var pace in Model.PaceTypes)
             {
-                <option value="@pace.PaceTypeId">@pace.PaceName</option>
+                var paceName = (pace.PaceName ?? "").Trim();
+                var icon = "⏱";
+
+                if (paceName.Contains("Nyugodtan") || paceName.Contains("saját")) { icon = "🕘"; }
+                else if (paceName.Contains("Kiegyensúlyozott")) { icon = "🎯"; }
+                else if (paceName.Contains("Gyors")) { icon = "⚡"; }
+
+            <label class="ql-option ql-pace-option">
+                <input type="radio" name="PaceTypeId" value="@pace.PaceTypeId" required />
+                <span class="ql-option-content">
+                    <span class="ql-icon ql-pace-icon">@icon</span>
+                    <span>@pace.PaceName</span>
+                </span>
+            </label>
             }
-        </select>
-    </div>
+        </div>
 
-    <div>
-        <label>Készségek</label>
-        @foreach (var skill in Model.Skills)
-        {
-            <div>
-                <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
-                <span>@skill.SkillName</span>
-            </div>
-        }
-    </div>
-
-    <div style="margin-top:15px;">
-        <button type="submit">Ajánlás indítása</button>
-    </div>
+        <div class="ql-actions">
+            <button type="submit" class="ql-btn">Következő</button>
+        </div>
+    </section>
 </form>
+
+<script>
+(function () {
+    var form = document.getElementById('qlStartForm');
+    if (!form) return;
+
+    function showStep(step) {
+        var panels = form.querySelectorAll('.ql-step-panel');
+        for (var i = 0; i < panels.length; i++) {
+            panels[i].classList.remove('is-active');
+            if (panels[i].getAttribute('data-step') === String(step)) {
+                panels[i].classList.add('is-active');
+            }
+        }
+    }
+
+    function hasLanguageSelected() {
+        return !!form.querySelector('input[name="LanguageId"]:checked');
+    }
+
+    function hasSkillSelected() {
+        return !!form.querySelector('input[name="SelectedSkillTypeIds"]:checked');
+    }
+
+    function hasLevelSelected() {
+        return !!form.querySelector('input[name="SelectedLevelId"]:checked');
+    }
+
+    var nextButtons = form.querySelectorAll('.ql-next');
+    for (var i = 0; i < nextButtons.length; i++) {
+        nextButtons[i].addEventListener('click', function () {
+            var next = this.getAttribute('data-next');
+
+            if (next === '2' && !hasLanguageSelected()) {
+                alert('Kérlek, válassz nyelvet.');
+                return;
+            }
+
+            if (next === '3' && !hasSkillSelected()) {
+                alert('Kérlek, válassz legalább egy fejlesztési területet.');
+                return;
+            }
+
+            if (next === '4' && !hasLevelSelected()) {
+                alert('Kérlek, válassz szintet vagy kérj szintfelmérőt.');
+                return;
+            }
+
+            showStep(next);
+        });
+    }
+})();
+</script>
