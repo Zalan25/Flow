@@ -57,11 +57,17 @@
     <Compile Include="Models.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shortans.cs">
+    <Compile Include="UC_MultiOption_Item.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Shortans.Designer.cs">
-      <DependentUpon>Shortans.cs</DependentUpon>
+    <Compile Include="UC_MultiOption_Item.Designer.cs">
+      <DependentUpon>UC_MultiOption_Item.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Multi_settings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Multi_settings.Designer.cs">
+      <DependentUpon>UC_Multi_settings.cs</DependentUpon>
     </Compile>
     <Compile Include="UC_NewQuiz.cs">
       <SubType>UserControl</SubType>
@@ -75,11 +81,23 @@
     <Compile Include="UC_QuestionCard.Designer.cs">
       <DependentUpon>UC_QuestionCard.cs</DependentUpon>
     </Compile>
+    <Compile Include="UC_ShortAnswer_Item.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_ShortAnswer_Item.Designer.cs">
+      <DependentUpon>UC_ShortAnswer_Item.cs</DependentUpon>
+    </Compile>
     <Compile Include="UC_Shortans_settings.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UC_Shortans_settings.Designer.cs">
       <DependentUpon>UC_Shortans_settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_TF_settings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_TF_settings.Designer.cs">
+      <DependentUpon>UC_TF_settings.cs</DependentUpon>
     </Compile>
     <Compile Include="UC_TypeSelector.cs">
       <SubType>UserControl</SubType>
@@ -106,8 +124,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Shortans.resx">
-      <DependentUpon>Shortans.cs</DependentUpon>
+    <EmbeddedResource Include="UC_MultiOption_Item.resx">
+      <DependentUpon>UC_MultiOption_Item.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Multi_settings.resx">
+      <DependentUpon>UC_Multi_settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_NewQuiz.resx">
       <DependentUpon>UC_NewQuiz.cs</DependentUpon>
@@ -115,8 +136,14 @@
     <EmbeddedResource Include="UC_QuestionCard.resx">
       <DependentUpon>UC_QuestionCard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UC_ShortAnswer_Item.resx">
+      <DependentUpon>UC_ShortAnswer_Item.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UC_Shortans_settings.resx">
       <DependentUpon>UC_Shortans_settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_TF_settings.resx">
+      <DependentUpon>UC_TF_settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_TypeSelector.resx">
       <DependentUpon>UC_TypeSelector.cs</DependentUpon>

@@ -30,9 +30,7 @@
         {
             this.lblTypeHeader = new System.Windows.Forms.Label();
             this.btnTF = new System.Windows.Forms.Button();
-            this.btnDrop = new System.Windows.Forms.Button();
             this.btnMulti = new System.Windows.Forms.Button();
-            this.btnLong = new System.Windows.Forms.Button();
             this.btnShort = new System.Windows.Forms.Button();
             this.pnlleft = new System.Windows.Forms.Panel();
             this.pnlCenter = new System.Windows.Forms.Panel();
@@ -69,17 +67,7 @@
             this.btnTF.TabIndex = 10;
             this.btnTF.Text = "Igaz-Hamis";
             this.btnTF.UseVisualStyleBackColor = true;
-            // 
-            // btnDrop
-            // 
-            this.btnDrop.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnDrop.Location = new System.Drawing.Point(24, 413);
-            this.btnDrop.Margin = new System.Windows.Forms.Padding(4);
-            this.btnDrop.Name = "btnDrop";
-            this.btnDrop.Size = new System.Drawing.Size(204, 85);
-            this.btnDrop.TabIndex = 9;
-            this.btnDrop.Text = "Legördülő lista";
-            this.btnDrop.UseVisualStyleBackColor = true;
+            this.btnTF.Click += new System.EventHandler(this.btnTF_Click);
             // 
             // btnMulti
             // 
@@ -91,17 +79,7 @@
             this.btnMulti.TabIndex = 8;
             this.btnMulti.Text = "Feleletválasztós";
             this.btnMulti.UseVisualStyleBackColor = true;
-            // 
-            // btnLong
-            // 
-            this.btnLong.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLong.Location = new System.Drawing.Point(24, 233);
-            this.btnLong.Margin = new System.Windows.Forms.Padding(4);
-            this.btnLong.Name = "btnLong";
-            this.btnLong.Size = new System.Drawing.Size(204, 85);
-            this.btnLong.TabIndex = 7;
-            this.btnLong.Text = "Hosszú válasz";
-            this.btnLong.UseVisualStyleBackColor = true;
+            this.btnMulti.Click += new System.EventHandler(this.btnMulti_Click);
             // 
             // btnShort
             // 
@@ -120,15 +98,13 @@
             this.pnlleft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.pnlleft.Controls.Add(this.btnShort);
-            this.pnlleft.Controls.Add(this.btnLong);
             this.pnlleft.Controls.Add(this.btnMulti);
-            this.pnlleft.Controls.Add(this.btnDrop);
             this.pnlleft.Controls.Add(this.btnTF);
             this.pnlleft.Controls.Add(this.lblTypeHeader);
             this.pnlleft.Location = new System.Drawing.Point(0, 0);
             this.pnlleft.Margin = new System.Windows.Forms.Padding(4);
             this.pnlleft.Name = "pnlleft";
-            this.pnlleft.Size = new System.Drawing.Size(268, 892);
+            this.pnlleft.Size = new System.Drawing.Size(268, 938);
             this.pnlleft.TabIndex = 0;
             // 
             // pnlCenter
@@ -140,7 +116,7 @@
             this.pnlCenter.Location = new System.Drawing.Point(276, 0);
             this.pnlCenter.Margin = new System.Windows.Forms.Padding(4);
             this.pnlCenter.Name = "pnlCenter";
-            this.pnlCenter.Size = new System.Drawing.Size(450, 742);
+            this.pnlCenter.Size = new System.Drawing.Size(525, 788);
             this.pnlCenter.TabIndex = 1;
             // 
             // flpQuestionList
@@ -152,7 +128,7 @@
             this.flpQuestionList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpQuestionList.Location = new System.Drawing.Point(11, 17);
             this.flpQuestionList.Name = "flpQuestionList";
-            this.flpQuestionList.Size = new System.Drawing.Size(414, 690);
+            this.flpQuestionList.Size = new System.Drawing.Size(511, 736);
             this.flpQuestionList.TabIndex = 0;
             this.flpQuestionList.WrapContents = false;
             this.flpQuestionList.Paint += new System.Windows.Forms.PaintEventHandler(this.flpQuestionList_Paint);
@@ -162,23 +138,24 @@
             // 
             this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdd.Location = new System.Drawing.Point(43, 25);
+            this.btnAdd.Location = new System.Drawing.Point(68, 25);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(4);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(148, 99);
             this.btnAdd.TabIndex = 0;
             this.btnAdd.Text = "Kérdés hozzáadása";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click_1);
             // 
             // pnlright
             // 
             this.pnlright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlright.Controls.Add(this.lblSetHeader);
-            this.pnlright.Location = new System.Drawing.Point(724, 0);
+            this.pnlright.Location = new System.Drawing.Point(805, 0);
             this.pnlright.Margin = new System.Windows.Forms.Padding(4);
             this.pnlright.Name = "pnlright";
-            this.pnlright.Size = new System.Drawing.Size(474, 891);
+            this.pnlright.Size = new System.Drawing.Size(762, 937);
             this.pnlright.TabIndex = 2;
             this.pnlright.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlright_Paint);
             // 
@@ -201,16 +178,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlbottom.Controls.Add(this.btnnewquestion);
             this.pnlbottom.Controls.Add(this.btnAdd);
-            this.pnlbottom.Location = new System.Drawing.Point(276, 749);
+            this.pnlbottom.Location = new System.Drawing.Point(276, 795);
             this.pnlbottom.Name = "pnlbottom";
-            this.pnlbottom.Size = new System.Drawing.Size(448, 142);
+            this.pnlbottom.Size = new System.Drawing.Size(525, 142);
             this.pnlbottom.TabIndex = 3;
             // 
             // btnnewquestion
             // 
             this.btnnewquestion.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnnewquestion.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnnewquestion.Location = new System.Drawing.Point(247, 25);
+            this.btnnewquestion.Location = new System.Drawing.Point(298, 25);
             this.btnnewquestion.Margin = new System.Windows.Forms.Padding(4);
             this.btnnewquestion.Name = "btnnewquestion";
             this.btnnewquestion.Size = new System.Drawing.Size(148, 99);
@@ -229,7 +206,7 @@
             this.Controls.Add(this.pnlleft);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "UC_TypeSelector";
-            this.Size = new System.Drawing.Size(1198, 892);
+            this.Size = new System.Drawing.Size(1567, 938);
             this.Load += new System.EventHandler(this.UC_TypeSelector_Load_1);
             this.pnlleft.ResumeLayout(false);
             this.pnlleft.PerformLayout();
@@ -245,9 +222,7 @@
 
         private System.Windows.Forms.Label lblTypeHeader;
         private System.Windows.Forms.Button btnTF;
-        private System.Windows.Forms.Button btnDrop;
         private System.Windows.Forms.Button btnMulti;
-        private System.Windows.Forms.Button btnLong;
         private System.Windows.Forms.Button btnShort;
         private System.Windows.Forms.Panel pnlleft;
         private System.Windows.Forms.Panel pnlCenter;

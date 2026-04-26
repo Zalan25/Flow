@@ -12,27 +12,32 @@ namespace QuestionBankClient
 {
     public partial class UC_QuestionCard : UserControl
     {
-        // Eltároljuk a kérdés adatait a kártyán belül is
-        public string QuestionText { get; set; }
-        public string QuestionType { get; set; } // pl. "Short"
-        public List<string> Answers { get; set; } = new List<string>();
+        // Ez a "lelke" a kártyának: minden adat itt lakik (ID, Pont, Válaszok, stb.)
+        public Question Data { get; set; } = new Question();
 
         public UC_QuestionCard()
         {
             InitializeComponent();
         }
 
-        // Függvény a kártya feliratainak frissítésére
-        public void UpdateDisplay(int number, string text)
+        // Frissítjük a kártya kinézetét
+        // A 'number' a sorszám, a 'text' pedig a megjelenítendő kérdés
+        public void UpdateDisplay(int number, string displayContent)
         {
+            // A 'number' a sorszám (pl. 1. kérdés)
             lblNumber.Text = number.ToString() + ". kérdés";
-            lblText.Text = text;
+
+            // A 'displayContent' mostantól a kérdést ÉS az összefoglalót is tartalmazza
+            lblText.Text = string.IsNullOrWhiteSpace(displayContent) ? "Nincs megadva tartalom..." : displayContent;
+
+            // UI tipp: Állítsd be a lblText-et a designerben:
+            // AutoSize = False
+            // Anchor = Top, Left, Right, Bottom (vagy Dock = Fill egy panelen belül)
         }
 
         private void pnlquestioncard_Paint(object sender, PaintEventArgs e)
         {
-
+            // Ide jöhet majd esetleg egy egyedi keret rajzolása, ha szeretnéd
         }
-        
     }
 }

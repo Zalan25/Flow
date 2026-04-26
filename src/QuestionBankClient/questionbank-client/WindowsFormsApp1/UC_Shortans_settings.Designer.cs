@@ -2,15 +2,8 @@
 {
     partial class UC_Shortans_settings
     {
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,298 +15,239 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lblSetHeader = new System.Windows.Forms.Label();
-            this.lstAnswers = new System.Windows.Forms.ListBox();
-            this.txtCorrectAnswer = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.lblBaseSettings = new System.Windows.Forms.Label();
+            this.pnlSep1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.lb_base_settings = new System.Windows.Forms.Label();
+            this.txtQuestionText = new System.Windows.Forms.TextBox();
+            this.lblMandatory = new System.Windows.Forms.Label();
+            this.chkMandatory = new System.Windows.Forms.CheckBox();
+            this.pnlSep1_5 = new System.Windows.Forms.Panel();
+            this.lblHint = new System.Windows.Forms.Label();
+            this.txtHint = new System.Windows.Forms.TextBox();
+
+            this.lblCheck = new System.Windows.Forms.Label();
+            this.pnlSep2 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.flpAnswers = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddAns = new System.Windows.Forms.Button();
+
+            this.lblValidation = new System.Windows.Forms.Label();
+            this.pnlSep3 = new System.Windows.Forms.Panel();
+            this.lblType = new System.Windows.Forms.Label();
+            this.cmbTextType = new System.Windows.Forms.ComboBox();
+            this.lblMaxChars = new System.Windows.Forms.Label();
+            this.txtMaxChars = new System.Windows.Forms.TextBox();
+
+            this.lblEval = new System.Windows.Forms.Label();
+            this.pnlSep4 = new System.Windows.Forms.Panel();
             this.lblrate = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txtPoints = new System.Windows.Forms.TextBox();
+            this.btnDelete = new System.Windows.Forms.Button();
+
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
+
             // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.textBox3);
-            this.panel1.Controls.Add(this.lblrate);
-            this.panel1.Controls.Add(this.btnAddAns);
-            this.panel1.Controls.Add(this.lblSetHeader);
-            this.panel1.Controls.Add(this.lstAnswers);
-            this.panel1.Controls.Add(this.txtCorrectAnswer);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.checkBox2);
-            this.panel1.Controls.Add(this.checkBox1);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.AutoScroll = true;
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
+            this.panel1.Controls.Add(this.lblBaseSettings);
+            this.panel1.Controls.Add(this.pnlSep1);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.lb_base_settings);
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Controls.Add(this.txtQuestionText);
+            this.panel1.Controls.Add(this.lblMandatory);
+            this.panel1.Controls.Add(this.chkMandatory);
+            this.panel1.Controls.Add(this.pnlSep1_5);
+            this.panel1.Controls.Add(this.lblHint);
+            this.panel1.Controls.Add(this.txtHint);
+            this.panel1.Controls.Add(this.lblCheck);
+            this.panel1.Controls.Add(this.pnlSep2);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.flpAnswers);
+            this.panel1.Controls.Add(this.btnAddAns);
+            this.panel1.Controls.Add(this.lblValidation);
+            this.panel1.Controls.Add(this.pnlSep3);
+            this.panel1.Controls.Add(this.lblType);
+            this.panel1.Controls.Add(this.cmbTextType);
+            this.panel1.Controls.Add(this.lblMaxChars);
+            this.panel1.Controls.Add(this.txtMaxChars);
+            this.panel1.Controls.Add(this.lblEval);
+            this.panel1.Controls.Add(this.pnlSep4);
+            this.panel1.Controls.Add(this.lblrate);
+            this.panel1.Controls.Add(this.txtPoints);
+            this.panel1.Controls.Add(this.btnDelete);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(714, 1095);
-            this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // lblSetHeader
-            // 
-            this.lblSetHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSetHeader.AutoSize = true;
-            this.lblSetHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.lblSetHeader.Location = new System.Drawing.Point(48, 56);
-            this.lblSetHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblSetHeader.Name = "lblSetHeader";
-            this.lblSetHeader.Size = new System.Drawing.Size(239, 31);
-            this.lblSetHeader.TabIndex = 13;
-            this.lblSetHeader.Text = "Kérdés beállítása";
-            // 
-            // lstAnswers
-            // 
-            this.lstAnswers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstAnswers.FormattingEnabled = true;
-            this.lstAnswers.ItemHeight = 25;
-            this.lstAnswers.Location = new System.Drawing.Point(70, 776);
-            this.lstAnswers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.lstAnswers.Name = "lstAnswers";
-            this.lstAnswers.Size = new System.Drawing.Size(458, 104);
-            this.lstAnswers.TabIndex = 12;
-            // 
-            // txtCorrectAnswer
-            // 
-            this.txtCorrectAnswer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCorrectAnswer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtCorrectAnswer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCorrectAnswer.Location = new System.Drawing.Point(33, 629);
-            this.txtCorrectAnswer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.txtCorrectAnswer.Multiline = true;
-            this.txtCorrectAnswer.Name = "txtCorrectAnswer";
-            this.txtCorrectAnswer.Size = new System.Drawing.Size(596, 54);
-            this.txtCorrectAnswer.TabIndex = 10;
-            this.txtCorrectAnswer.Text = "Írd be a szöveget";
-            // 
-            // label5
-            // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(27, 575);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(205, 31);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Helyes válasz:";
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(27, 509);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(160, 31);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Ellenőrzés:";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(33, 431);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(596, 54);
-            this.textBox2.TabIndex = 7;
-            this.textBox2.Text = "Írd be a szöveget";
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(27, 379);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(207, 31);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Súgó szövege:";
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(151, 326);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(88, 29);
-            this.checkBox2.TabIndex = 5;
-            this.checkBox2.Text = "Nem";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(33, 326);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(85, 29);
-            this.checkBox1.TabIndex = 4;
-            this.checkBox1.Text = "Igen";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(27, 274);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(233, 31);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Kötelező kérdés:";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(33, 198);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(596, 54);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "Mi az angol \'alma\' szó?";
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(64, 163);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(232, 31);
-            this.label1.TabIndex = 1;
+
+            // --- ALAPADATOK ---
+            this.lblBaseSettings.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblBaseSettings.Location = new System.Drawing.Point(20, 20);
+            this.lblBaseSettings.Size = new System.Drawing.Size(200, 30);
+            this.lblBaseSettings.Text = "Alapadatok:";
+
+            this.pnlSep1.BackColor = System.Drawing.Color.DarkGray;
+            this.pnlSep1.Location = new System.Drawing.Point(20, 55);
+            this.pnlSep1.Size = new System.Drawing.Size(450, 2);
+
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.label1.Location = new System.Drawing.Point(40, 75);
+            this.label1.Size = new System.Drawing.Size(200, 25);
             this.label1.Text = "Kérdés szövege:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // lb_base_settings
-            // 
-            this.lb_base_settings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lb_base_settings.AutoSize = true;
-            this.lb_base_settings.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_base_settings.Location = new System.Drawing.Point(27, 116);
-            this.lb_base_settings.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lb_base_settings.Name = "lb_base_settings";
-            this.lb_base_settings.Size = new System.Drawing.Size(169, 31);
-            this.lb_base_settings.TabIndex = 0;
-            this.lb_base_settings.Text = "Alapadatok:";
-            // 
-            // btnAddAns
-            // 
-            this.btnAddAns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddAns.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAddAns.Location = new System.Drawing.Point(509, 691);
-            this.btnAddAns.Margin = new System.Windows.Forms.Padding(4);
-            this.btnAddAns.Name = "btnAddAns";
-            this.btnAddAns.Size = new System.Drawing.Size(120, 56);
-            this.btnAddAns.TabIndex = 14;
-            this.btnAddAns.Text = "Hozzáad";
-            this.btnAddAns.UseVisualStyleBackColor = true;
-            // 
-            // lblrate
-            // 
-            this.lblrate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblrate.AutoSize = true;
-            this.lblrate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblrate.Location = new System.Drawing.Point(27, 937);
-            this.lblrate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblrate.Name = "lblrate";
-            this.lblrate.Size = new System.Drawing.Size(152, 31);
-            this.lblrate.TabIndex = 15;
+
+            this.txtQuestionText.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtQuestionText.Location = new System.Drawing.Point(45, 105);
+            this.txtQuestionText.Multiline = true;
+            this.txtQuestionText.Size = new System.Drawing.Size(410, 50);
+
+            this.lblMandatory.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblMandatory.Location = new System.Drawing.Point(40, 175);
+            this.lblMandatory.Size = new System.Drawing.Size(200, 25);
+            this.lblMandatory.Text = "Kötelező kérdés";
+
+            this.chkMandatory.Location = new System.Drawing.Point(380, 180);
+            this.chkMandatory.Size = new System.Drawing.Size(15, 14);
+
+            this.pnlSep1_5.BackColor = System.Drawing.Color.LightGray;
+            this.pnlSep1_5.Location = new System.Drawing.Point(45, 215);
+            this.pnlSep1_5.Size = new System.Drawing.Size(410, 1);
+
+            this.lblHint.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblHint.Location = new System.Drawing.Point(40, 230);
+            this.lblHint.Size = new System.Drawing.Size(200, 25);
+            this.lblHint.Text = "Súgó szöveg:";
+
+            this.txtHint.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtHint.Location = new System.Drawing.Point(45, 260);
+            this.txtHint.Size = new System.Drawing.Size(410, 35);
+
+            // --- ELLENŐRZÉS ---
+            this.lblCheck.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblCheck.Location = new System.Drawing.Point(20, 320);
+            this.lblCheck.Size = new System.Drawing.Size(200, 30);
+            this.lblCheck.Text = "Ellenőrzés";
+
+            this.pnlSep2.BackColor = System.Drawing.Color.DarkGray;
+            this.pnlSep2.Location = new System.Drawing.Point(20, 355);
+            this.pnlSep2.Size = new System.Drawing.Size(450, 2);
+
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.label2.Location = new System.Drawing.Point(40, 375);
+            this.label2.Size = new System.Drawing.Size(200, 25);
+            this.label2.Text = "Helyes válasz:";
+
+            this.flpAnswers.AutoScroll = true;
+            this.flpAnswers.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpAnswers.Location = new System.Drawing.Point(45, 405);
+            this.flpAnswers.Size = new System.Drawing.Size(410, 120);
+            this.flpAnswers.WrapContents = false;
+
+            this.btnAddAns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
+            this.btnAddAns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddAns.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnAddAns.ForeColor = System.Drawing.Color.White;
+            this.btnAddAns.Location = new System.Drawing.Point(100, 535);
+            this.btnAddAns.Size = new System.Drawing.Size(300, 40);
+            this.btnAddAns.Text = "+ Másik válasz";
+            this.btnAddAns.Click += new System.EventHandler(this.btnAddAns_Click_1);
+
+            // --- VALIDÁCIÓ ---
+            this.lblValidation.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblValidation.Location = new System.Drawing.Point(20, 600);
+            this.lblValidation.Size = new System.Drawing.Size(200, 30);
+            this.lblValidation.Text = "Validáció:";
+
+            this.pnlSep3.BackColor = System.Drawing.Color.DarkGray;
+            this.pnlSep3.Location = new System.Drawing.Point(20, 635);
+            this.pnlSep3.Size = new System.Drawing.Size(450, 2);
+
+            this.lblType.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblType.Location = new System.Drawing.Point(40, 655);
+            this.lblType.Size = new System.Drawing.Size(150, 25);
+            this.lblType.Text = "Szöveg típusa:";
+
+            this.cmbTextType.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.cmbTextType.Items.AddRange(new object[] { "szöveg", "szám", "email" });
+            this.cmbTextType.Location = new System.Drawing.Point(200, 650);
+            this.cmbTextType.Size = new System.Drawing.Size(150, 29);
+            this.cmbTextType.Text = "szöveg";
+
+            this.lblMaxChars.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblMaxChars.Location = new System.Drawing.Point(40, 695);
+            this.lblMaxChars.Size = new System.Drawing.Size(150, 25);
+            this.lblMaxChars.Text = "Max. karakter:";
+
+            this.txtMaxChars.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtMaxChars.Location = new System.Drawing.Point(200, 690);
+            this.txtMaxChars.Size = new System.Drawing.Size(100, 29);
+
+            // --- ÉRTÉKELÉS ---
+            this.lblEval.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblEval.Location = new System.Drawing.Point(20, 740);
+            this.lblEval.Size = new System.Drawing.Size(200, 30);
+            this.lblEval.Text = "Értékelés";
+
+            this.pnlSep4.BackColor = System.Drawing.Color.DarkGray;
+            this.pnlSep4.Location = new System.Drawing.Point(20, 775);
+            this.pnlSep4.Size = new System.Drawing.Size(450, 2);
+
+            this.lblrate.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblrate.Location = new System.Drawing.Point(40, 795);
+            this.lblrate.Size = new System.Drawing.Size(150, 25);
             this.lblrate.Text = "Pontszám:";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(33, 1006);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(219, 31);
-            this.textBox3.TabIndex = 16;
-            // 
+
+            this.txtPoints.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.txtPoints.Location = new System.Drawing.Point(200, 790);
+            this.txtPoints.Size = new System.Drawing.Size(100, 32);
+
+            this.btnDelete.BackColor = System.Drawing.Color.White;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnDelete.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
+            this.btnDelete.Location = new System.Drawing.Point(45, 850);
+            this.btnDelete.Size = new System.Drawing.Size(150, 45);
+            this.btnDelete.Text = "Törlés";
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+
             // UC_Shortans_settings
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "UC_Shortans_settings";
-            this.Size = new System.Drawing.Size(714, 1095);
-            this.Load += new System.EventHandler(this.UC_Shortans_settings_Load);
+            this.Size = new System.Drawing.Size(500, 950);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
-
         }
 
         #endregion
 
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lblBaseSettings;
+        private System.Windows.Forms.Panel pnlSep1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lb_base_settings;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.TextBox txtQuestionText;
+        private System.Windows.Forms.Label lblMandatory;
+        private System.Windows.Forms.CheckBox chkMandatory;
+        private System.Windows.Forms.Panel pnlSep1_5;
+        private System.Windows.Forms.Label lblHint;
+        private System.Windows.Forms.TextBox txtHint;
+        private System.Windows.Forms.Label lblCheck;
+        private System.Windows.Forms.Panel pnlSep2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtCorrectAnswer;
-        private System.Windows.Forms.ListBox lstAnswers;
-        private System.Windows.Forms.Label lblSetHeader;
+        private System.Windows.Forms.FlowLayoutPanel flpAnswers;
         private System.Windows.Forms.Button btnAddAns;
+        private System.Windows.Forms.Label lblValidation;
+        private System.Windows.Forms.Panel pnlSep3;
+        private System.Windows.Forms.Label lblType;
+        private System.Windows.Forms.ComboBox cmbTextType;
+        private System.Windows.Forms.Label lblMaxChars;
+        private System.Windows.Forms.TextBox txtMaxChars;
+        private System.Windows.Forms.Label lblEval;
+        private System.Windows.Forms.Panel pnlSep4;
         private System.Windows.Forms.Label lblrate;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtPoints;
+        private System.Windows.Forms.Button btnDelete;
     }
 }

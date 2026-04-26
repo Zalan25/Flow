@@ -1,31 +1,29 @@
-﻿using System;
+﻿using QuestionBankClient;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
-
+using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace QuestionBankClient
 {
-    public partial class UC_Shortans_settings : UserControl
+    public partial class UC_Multi_settings : UserControl
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
-        public UC_Shortans_settings()
+        public UC_Multi_settings()
         {
             InitializeComponent();
 
             this.HandleCreated += (s, e) => {
-                SetPlaceholder(txtQuestionText, "pl. Mi az angol 'alma' szó?");
-                SetPlaceholder(txtHint, "Ide írd a választ...");
-                SetPlaceholder(txtPoints, "1");
+                SetPlaceholder(txtQuestionText, "Milyen nyelven szeretnél tanulni?");
+                SetPlaceholder(txtHint, "Ide írd a súgó szöveget...");
+                SetPlaceholder(txtPoints, "Pont");
             };
         }
 
@@ -43,35 +41,28 @@ namespace QuestionBankClient
             set { if (txtPoints != null) txtPoints.Text = value; }
         }
 
-        public string MaxCharacters
-        {
-            get => txtMaxChars?.Text ?? "";
-            set { if (txtMaxChars != null) txtMaxChars.Text = value; }
-        }
-
-        public string TextType => cmbTextType.SelectedItem?.ToString() ?? "szöveg";
-
         public bool IsMandatory => chkMandatory != null && chkMandatory.Checked;
 
         // --- MŰVELETEK ---
 
         public List<Answer> GetAnswers()
         {
-            var list = new List<Answer>();
+            var answers = new List<Answer>();
             int order = 1;
-            foreach (UC_ShortAnswer_Item item in flpAnswers.Controls.OfType<UC_ShortAnswer_Item>())
+
+            foreach (UC_MultiOption_Item item in flpOptions.Controls.OfType<UC_MultiOption_Item>())
             {
-                if (!string.IsNullOrWhiteSpace(item.AnswerText))
+                if (!string.IsNullOrWhiteSpace(item.OptionText))
                 {
-                    list.Add(new Answer
+                    answers.Add(new Answer
                     {
-                        AnswerText = item.AnswerText,
-                        IsCorrect = true,
+                        AnswerText = item.OptionText,
+                        IsCorrect = item.IsCorrect,
                         AnswerOrder = order++
                     });
                 }
             }
-            return list;
+            return answers;
         }
 
         private void SetPlaceholder(Control control, string text)
@@ -80,11 +71,10 @@ namespace QuestionBankClient
                 SendMessage(control.Handle, 0x1501, 0, text);
         }
 
-        private void btnAddAns_Click_1(object sender, EventArgs e)
+        private void btnAddOption_Click(object sender, EventArgs e)
         {
-            // Új alternatíva hozzáadása a listához
-            var newItem = new UC_ShortAnswer_Item { Width = flpAnswers.Width - 25 };
-            flpAnswers.Controls.Add(newItem);
+            var newItem = new UC_MultiOption_Item { Width = flpOptions.Width - 25 };
+            flpOptions.Controls.Add(newItem);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

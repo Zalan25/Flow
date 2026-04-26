@@ -17,27 +17,40 @@ namespace QuestionBankClient
             InitializeComponent();
         }
 
-        private void btnShort_Click(object sender, EventArgs e)
+        // Segédfüggvény a szülő eléréséhez és a váltáshoz
+        private void SelectTypeAndReturn(string type, string defaultText)
         {
-            // Megkeressük a panelt név alapján bárhol a szülő formon belül
-            var panel = this.ParentForm.Controls.Find("pnlright", true).FirstOrDefault() as Panel;
+            // Megkeressük az UC_TypeSelector-t (picker -> pnlCenter -> UC_TypeSelector)
+            var parent = this.Parent.Parent as UC_TypeSelector;
 
-            if (panel != null)
+            if (parent != null)
             {
-                panel.Controls.Clear();
-                UC_Shortans_settings mid = new UC_Shortans_settings { Dock = DockStyle.Fill };
-                panel.Controls.Add(mid);
+                // 1. Először visszahozzuk a kérdéslistát a középső panelbe
+                parent.ShowQuestionList();
+
+                // 2. Létrehozzuk az új kártyát a választott típussal
+                // Megjegyzés: a 'CreateNewQuestionCard' metódust public-ra vagy internal-ra kell állítanunk!
+                parent.HandleNewQuestionSelection(type, defaultText);
             }
         }
 
-        private void btnLong_Click(object sender, EventArgs e)
+        private void btnShort_Click(object sender, EventArgs e)
         {
-
+            SelectTypeAndReturn("Short", "Új rövid válaszos kérdés...");
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void btnTF_Click(object sender, EventArgs e)
         {
-
+            SelectTypeAndReturn("tf", "Új igaz/hamis kérdés...");
         }
+
+        private void btnMulti_Click(object sender, EventArgs e)
+        {
+            SelectTypeAndReturn("Multi", "Új feleletválasztós kérdés...");
+        }
+
+        // Üres metódusok a hiba elkerülésére
+        private void btnLong_Click(object sender, EventArgs e) { }
+        private void panel1_Paint(object sender, PaintEventArgs e) { }
     }
 }
