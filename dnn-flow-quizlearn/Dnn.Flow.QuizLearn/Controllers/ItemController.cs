@@ -127,19 +127,21 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("Start", fresh);
             }
 
-
+            var needLevelTestFromForm =
+                string.Equals(Request.Form["NeedLevelTest"], "true", StringComparison.OrdinalIgnoreCase);
 
             var needLevelTest =
                 moduleMode == QuizLearnMode.LevelAssessment ||
+                needLevelTestFromForm ||
                 (
                     moduleMode == QuizLearnMode.RecommendationWithLevelAssessment &&
                     !model.SelectedLevelId.HasValue
                 );
 
-            if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue)
+            if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue && !needLevelTest)
             {
                 var fresh = BuildStartViewModel(moduleMode);
-                ModelState.AddModelError("", "Termékajánló módban a szint kiválasztása kötelező.");
+                ViewBag.ServerValidationStep = 3;
                 return View("Start", fresh);
             }
 
@@ -164,15 +166,21 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (needLevelTest)
             {
-                var vm = BuildStartViewModel(moduleMode);
-                vm.SessionId = sessionId;
-                vm.LanguageId = model.LanguageId;
-                vm.SecondaryLanguageId = model.SecondaryLanguageId;
-                vm.PaceTypeId = model.PaceTypeId;
-                vm.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
-                vm.NeedLevelTest = true;
+                _assessmentService.GenerateSessionQuestions(
+                    ModuleContext.ModuleId,
+                    sessionId,
+                    model.LanguageId
+                );
 
-                return View("StartAssessment", vm);
+                _assessmentService.StartTestAttempt(
+                    ModuleContext.ModuleId,
+                    sessionId,
+                    1
+                );
+
+                return Redirect(Url.Action("Question", "Item")
+                    + "?sessionId=" + sessionId
+                    + "&questionNumber=1");
             }
 
             var rules = GetRecommendationRulesForAllSelectedSkills(model);
