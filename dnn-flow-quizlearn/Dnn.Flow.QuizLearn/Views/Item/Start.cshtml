@@ -379,17 +379,17 @@
 
         if (recommendationForm) {
             recommendationForm.addEventListener("submit", function (e) {
-                e.preventDefault();
-
                 if (!validateStep(4)) {
+                    e.preventDefault();
+
                     showStep(4);
                     showStepError(4);
+
                     return false;
                 }
 
                 sessionStorage.removeItem("quizlearn-step");
-
-                HTMLFormElement.prototype.submit.call(recommendationForm);
+                return true;
             });
         }
 
@@ -401,10 +401,9 @@
         if (serverValidationStep > 0) {
             showStep(serverValidationStep);
             showStepError(serverValidationStep);
-        } else if (!sessionStorage.getItem("quizlearn-step")) {
-            showStep(1);
         } else {
-            showStep(parseInt(sessionStorage.getItem("quizlearn-step"), 10));
+            sessionStorage.removeItem("quizlearn-step");
+            showStep(1);
         }
     })();
 </script>
