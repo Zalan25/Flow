@@ -395,7 +395,18 @@
                 return true;
             });
         }
-        s
-        showStep(1);
+
+        var serverValidationStepInput = document.getElementById("ServerValidationStep");
+        var serverValidationStep = serverValidationStepInput
+            ? parseInt(serverValidationStepInput.value, 10)
+            : 0;
+
+        if (serverValidationStep > 0) {
+            showStep(serverValidationStep);
+            showStepError(serverValidationStep);
+        } else {
+            showStep(1);
+        }
     })();
+</script>
 </script>
