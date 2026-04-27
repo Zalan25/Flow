@@ -1,0 +1,119 @@
+﻿/* =========================================
+   00.00.10 - Bundle composition + fixes
+========================================= */
+
+/* --- 1. Book skill hozzáadása --- */
+IF NOT EXISTS (
+    SELECT 1 
+    FROM {databaseOwner}{objectQualifier}lm_skill_types
+    WHERE SkillName = 'Book'
+)
+BEGIN
+    INSERT INTO {databaseOwner}{objectQualifier}lm_skill_types (SkillName)
+    VALUES ('Book');
+END
+
+
+/* --- 2. ProductKind oszlop hozzáadása --- */
+IF NOT EXISTS (
+    SELECT 1
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_NAME = '{objectQualifier}lm_recommendation_rules'
+      AND COLUMN_NAME = 'ProductKind'
+)
+BEGIN
+    ALTER TABLE {databaseOwner}{objectQualifier}lm_recommendation_rules
+    ADD ProductKind NVARCHAR(50) NULL;
+END
+
+
+/* --- 3. Pace nevek frissítése --- */
+UPDATE {databaseOwner}{objectQualifier}lm_pace_types
+SET PaceName = CASE PaceTypeId
+    WHEN 1 THEN N'Kényelmesen tanulok'
+    WHEN 2 THEN N'Kiegyensúlyozottan'
+    WHEN 3 THEN N'Intenzív haladás'
+    ELSE PaceName
+END
+WHERE PaceTypeId IN (1,2,3);
+
+
+/* --- 4. Bundle composition table létrehozása --- */
+IF NOT EXISTS (
+    SELECT 1 
+    FROM INFORMATION_SCHEMA.TABLES
+    WHERE TABLE_NAME = '{objectQualifier}lm_bundle_composition_rules'
+)
+BEGIN
+    CREATE TABLE {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+    (
+        BundleCompositionRuleId INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+
+        ModuleId INT NOT NULL,
+
+        FocusSkillTypeId INT NOT NULL,
+        PaceTypeId INT NOT NULL,
+        ProductSkillTypeId INT NOT NULL,
+
+        ProductCount INT NOT NULL,
+        Priority INT NOT NULL,
+
+        IsActive BIT NOT NULL DEFAULT 1,
+
+        CreatedOn DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+    );
+END
+
+
+/* --- 5. Indexek --- */
+IF NOT EXISTS (
+    SELECT 1 FROM sys.indexes 
+    WHERE name = 'IX_lm_bundle_composition_rules_lookup'
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_lm_bundle_composition_rules_lookup
+    ON {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+    (
+        ModuleId,
+        FocusSkillTypeId,
+        PaceTypeId
+    );
+END
+
+
+/* --- 6. Seed (csak ha még nincs adat) --- */
+IF NOT EXISTS (
+    SELECT 1 
+    FROM {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+)
+BEGIN
+    DECLARE @ModuleId INT = 0;
+
+    DECLARE @Practice INT = (SELECT SkillTypeId FROM {databaseOwner}{objectQualifier}lm_skill_types WHERE SkillName = 'Practice');
+    DECLARE @Book INT = (SELECT SkillTypeId FROM {databaseOwner}{objectQualifier}lm_skill_types WHERE SkillName = 'Book');
+    DECLARE @Listening INT = (SELECT SkillTypeId FROM {databaseOwner}{objectQualifier}lm_skill_types WHERE SkillName = 'Listening');
+    DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM {databaseOwner}{objectQualifier}lm_skill_types WHERE SkillName = 'Vocabulary');
+
+    /* SLOW */
+    INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+    (ModuleId, FocusSkillTypeId, PaceTypeId, ProductSkillTypeId, ProductCount, Priority)
+    VALUES
+    (@ModuleId, @Practice, 1, @Practice, 1, 1),
+    (@ModuleId, @Practice, 1, @Book, 1, 2);
+
+    /* MEDIUM */
+    INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+    (ModuleId, FocusSkillTypeId, PaceTypeId, ProductSkillTypeId, ProductCount, Priority)
+    VALUES
+    (@ModuleId, @Practice, 2, @Practice, 2, 1),
+    (@ModuleId, @Practice, 2, @Book, 1, 2);
+
+    /* FAST */
+    INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+    (ModuleId, FocusSkillTypeId, PaceTypeId, ProductSkillTypeId, ProductCount, Priority)
+    VALUES
+    (@ModuleId, @Practice, 3, @Practice, 2, 1),
+    (@ModuleId, @Practice, 3, @Book, 1, 2),
+    (@ModuleId, @Practice, 3, @Listening, 1, 3),
+    (@ModuleId, @Practice, 3, @Vocabulary, 1, 4);
+END
