@@ -638,11 +638,16 @@
 }
 
 .quizlearn-level-option {
-    width: 48px;
+    width: 100%;
     min-height: 44px;
     margin-bottom: 10px;
     padding: 6px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
     font-size: 21px;
+    text-align: left;
 }
 
 .quizlearn-pace-option {
@@ -664,13 +669,23 @@
 }
 
 .quizlearn-level-option .quizlearn-option-icon {
-    min-width: 38px;
-    height: 30px;
-    background: transparent;
-    font-size: 24px;
+    width: 48px;
+    min-width: 48px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f3ff;
+    border-radius: 7px;
+    font-size: 22px;
 }
 
-.quizlearn-flag-placeholder {
+.quizlearn-level-option .quizlearn-option-text {
+    flex: 1;
+    text-align: center;
+}
+
+/*.quizlearn-flag-placeholder {
     background: #f7f7f7;
 }
 
@@ -681,6 +696,22 @@
         display: block;
         background: #e5e7eb;
         border-radius: 2px;
+    }*/
+
+.quizlearn-language-flag {
+    width: 54px;
+    min-width: 54px;
+    height: 38px;
+    background: #f7f7ff;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+    .quizlearn-language-flag img {
+        width: 54px;
+        height: 38px;
+        object-fit: cover;
+        display: block;
     }
 
 .quizlearn-button {

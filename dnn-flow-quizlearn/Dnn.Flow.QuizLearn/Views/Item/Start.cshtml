@@ -1,5 +1,5 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
-<link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/quizlearn.css?v=10" />
+<link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/quizlearn.css?v=12" />
 
 <div class="quizlearn-wrapper">
     <div class="quizlearn-card quizlearn-recommendation-card">
@@ -44,8 +44,12 @@
                     {
                         <label class="quizlearn-start-option quizlearn-language-option">
                             <input type="radio" name="LanguageId" value="@language.LanguageId" />
-                            <span class="quizlearn-option-icon quizlearn-flag-placeholder"></span>
-                            <span>@language.Name</span>
+
+                            <span class="quizlearn-option-image quizlearn-language-flag">
+                                <img src="@GetLanguageFlagPath(language.Name)" alt="@language.Name" />
+                            </span>
+
+                            <span class="quizlearn-option-text">@language.Name</span>
                         </label>
                     }
                 </div>
@@ -120,6 +124,21 @@
 </div>
 
 @functions {
+    private string GetLanguageFlagPath(string languageName)
+    {
+        var name = languageName.ToLower();
+
+        if (name.Contains("angol")) return "/Portals/0/QuizLearn/flags/en.svg";
+        if (name.Contains("görög")) return "/Portals/0/QuizLearn/flags/gr.svg";
+        if (name.Contains("kínai")) return "/Portals/0/QuizLearn/flags/cn.svg";
+        if (name.Contains("orosz")) return "/Portals/0/QuizLearn/flags/ru.svg";
+        if (name.Contains("japán")) return "/Portals/0/QuizLearn/flags/jp.svg";
+        if (name.Contains("török")) return "/Portals/0/QuizLearn/flags/tr.svg";
+        if (name.Contains("horvát")) return "/Portals/0/QuizLearn/flags/hr.svg";
+        if (name.Contains("portugál")) return "/Portals/0/QuizLearn/flags/pt.svg";
+
+        return "/Portals/0/QuizLearn/flags/default.svg";
+    }
     private string GetSkillDisplayName(string skillName)
     {
         switch (skillName)
@@ -196,17 +215,17 @@
 
             if (!stepElement) return false;
 
-            var radios = stepElement.querySelectorAll('input[type="radio"]');
-            if (radios.length > 0) {
-                return Array.from(radios).some(function (r) {
-                    return r.checked;
-                });
-            }
-
             var checkboxes = stepElement.querySelectorAll('input[type="checkbox"]');
             if (checkboxes.length > 0) {
                 return Array.from(checkboxes).some(function (c) {
                     return c.checked;
+                });
+            }
+
+            var radios = stepElement.querySelectorAll('input[type="radio"]');
+            if (radios.length > 0) {
+                return Array.from(radios).some(function (r) {
+                    return r.checked;
                 });
             }
 
@@ -215,7 +234,6 @@
 
         function showStepError(step) {
             var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
-
             if (!stepElement) return;
 
             stepElement.querySelectorAll(".quizlearn-start-option").forEach(function (el) {
@@ -248,93 +266,73 @@
                 el.classList.remove("active");
             });
 
+            var targetStep = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
+            if (targetStep) {
+                targetStep.classList.add("active");
+            }
+
             circles.forEach(function (circle) {
-                circle.addEventListener("click", function () {
-                    var targetStep = parseInt(circle.getAttribute("data-go-step"), 10);
+                var circleStep = parseInt(circle.getAttribute("data-go-step"), 10);
 
-                    if (targetStep < 1 || targetStep > maxStep) {
-                        return;
-                    }
+                circle.classList.remove("active");
+                circle.classList.remove("done");
 
-                    /* Visszafelé mindig lehessen menni */
-                    if (targetStep <= currentStep) {
-                        showStep(targetStep);
-                        return;
-                    }
+                if (circleStep < currentStep) {
+                    circle.classList.add("done");
+                }
 
-                    /* Előre csak akkor, ha az aktuális step valid */
-                    if (!validateStep(currentStep)) {
-                        showStepError(currentStep);
-                        return;
-                    }
-
-                    /* Ne lehessen átugrani több lépést egyszerre */
-                    if (targetStep === currentStep + 1) {
-                        showStep(targetStep);
-                    }
-                });
+                if (circleStep === currentStep) {
+                    circle.classList.add("active");
+                }
             });
+        }
 
-            var target = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
-            if (target) {
-                target.classList.add("active");
+        function updateSelectedStates(input) {
+            var parentStep = input.closest(".quizlearn-start-step");
+            clearStepError(parentStep);
+
+            if (input.type === "radio") {
+                var sameNameInputs = document.querySelectorAll('input[name="' + input.name + '"]');
+
+                sameNameInputs.forEach(function (radio) {
+                    var parent = radio.closest(".quizlearn-start-option");
+                    if (parent) parent.classList.remove("selected");
+                });
+            }
+
+            var parent = input.closest(".quizlearn-start-option");
+            if (parent) {
+                parent.classList.toggle("selected", input.checked);
+            }
+
+            if (input.name === "SelectedLevelId") {
+                needLevelTestInput.value = "false";
+
+                var levelTestInput = document.querySelector('input[name="LevelChoice"]');
+                if (levelTestInput) {
+                    levelTestInput.checked = false;
+                    var levelTestParent = levelTestInput.closest(".quizlearn-start-option");
+                    if (levelTestParent) levelTestParent.classList.remove("selected");
+                }
+            }
+
+            if (input.name === "LevelChoice" && input.value === "NeedLevelTest") {
+                needLevelTestInput.value = "true";
+
+                var selectedLevels = document.querySelectorAll('input[name="SelectedLevelId"]');
+                selectedLevels.forEach(function (levelInput) {
+                    levelInput.checked = false;
+                    var levelParent = levelInput.closest(".quizlearn-start-option");
+                    if (levelParent) levelParent.classList.remove("selected");
+                });
             }
         }
 
-        function selectVisualState() {
-            var options = document.querySelectorAll(".quizlearn-start-option");
-
-            options.forEach(function (option) {
-                var input = option.querySelector("input");
-
-                if (!input) return;
-
-                option.classList.toggle("selected", input.checked);
-
-                input.addEventListener("change", function () {
-                    var parentStep = input.closest(".quizlearn-start-step");
-                    clearStepError(parentStep);
-
-                    if (input.type === "radio") {
-                        var sameName = document.querySelectorAll('input[name="' + input.name + '"]');
-
-                        sameName.forEach(function (radio) {
-                            var parent = radio.closest(".quizlearn-start-option");
-                            if (parent) parent.classList.remove("selected");
-                        });
-                    }
-
-                    option.classList.toggle("selected", input.checked);
-
-                    if (input.name === "SelectedLevelId") {
-                        needLevelTestInput.value = "false";
-
-                        var levelTestInput = document.querySelector('input[name="LevelChoice"]');
-                        if (levelTestInput) {
-                            levelTestInput.checked = false;
-
-                            var levelTestParent = levelTestInput.closest(".quizlearn-start-option");
-                            if (levelTestParent) {
-                                levelTestParent.classList.remove("selected");
-                            }
-                        }
-                    }
-
-                    if (input.name === "LevelChoice" && input.value === "NeedLevelTest") {
-                        needLevelTestInput.value = "true";
-
-                        var selectedLevels = document.querySelectorAll('input[name="SelectedLevelId"]');
-
-                        selectedLevels.forEach(function (levelInput) {
-                            levelInput.checked = false;
-
-                            var parent = levelInput.closest(".quizlearn-start-option");
-                            if (parent) parent.classList.remove("selected");
-                        });
-                    }
-                });
+        document.querySelectorAll(".quizlearn-start-option input").forEach(function (input) {
+            input.addEventListener("change", function () {
+                updateSelectedStates(input);
             });
-        }
+        });
 
         nextButtons.forEach(function (btn) {
             btn.addEventListener("click", function () {
@@ -353,7 +351,21 @@
             circle.addEventListener("click", function () {
                 var targetStep = parseInt(circle.getAttribute("data-go-step"), 10);
 
-                if (targetStep >= 1 && targetStep <= maxStep) {
+                if (targetStep < 1 || targetStep > maxStep) {
+                    return;
+                }
+
+                if (targetStep <= currentStep) {
+                    showStep(targetStep);
+                    return;
+                }
+
+                if (!validateStep(currentStep)) {
+                    showStepError(currentStep);
+                    return;
+                }
+
+                if (targetStep === currentStep + 1) {
                     showStep(targetStep);
                 }
             });
@@ -368,7 +380,6 @@
             });
         }
 
-        selectVisualState();
         showStep(1);
     })();
 </script>
