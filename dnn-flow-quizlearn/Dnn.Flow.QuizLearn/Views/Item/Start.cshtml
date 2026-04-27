@@ -124,7 +124,7 @@
                 }
             </div>
 
-            <button type="submit" class="quizlearn-button">
+            <button type="button" class="quizlearn-button" id="recommendationSubmitButton">
                 Ajánlás megtekintése
             </button>
         </section>
@@ -218,6 +218,7 @@
         var nextButtons = document.querySelectorAll(".quizlearn-next-button");
         var needLevelTestInput = document.getElementById("NeedLevelTest");
         var recommendationForm = document.getElementById("recommendationForm");
+        var submitButton = document.getElementById("recommendationSubmitButton");
 
         function validateStep(step) {
             var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
@@ -384,8 +385,27 @@
             recommendationForm.addEventListener("submit", function (e) {
                 if (!validateStep(4)) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    showStep(4);
                     showStepError(4);
+
+                    return false;
                 }
+            }, true);
+        }
+        var submitButton = document.getElementById("recommendationSubmitButton");
+
+        if (submitButton && recommendationForm) {
+            submitButton.addEventListener("click", function () {
+                if (!validateStep(4)) {
+                    showStep(4);
+                    showStepError(4);
+                    return;
+                }
+
+                recommendationForm.submit();
             });
         }
 
