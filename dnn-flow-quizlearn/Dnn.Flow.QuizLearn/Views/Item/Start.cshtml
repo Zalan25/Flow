@@ -218,7 +218,6 @@
         var nextButtons = document.querySelectorAll(".quizlearn-next-button");
         var needLevelTestInput = document.getElementById("NeedLevelTest");
         var recommendationForm = document.getElementById("recommendationForm");
-        var submitButton = document.getElementById("recommendationSubmitButton");
 
         function validateStep(step) {
             var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
@@ -381,27 +380,14 @@
             });
         });
 
-        if (recommendationForm) {
-            recommendationForm.addEventListener("submit", function (e) {
-                if (!validateStep(4)) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
 
-                    showStep(4);
-                    showStepError(4);
 
-                    return false;
-                }
-            }, true);
-        }
-        var submitButton = document.getElementById("recommendationSubmitButton");
-
-        if (submitButton && recommendationForm) {
+        if (submitButton ) {
             submitButton.addEventListener("click", function () {
-                if (!validateStep(4)) {
-                    showStep(4);
-                    showStepError(4);
+                var stepElement = submitButton.closest(".quizlearn-start-step");
+
+                if (!validateStepElement(stepElement)) {
+                    showStepErrorElement(stepElement);
                     return;
                 }
 
