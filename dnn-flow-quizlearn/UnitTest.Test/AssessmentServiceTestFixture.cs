@@ -44,11 +44,11 @@ namespace Dnn.Flow.QuizLearn.Unittest
 
             var repositoryMock = new Mock<IQuizLearnDataRepository>(MockBehavior.Strict);
 
-            var mockAnswers = new List<AttemptAnswerSummary>
+            var mockAnswers = new List<AttemptAnswerSummaryInfo>
             {
-                new AttemptAnswerSummary { EarnedPoints = 15, QuestionLevelId = 3, IsCorrect = true },
-                new AttemptAnswerSummary { EarnedPoints = 10, QuestionLevelId = 3, IsCorrect = true },
-                new AttemptAnswerSummary { EarnedPoints = 10, QuestionLevelId = 3, IsCorrect = true }
+                new AttemptAnswerSummaryInfo { EarnedPoints = 15, QuestionLevelId = 3, IsCorrect = true },
+                new AttemptAnswerSummaryInfo { EarnedPoints = 10, QuestionLevelId = 3, IsCorrect = true },
+                new AttemptAnswerSummaryInfo { EarnedPoints = 10, QuestionLevelId = 3, IsCorrect = true }
             };
 
             repositoryMock
