@@ -109,10 +109,10 @@
             this.btnexisting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnexisting.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnexisting.ForeColor = System.Drawing.Color.White;
-            this.btnexisting.Location = new System.Drawing.Point(84, 371);
+            this.btnexisting.Location = new System.Drawing.Point(68, 326);
             this.btnexisting.Margin = new System.Windows.Forms.Padding(4);
             this.btnexisting.Name = "btnexisting";
-            this.btnexisting.Size = new System.Drawing.Size(246, 81);
+            this.btnexisting.Size = new System.Drawing.Size(294, 128);
             this.btnexisting.TabIndex = 4;
             this.btnexisting.Text = "Kérdőíveim";
             this.btnexisting.UseVisualStyleBackColor = false;

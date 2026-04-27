@@ -116,7 +116,7 @@
             this.pnlCenter.Location = new System.Drawing.Point(276, 0);
             this.pnlCenter.Margin = new System.Windows.Forms.Padding(4);
             this.pnlCenter.Name = "pnlCenter";
-            this.pnlCenter.Size = new System.Drawing.Size(525, 788);
+            this.pnlCenter.Size = new System.Drawing.Size(439, 788);
             this.pnlCenter.TabIndex = 1;
             // 
             // flpQuestionList
@@ -128,7 +128,7 @@
             this.flpQuestionList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpQuestionList.Location = new System.Drawing.Point(11, 17);
             this.flpQuestionList.Name = "flpQuestionList";
-            this.flpQuestionList.Size = new System.Drawing.Size(511, 736);
+            this.flpQuestionList.Size = new System.Drawing.Size(428, 736);
             this.flpQuestionList.TabIndex = 0;
             this.flpQuestionList.WrapContents = false;
             this.flpQuestionList.Paint += new System.Windows.Forms.PaintEventHandler(this.flpQuestionList_Paint);
@@ -152,10 +152,10 @@
             this.pnlright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlright.Controls.Add(this.lblSetHeader);
-            this.pnlright.Location = new System.Drawing.Point(805, 0);
+            this.pnlright.Location = new System.Drawing.Point(718, 0);
             this.pnlright.Margin = new System.Windows.Forms.Padding(4);
             this.pnlright.Name = "pnlright";
-            this.pnlright.Size = new System.Drawing.Size(762, 937);
+            this.pnlright.Size = new System.Drawing.Size(849, 937);
             this.pnlright.TabIndex = 2;
             this.pnlright.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlright_Paint);
             // 
@@ -180,14 +180,14 @@
             this.pnlbottom.Controls.Add(this.btnAdd);
             this.pnlbottom.Location = new System.Drawing.Point(276, 795);
             this.pnlbottom.Name = "pnlbottom";
-            this.pnlbottom.Size = new System.Drawing.Size(525, 142);
+            this.pnlbottom.Size = new System.Drawing.Size(439, 142);
             this.pnlbottom.TabIndex = 3;
             // 
             // btnnewquestion
             // 
             this.btnnewquestion.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnnewquestion.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnnewquestion.Location = new System.Drawing.Point(298, 25);
+            this.btnnewquestion.Location = new System.Drawing.Point(212, 25);
             this.btnnewquestion.Margin = new System.Windows.Forms.Padding(4);
             this.btnnewquestion.Name = "btnnewquestion";
             this.btnnewquestion.Size = new System.Drawing.Size(148, 99);

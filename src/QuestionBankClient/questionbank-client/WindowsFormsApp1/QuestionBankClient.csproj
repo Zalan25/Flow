@@ -81,6 +81,12 @@
     <Compile Include="UC_QuestionCard.Designer.cs">
       <DependentUpon>UC_QuestionCard.cs</DependentUpon>
     </Compile>
+    <Compile Include="UC_QuizList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_QuizList.Designer.cs">
+      <DependentUpon>UC_QuizList.cs</DependentUpon>
+    </Compile>
     <Compile Include="UC_ShortAnswer_Item.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -135,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UC_QuestionCard.resx">
       <DependentUpon>UC_QuestionCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_QuizList.resx">
+      <DependentUpon>UC_QuizList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_ShortAnswer_Item.resx">
       <DependentUpon>UC_ShortAnswer_Item.cs</DependentUpon>

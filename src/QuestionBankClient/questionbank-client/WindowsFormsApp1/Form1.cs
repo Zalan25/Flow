@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
+
 namespace QuestionBankClient
 {
     public partial class Form1 : Form
@@ -89,7 +90,16 @@ namespace QuestionBankClient
 
         private void btnexisting_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Hamarosan: Meglévő kérdőívek listázása!");
+            // Töröljük a középső területet
+            pnlbetamain.Controls.Clear();
+
+            // Betöltjük a kérdőívek listáját
+            UC_QuizList quizListPanel = new UC_QuizList { Dock = DockStyle.Fill };
+            pnlbetamain.Controls.Add(quizListPanel);
+
+            lblMainTitle.Text = "Mentett Kérdőíveim";
+            btnBack.Visible = true;
+            if (btnFinalSave != null) btnFinalSave.Visible = false;
         }
 
         public void btnBack_Click_1(object sender, EventArgs e)
@@ -207,7 +217,23 @@ namespace QuestionBankClient
                 cmd.ExecuteNonQuery();
             }
         }
+        // létező quiz megnyitása a szerkesztéshez
+        public void OpenExistingQuiz(Quiz loadedQuiz)
+        {
+            this.ActiveQuiz = loadedQuiz; // Beállítjuk az adatbázisból jött tesztet aktívnak
 
+            pnlmain.Controls.Clear();
+            UC_TypeSelector typeSelector = new UC_TypeSelector();
+            typeSelector.Dock = DockStyle.Fill;
+            pnlmain.Controls.Add(typeSelector);
+
+            // Meghívunk egy új metódust a TypeSelectorban, ami kirajzolja a kártyákat
+            typeSelector.LoadQuestionsFromModel(loadedQuiz.Questions);
+
+            lblMainTitle.Text = "Kérdőív szerkesztése: " + loadedQuiz.Title;
+            btnBack.Visible = true;
+            btnFinalSave.Visible = true;
+        }
         private void SaveAnswers(int questionId, List<Answer> answers, SqlConnection conn, SqlTransaction trans)
         {
             foreach (var ans in answers)

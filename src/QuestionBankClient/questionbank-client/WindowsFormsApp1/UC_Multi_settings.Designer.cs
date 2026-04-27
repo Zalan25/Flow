@@ -31,15 +31,15 @@
             this.lblrate = new System.Windows.Forms.Label();
             this.txtPoints = new System.Windows.Forms.TextBox();
             this.btnDelete = new System.Windows.Forms.Button();
-
+            this.btnSave = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-
             // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
+            this.panel1.Controls.Add(this.btnSave);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtQuestionText);
             this.panel1.Controls.Add(this.lblMandatory);
@@ -54,73 +54,84 @@
             this.panel1.Controls.Add(this.txtPoints);
             this.panel1.Controls.Add(this.btnDelete);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.panel1.Name = "panel1";
-
+            this.panel1.Size = new System.Drawing.Size(1000, 1538);
+            this.panel1.TabIndex = 0;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
-            // label1 (Kérdés szövege)
+            // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(40, 20);
+            this.label1.Location = new System.Drawing.Point(80, 38);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(155, 25);
+            this.label1.Size = new System.Drawing.Size(310, 51);
+            this.label1.TabIndex = 0;
             this.label1.Text = "Kérdés szövege:";
-
             // 
             // txtQuestionText
             // 
             this.txtQuestionText.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtQuestionText.Location = new System.Drawing.Point(45, 55);
+            this.txtQuestionText.Location = new System.Drawing.Point(90, 106);
+            this.txtQuestionText.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.txtQuestionText.Multiline = true;
             this.txtQuestionText.Name = "txtQuestionText";
-            this.txtQuestionText.Size = new System.Drawing.Size(410, 50);
-
+            this.txtQuestionText.Size = new System.Drawing.Size(816, 92);
+            this.txtQuestionText.TabIndex = 1;
             // 
             // lblMandatory
             // 
             this.lblMandatory.AutoSize = true;
             this.lblMandatory.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblMandatory.Location = new System.Drawing.Point(40, 130);
+            this.lblMandatory.Location = new System.Drawing.Point(80, 250);
+            this.lblMandatory.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblMandatory.Name = "lblMandatory";
-            this.lblMandatory.Size = new System.Drawing.Size(160, 25);
+            this.lblMandatory.Size = new System.Drawing.Size(307, 51);
+            this.lblMandatory.TabIndex = 2;
             this.lblMandatory.Text = "Kötelező kérdés";
-
             // 
             // chkMandatory
             // 
             this.chkMandatory.AutoSize = true;
-            this.chkMandatory.Location = new System.Drawing.Point(380, 137);
+            this.chkMandatory.Location = new System.Drawing.Point(760, 263);
+            this.chkMandatory.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.chkMandatory.Name = "chkMandatory";
-            this.chkMandatory.Size = new System.Drawing.Size(15, 14);
-
+            this.chkMandatory.Size = new System.Drawing.Size(28, 27);
+            this.chkMandatory.TabIndex = 3;
             // 
             // pnlSeparator
             // 
             this.pnlSeparator.BackColor = System.Drawing.Color.LightGray;
-            this.pnlSeparator.Location = new System.Drawing.Point(45, 175);
+            this.pnlSeparator.Location = new System.Drawing.Point(90, 337);
+            this.pnlSeparator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.pnlSeparator.Name = "pnlSeparator";
-            this.pnlSeparator.Size = new System.Drawing.Size(410, 1);
-
+            this.pnlSeparator.Size = new System.Drawing.Size(820, 2);
+            this.pnlSeparator.TabIndex = 4;
             // 
             // lblOptions
             // 
             this.lblOptions.AutoSize = true;
             this.lblOptions.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblOptions.Location = new System.Drawing.Point(40, 195);
+            this.lblOptions.Location = new System.Drawing.Point(80, 375);
+            this.lblOptions.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblOptions.Name = "lblOptions";
-            this.lblOptions.Size = new System.Drawing.Size(320, 25);
+            this.lblOptions.Size = new System.Drawing.Size(615, 51);
+            this.lblOptions.TabIndex = 5;
             this.lblOptions.Text = "Opciók- megfelelőek kiválasztása";
-
             // 
             // flpOptions
             // 
             this.flpOptions.AutoScroll = true;
             this.flpOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpOptions.Location = new System.Drawing.Point(45, 230);
+            this.flpOptions.Location = new System.Drawing.Point(90, 442);
+            this.flpOptions.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.flpOptions.Name = "flpOptions";
-            this.flpOptions.Size = new System.Drawing.Size(410, 150);
+            this.flpOptions.Size = new System.Drawing.Size(820, 288);
+            this.flpOptions.TabIndex = 6;
             this.flpOptions.WrapContents = false;
-
             // 
             // btnAddOption
             // 
@@ -128,49 +139,54 @@
             this.btnAddOption.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddOption.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnAddOption.ForeColor = System.Drawing.Color.White;
-            this.btnAddOption.Location = new System.Drawing.Point(100, 395);
+            this.btnAddOption.Location = new System.Drawing.Point(200, 760);
+            this.btnAddOption.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnAddOption.Name = "btnAddOption";
-            this.btnAddOption.Size = new System.Drawing.Size(300, 40);
+            this.btnAddOption.Size = new System.Drawing.Size(600, 77);
+            this.btnAddOption.TabIndex = 7;
             this.btnAddOption.Text = "+ Opció hozzáadása";
             this.btnAddOption.UseVisualStyleBackColor = false;
             this.btnAddOption.Click += new System.EventHandler(this.btnAddOption_Click);
-
             // 
             // lblHint
             // 
             this.lblHint.AutoSize = true;
             this.lblHint.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblHint.Location = new System.Drawing.Point(40, 460);
+            this.lblHint.Location = new System.Drawing.Point(80, 885);
+            this.lblHint.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblHint.Name = "lblHint";
-            this.lblHint.Size = new System.Drawing.Size(126, 25);
+            this.lblHint.Size = new System.Drawing.Size(257, 51);
+            this.lblHint.TabIndex = 8;
             this.lblHint.Text = "Súgó szöveg:";
-
             // 
             // txtHint
             // 
             this.txtHint.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtHint.Location = new System.Drawing.Point(45, 490);
+            this.txtHint.Location = new System.Drawing.Point(90, 942);
+            this.txtHint.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.txtHint.Name = "txtHint";
-            this.txtHint.Size = new System.Drawing.Size(410, 29);
-
+            this.txtHint.Size = new System.Drawing.Size(816, 50);
+            this.txtHint.TabIndex = 9;
             // 
             // lblrate
             // 
             this.lblrate.AutoSize = true;
             this.lblrate.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblrate.Location = new System.Drawing.Point(40, 545);
+            this.lblrate.Location = new System.Drawing.Point(80, 1048);
+            this.lblrate.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblrate.Name = "lblrate";
-            this.lblrate.Size = new System.Drawing.Size(104, 25);
+            this.lblrate.Size = new System.Drawing.Size(205, 51);
+            this.lblrate.TabIndex = 10;
             this.lblrate.Text = "Pontszám:";
-
             // 
             // txtPoints
             // 
             this.txtPoints.Font = new System.Drawing.Font("Segoe UI", 14F);
-            this.txtPoints.Location = new System.Drawing.Point(170, 542);
+            this.txtPoints.Location = new System.Drawing.Point(340, 1042);
+            this.txtPoints.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.txtPoints.Name = "txtPoints";
-            this.txtPoints.Size = new System.Drawing.Size(80, 32);
-
+            this.txtPoints.Size = new System.Drawing.Size(156, 57);
+            this.txtPoints.TabIndex = 11;
             // 
             // btnDelete
             // 
@@ -178,21 +194,38 @@
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDelete.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnDelete.Location = new System.Drawing.Point(45, 610);
+            this.btnDelete.Location = new System.Drawing.Point(90, 1173);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(150, 45);
+            this.btnDelete.Size = new System.Drawing.Size(300, 87);
+            this.btnDelete.TabIndex = 12;
             this.btnDelete.Text = "Törlés";
             this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-
+            // 
+            // btnSave
+            // 
+            this.btnSave.BackColor = System.Drawing.Color.White;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
+            this.btnSave.Location = new System.Drawing.Point(563, 1173);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(300, 87);
+            this.btnSave.TabIndex = 26;
+            this.btnSave.Text = "Mentés";
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // UC_Multi_settings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "UC_Multi_settings";
-            this.Size = new System.Drawing.Size(500, 800);
+            this.Size = new System.Drawing.Size(1000, 1538);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -215,5 +248,6 @@
         private System.Windows.Forms.Label lblrate;
         private System.Windows.Forms.TextBox txtPoints;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnSave;
     }
 }

@@ -12,6 +12,7 @@ namespace QuestionBankClient
 {
     public partial class UC_TypeSelector : UserControl
     {
+        public UC_QuestionCard ActiveCard { get; set; }
         // --- ADATTAGOK / VÁLTOZÓK ---
         private int qCounter = 1;
         private UC_QuestionCard selectedIndex = null; // Az éppen szerkesztett kártya
@@ -22,24 +23,9 @@ namespace QuestionBankClient
             InitializeComponent();
         }
 
-        // --- PUBLIKUS MŰVELETEK (Törlés) ---
+        
 
-        public void DeleteCurrentCard()
-        {
-            if (selectedIndex != null)
-            {
-                var result = MessageBox.Show("Biztosan törölni szeretnéd ezt a kérdést?", "Törlés", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (result == DialogResult.Yes)
-                {
-                    flpQuestionList.Controls.Remove(selectedIndex);
-                    selectedIndex.Dispose();
-                    selectedIndex = null;
-                    pnlright.Controls.Clear();
-                    RenumberQuestions();
-                }
-            }
-        }
+        
 
         // --- KÉRDÉSEK KEZELÉSE (Létrehozás, Kiválasztás, Betöltés) ---
 
@@ -67,16 +53,31 @@ namespace QuestionBankClient
 
         private void SelectCard(UC_QuestionCard card)
         {
-            selectedIndex = card;
+            ActiveCard = card; // Megjegyezzük, hogy őt szerkesztjük
+            pnlright.Controls.Clear(); // Kiürítjük a jobb oldalt
 
-            foreach (Control c in flpQuestionList.Controls)
+            // Megnézzük, milyen típusú a kártya, és betöltjük a megfelelő panelt az ADATOKKAL EGYÜTT
+            if (card.Data.UI_TypeKey == "tf")
             {
-                if (c is UC_QuestionCard) c.BackColor = Color.White;
+                var tf = new UC_TF_settings { Dock = DockStyle.Fill };
+                tf.QuestionText = card.Data.QuestionText;
+                tf.Points = card.Data.Points.ToString();
+                pnlright.Controls.Add(tf);
             }
-            card.BackColor = Color.FromArgb(235, 245, 255);
-
-            // Itt javítottuk: card.QuestionType helyett card.Data.UI_TypeKey
-            LoadRightSettings(card.Data.UI_TypeKey);
+            else if (card.Data.UI_TypeKey == "Short")
+            {
+                var shortAns = new UC_Shortans_settings { Dock = DockStyle.Fill };
+                shortAns.QuestionText = card.Data.QuestionText;
+                shortAns.Points = card.Data.Points.ToString();
+                pnlright.Controls.Add(shortAns);
+            }
+            else if (card.Data.UI_TypeKey == "Multi")
+            {
+                var multi = new UC_Multi_settings { Dock = DockStyle.Fill };
+                multi.QuestionText = card.Data.QuestionText;
+                multi.Points = card.Data.Points.ToString();
+                pnlright.Controls.Add(multi);
+            }
         }
 
         private void LoadRightSettings(string type)
@@ -197,8 +198,31 @@ namespace QuestionBankClient
                 }
             }
         }
+        //meglévő kérdőívek betöltése a modellből
+        public void LoadQuestionsFromModel(List<Question> questions)
+        {
+            flpQuestionList.Controls.Clear();
+            qCounter = 1; // Újraindítjuk a sorszámozást
 
-        // Ezt add hozzá az UC_TypeSelector.cs-hez
+            foreach (var qData in questions)
+            {
+                UC_QuestionCard card = new UC_QuestionCard();
+                card.Data = qData; // Átadjuk az adatokat a kártyának
+
+                // Kiszámoljuk az összefoglaló szöveget a kártyára
+                string summary = $"[{qData.UI_TypeKey.ToUpper()}] ({qData.Points} pont)\n{qData.QuestionText}";
+
+                flpQuestionList.Controls.Add(card);
+                card.Width = flpQuestionList.ClientSize.Width - 25;
+                card.UpdateDisplay(qCounter++, summary);
+
+                // Bekötjük az eseményeket, hogy újra lehessen kattintani a szerkesztéshez
+                card.Click += (s, ev) => SelectCard(card);
+                foreach (Control child in card.Controls) child.Click += (s, ev) => SelectCard(card);
+            }
+        }
+
+        
         public void ShowQuestionList()
         {
             pnlCenter.Controls.Clear();
@@ -272,6 +296,68 @@ namespace QuestionBankClient
             // 3. FRISSÍTJÜK A KÁRTYÁT
             int pos = flpQuestionList.Controls.GetChildIndex(selectedIndex) + 1;
             selectedIndex.UpdateDisplay(pos, cardSummary);
+
+
+        }
+
+        // Ez a metódus fogja átmenteni az adatokat a panelről a kártyára
+        public void SaveCurrentCard()
+        {
+            if (ActiveCard == null) return;
+
+            var currentPanel = pnlright.Controls.OfType<UserControl>().FirstOrDefault();
+
+            if (currentPanel is UC_TF_settings tf)
+            {
+                ActiveCard.Data.QuestionText = tf.QuestionText;
+                ActiveCard.Data.Points = int.TryParse(tf.Points, out int p) ? p : 1;
+                // Ha van Answer lista, azt is itt adhatod át: ActiveCard.Data.Answers = tf.GetAnswers();
+            }
+            else if (currentPanel is UC_Shortans_settings shortAns)
+            {
+                ActiveCard.Data.QuestionText = shortAns.QuestionText;
+                ActiveCard.Data.Points = int.TryParse(shortAns.Points, out int p) ? p : 1;
+            }
+            else if (currentPanel is UC_Multi_settings multi)
+            {
+                ActiveCard.Data.QuestionText = multi.QuestionText;
+                ActiveCard.Data.Points = int.TryParse(multi.Points, out int p) ? p : 1;
+            }
+
+            // Frissítjük a kártya szövegét a listában, hogy azonnal látszódjon a változás
+            string summary = $"[{ActiveCard.Data.UI_TypeKey.ToUpper()}] ({ActiveCard.Data.Points} pont)\n{ActiveCard.Data.QuestionText}";
+
+            int order = flpQuestionList.Controls.IndexOf(ActiveCard) + 1;
+            ActiveCard.UpdateDisplay(order, summary);
+        }
+        // --- PUBLIKUS MŰVELETEK (Törlés) ---
+        // Ez végzi a tényleges törlést
+        public void DeleteCurrentCard()
+        {
+            if (ActiveCard != null)
+            {
+                // Kártya törlése a listából
+                flpQuestionList.Controls.Remove(ActiveCard);
+                ActiveCard.Dispose();
+                ActiveCard = null;
+
+                // Jobb oldali beállító panel kiürítése (hiszen töröltük a kérdést)
+                pnlright.Controls.Clear();
+
+                // Sorszámok újraosztása
+                RefreshCardNumbering();
+            }
+        }
+
+        // Ez a metódus rakja rendbe a sorszámokat törlés vagy új hozzáadása után
+        public void RefreshCardNumbering()
+        {
+            int order = 1;
+            foreach (UC_QuestionCard card in flpQuestionList.Controls.OfType<UC_QuestionCard>())
+            {
+                string summary = $"[{card.Data.UI_TypeKey.ToUpper()}] ({card.Data.Points} pont)\n{card.Data.QuestionText}";
+                card.UpdateDisplay(order++, summary);
+            }
         }
     }
 }
