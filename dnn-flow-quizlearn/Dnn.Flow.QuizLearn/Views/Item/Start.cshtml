@@ -55,7 +55,7 @@
                     @foreach (var skill in Model.Skills)
                     {
                         <label class="quizlearn-start-option quizlearn-skill-option">
-                            <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
+                            <input type="radio" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
                             <span>@GetSkillDisplayName(skill.SkillName)</span>
                             <span class="quizlearn-option-icon">@GetSkillIcon(skill.SkillName)</span>
                         </label>
@@ -356,6 +356,17 @@
                 if (!validateStep(currentStep)) {
                     showStepError(currentStep);
                     return;
+                }
+                if (currentStep === 3) {
+                    var needLevelTest = document.querySelector('input[name="LevelChoice"][value="NeedLevelTest"]:checked');
+
+                    if (needLevelTest) {
+                        var selectedLanguage = document.querySelector('input[name="LanguageId"]:checked');
+                        var languageId = selectedLanguage ? selectedLanguage.value : "";
+
+                        window.location.href = "/leveltest?autoStart=1&languageId=" + encodeURIComponent(languageId);
+                        return;
+                    }
                 }
 
                 if (currentStep < maxStep) {

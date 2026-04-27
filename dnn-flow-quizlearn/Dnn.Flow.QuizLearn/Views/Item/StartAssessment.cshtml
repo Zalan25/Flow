@@ -1,5 +1,20 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
 <link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/quizlearn.css" />
+<script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var languageId = params.get("languageId");
+
+        if (!languageId) return;
+
+        var languageInput = document.querySelector('input[name="LanguageId"][value="' + languageId + '"]');
+
+        if (languageInput) {
+            languageInput.checked = true;
+        }
+    })();
+</script>
+
 <div class="quizlearn-wrapper">
     <div class="quizlearn-card">
 

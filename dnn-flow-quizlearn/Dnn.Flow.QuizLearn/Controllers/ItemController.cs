@@ -64,13 +64,51 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return View("Start", BuildStartViewModel(mode));
         }
 
-        public ActionResult StartAssessment()
+        public ActionResult StartAssessment(int? autoStart, int? languageId)
         {
+            var levelTestMode = _lookupService.GetAssessmentMode("LevelTest");
+
+            if (autoStart == 1 && languageId.HasValue && languageId.Value > 0)
+            {
+                var session = new AssessmentSessionInfo
+                {
+                    ModuleId = ModuleContext.ModuleId,
+                    AssessmentModeId = levelTestMode.AssessmentModeId,
+                    LanguageId = languageId.Value,
+                    SecondaryLanguageId = 0,
+                    SelectedLevelId = null,
+                    PaceTypeId = 0,
+                    UserId = User.UserID,
+                    NeedLevelTest = false,
+                    Status = "Started"
+                };
+
+                var sessionId = _assessmentService.StartAssessmentSession(
+                    session,
+                    new List<int>()
+                );
+
+                _assessmentService.GenerateSessionQuestions(
+                    ModuleContext.ModuleId,
+                    sessionId,
+                    languageId.Value
+                );
+
+                return Redirect(
+                    "/leveltest/moduleId/" + ModuleContext.ModuleId +
+                    "/controller/Item/action/Question?sessionId=" + sessionId +
+                    "&questionNumber=1"
+                );
+            }
+
+            var model = new AssessmentStartViewModel
+            {
+                AssessmentModeId = levelTestMode.AssessmentModeId,
+                Languages = _lookupService.GetLanguages()
+            };
             ViewBag.ModuleMode = GetModuleMode();
-
-            return View("StartAssessment");
+            return View(model);
         }
-
         private ActionResult HandleStartPost(QuizLearnMode moduleMode)
         {
             var model = new AssessmentStartViewModel
