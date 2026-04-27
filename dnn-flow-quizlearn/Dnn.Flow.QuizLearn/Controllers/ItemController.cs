@@ -200,7 +200,18 @@ namespace Dnn.Flow.QuizLearn.Controllers
             ViewBag.SessionId = sessionId;
             ViewBag.RuleCount = rules.Count;
 
-            return View("Recommendation", rules);
+            var skus = rules
+            .Where(x => !string.IsNullOrWhiteSpace(x.HotcakesProductSKU))
+            .OrderBy(x => x.Priority)
+            .Select(x => x.HotcakesProductSKU)
+            .Distinct()
+            .Take(maxProducts)
+            .ToList();
+
+            var cartUrl = "/hotcakesstore/cart?" + string.Join("&",
+                skus.Select(s => "AddSku=" + Server.UrlEncode(s) + "&AddSkuQty=1"));
+
+            return Redirect(cartUrl);
         }
 
         private List<RecommendationRuleInfo> GetRecommendationRulesForAllSelectedSkills(AssessmentStartViewModel model)
