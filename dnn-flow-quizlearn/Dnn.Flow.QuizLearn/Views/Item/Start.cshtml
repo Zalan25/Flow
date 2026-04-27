@@ -17,7 +17,7 @@
             </div>
         }
 
-    <form method="post" class="quizlearn-form" id="recommendationForm">
+    <form method="post" class="quizlearn-form" id="recommendationForm" onsubmit="return validateRecommendationSubmitClick(event)">
         @Html.AntiForgeryToken()
 
         <input type="hidden" name="AssessmentAction" value="StartRecommendation" />
@@ -124,7 +124,7 @@
                 }
             </div>
 
-            <button type="button" class="quizlearn-button" id="recommendationSubmitButton">
+            <button type="submit" class="quizlearn-button">
                 Ajánlás megtekintése
             </button>
         </section>
@@ -209,6 +209,52 @@
 }
 
 <script>
+    function validateRecommendationSubmitClick(e) {
+        if (!validateStep(4)) {
+            e.preventDefault();
+            showStepError(4);
+            return false;
+        }
+
+        sessionStorage.setItem("quizlearn-step", 4); // EZ IS KELL
+
+        return true;
+    }
+    function validateStep(step) {
+        var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
+
+        if (!stepElement) return false;
+
+        var checkboxes = stepElement.querySelectorAll('input[type="checkbox"]');
+        if (checkboxes.length > 0) {
+            return Array.from(checkboxes).some(function (c) {
+                return c.checked;
+            });
+        }
+
+        var radios = stepElement.querySelectorAll('input[type="radio"]');
+        if (radios.length > 0) {
+            return Array.from(radios).some(function (r) {
+                return r.checked;
+            });
+        }
+
+        return true;
+    }
+
+    function showStepError(step) {
+        var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
+        if (!stepElement) return;
+
+        stepElement.querySelectorAll(".quizlearn-start-option").forEach(function (el) {
+            el.classList.add("quizlearn-invalid");
+        });
+
+        var errorElement = stepElement.querySelector(".quizlearn-step-error");
+        if (errorElement) {
+            errorElement.classList.add("active");
+        }
+    }
     (function () {
         var currentStep = 1;
         var maxStep = 4;
@@ -220,41 +266,7 @@
         var submitButton = document.getElementById("recommendationSubmitButton");
         var recommendationForm = document.getElementById("recommendationForm");
 
-        function validateStep(step) {
-            var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
-
-            if (!stepElement) return false;
-
-            var checkboxes = stepElement.querySelectorAll('input[type="checkbox"]');
-            if (checkboxes.length > 0) {
-                return Array.from(checkboxes).some(function (c) {
-                    return c.checked;
-                });
-            }
-
-            var radios = stepElement.querySelectorAll('input[type="radio"]');
-            if (radios.length > 0) {
-                return Array.from(radios).some(function (r) {
-                    return r.checked;
-                });
-            }
-
-            return true;
-        }
-
-        function showStepError(step) {
-            var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
-            if (!stepElement) return;
-
-            stepElement.querySelectorAll(".quizlearn-start-option").forEach(function (el) {
-                el.classList.add("quizlearn-invalid");
-            });
-
-            var errorElement = stepElement.querySelector(".quizlearn-step-error");
-            if (errorElement) {
-                errorElement.classList.add("active");
-            }
-        }
+        
 
         function clearStepError(stepElement) {
             if (!stepElement) return;
@@ -271,6 +283,7 @@
 
         function showStep(step) {
             currentStep = step;
+            sessionStorage.setItem("quizlearn-step", step);
 
             steps.forEach(function (el) {
                 el.classList.remove("active");
@@ -382,19 +395,26 @@
         });
 
 
+        var recommendationForm = document.getElementById("recommendationForm");
 
-        if (submitButton) {
-            submitButton.addEventListener("click", function () {
-                // We use currentStep (which will be 4) to validate
-                if (!validateStep(currentStep)) {
-                    showStepError(currentStep);
-                    return;
+        if (recommendationForm) {
+            recommendationForm.addEventListener("submit", function (e) {
+
+                if (!validateStep(4)) {
+                    e.preventDefault();
+
+                    showStepError(4);
+
+                    return false;
                 }
-                recommendationForm.submit();
+
             });
-            
         }
 
-        showStep(1);
+        if (!sessionStorage.getItem("quizlearn-step")) {
+            showStep(1);
+        } else {
+            showStep(parseInt(sessionStorage.getItem("quizlearn-step")));
+        }
     })();
 </script>
