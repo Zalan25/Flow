@@ -166,6 +166,13 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (needLevelTest)
             {
+                if (sessionId <= 0)
+                {
+                    var fresh = BuildStartViewModel(moduleMode);
+                    ViewBag.ServerValidationStep = 3;
+                    return View("Start", fresh);
+                }
+
                 _assessmentService.GenerateSessionQuestions(
                     ModuleContext.ModuleId,
                     sessionId,
@@ -178,9 +185,14 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     1
                 );
 
-                return Redirect(Url.Action("Question", "Item")
-                    + "?sessionId=" + sessionId
-                    + "&questionNumber=1");
+                var firstQuestion = _assessmentService.GetQuestionForAssessment(sessionId, 1);
+
+                if (firstQuestion == null)
+                {
+                    return View("StartAssessment", BuildStartViewModel(moduleMode));
+                }
+
+                return View("Question", firstQuestion);
             }
 
             var rules = GetRecommendationRulesForAllSelectedSkills(model);
