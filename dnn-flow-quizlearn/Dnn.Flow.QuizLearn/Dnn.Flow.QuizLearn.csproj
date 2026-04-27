@@ -140,6 +140,7 @@
     <Compile Include="Services\RecommendationService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\quizlearn.css" />
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="License.txt" />
@@ -172,7 +173,6 @@
   <ItemGroup>
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
