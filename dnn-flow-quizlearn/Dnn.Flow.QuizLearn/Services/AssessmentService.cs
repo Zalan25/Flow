@@ -9,9 +9,17 @@ namespace Dnn.Flow.QuizLearn.Services
     public class AssessmentService : IAssessmentService
     {
         private readonly IQuizLearnDataRepository _repository;
-        public AssessmentService()
+        // 1. Alapértelmezett konstruktor az ÉLES programnak
+        // Ez automatikusan meghívja a paraméteres konstruktort a valódi adatbázissal
+        public AssessmentService() : this(new SqlDataProvider())
         {
-            _repository = new SqlDataProvider();
+        }
+
+        // 2. Paraméteres konstruktor a TESZTEKNEK (Dependency Injection)
+        // Ezt fogja hívni a NUnit teszt a mockolt (kamu) adatbázissal
+        public AssessmentService(IQuizLearnDataRepository repository)
+        {
+            _repository = repository;
         }
 
         public int StartAssessmentSession(AssessmentSessionInfo sessionInfo, IEnumerable<int> selectedSkillTypeIds)
