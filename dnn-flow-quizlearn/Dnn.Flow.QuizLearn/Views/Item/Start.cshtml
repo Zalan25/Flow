@@ -217,6 +217,7 @@
         var circles = document.querySelectorAll(".quizlearn-step-circle");
         var nextButtons = document.querySelectorAll(".quizlearn-next-button");
         var needLevelTestInput = document.getElementById("NeedLevelTest");
+        var submitButton = document.getElementById("recommendationSubmitButton");
         var recommendationForm = document.getElementById("recommendationForm");
 
         function validateStep(step) {
@@ -382,17 +383,16 @@
 
 
 
-        if (submitButton ) {
+        if (submitButton) {
             submitButton.addEventListener("click", function () {
-                var stepElement = submitButton.closest(".quizlearn-start-step");
-
-                if (!validateStepElement(stepElement)) {
-                    showStepErrorElement(stepElement);
+                // We use currentStep (which will be 4) to validate
+                if (!validateStep(currentStep)) {
+                    showStepError(currentStep);
                     return;
                 }
-
                 recommendationForm.submit();
             });
+            
         }
 
         showStep(1);
