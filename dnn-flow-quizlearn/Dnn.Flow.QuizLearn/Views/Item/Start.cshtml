@@ -1,109 +1,120 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
-<link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/start.css" />
+<link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/quizlearn.css?v=10" />
 
-<div class="ql-rec-wrapper">
-    <div class="ql-rec-card">
+<div class="quizlearn-wrapper">
+    <div class="quizlearn-card quizlearn-recommendation-card">
 
-        <form method="post" id="recommendationForm">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="quizlearn-error">
+                @foreach (var state in ViewData.ModelState.Values)
+                {
+                    foreach (var error in state.Errors)
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                }
+            </div>
+        }
+
+        <form method="post" class="quizlearn-form" id="recommendationForm">
             @Html.AntiForgeryToken()
 
             <input type="hidden" name="AssessmentAction" value="StartRecommendation" />
             <input type="hidden" name="AssessmentModeId" value="@Model.AssessmentModeId" />
-            <input type="hidden" name="NeedLevelTest" value="false" />
+            <input type="hidden" id="NeedLevelTest" name="NeedLevelTest" value="false" />
+
+            <div class="quizlearn-step-nav">
+                <button type="button" class="quizlearn-step-circle active" data-go-step="1">1</button>
+                <span></span>
+                <button type="button" class="quizlearn-step-circle" data-go-step="2">2</button>
+                <span></span>
+                <button type="button" class="quizlearn-step-circle" data-go-step="3">3</button>
+                <span></span>
+                <button type="button" class="quizlearn-step-circle" data-go-step="4">4</button>
+            </div>
 
             <!-- STEP 1 -->
-            <div class="ql-step active" data-step="1">
-                <div class="ql-steps">
-                    <span class="active">1</span><span>2</span><span>3</span><span>4</span>
-                </div>
+            <section class="quizlearn-start-step active" data-step="1">
+                <h2 class="quizlearn-title">Milyen nyelvet szeretnél tanulni?</h2>
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
 
-                <h2>Milyen nyelvet szeretnél tanulni?</h2>
-
-                <div class="ql-language-grid">
+                <div class="quizlearn-language-grid">
                     @foreach (var language in Model.Languages)
                     {
-                        <label class="ql-choice ql-language-choice">
+                        <label class="quizlearn-start-option quizlearn-language-option">
                             <input type="radio" name="LanguageId" value="@language.LanguageId" />
-                            <span class="ql-icon-placeholder"></span>
+                            <span class="quizlearn-option-icon quizlearn-flag-placeholder"></span>
                             <span>@language.Name</span>
                         </label>
                     }
                 </div>
 
-                <button type="button" class="ql-btn next-btn">Következő</button>
-            </div>
+                <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
+            </section>
 
             <!-- STEP 2 -->
-            <div class="ql-step" data-step="2">
-                <div class="ql-steps">
-                    <span class="done">1</span><span class="active">2</span><span>3</span><span>4</span>
-                </div>
+            <section class="quizlearn-start-step" data-step="2">
+                <h2 class="quizlearn-title">Miben szeretnél fejlődni?</h2>
 
-                <h2>Miben szeretnél fejlődni?</h2>
-
-                <div class="ql-skill-grid">
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+                <div class="quizlearn-skill-grid">
                     @foreach (var skill in Model.Skills)
                     {
-                        <label class="ql-choice ql-skill-choice">
+                        <label class="quizlearn-start-option quizlearn-skill-option">
                             <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
                             <span>@GetSkillDisplayName(skill.SkillName)</span>
-                            <span class="ql-icon-placeholder small"></span>
+                            <span class="quizlearn-option-icon">@GetSkillIcon(skill.SkillName)</span>
                         </label>
                     }
                 </div>
 
-                <button type="button" class="ql-btn next-btn">Következő</button>
-            </div>
+                <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
+            </section>
 
             <!-- STEP 3 -->
-            <div class="ql-step" data-step="3">
-                <div class="ql-steps">
-                    <span class="done">1</span><span class="done">2</span><span class="active">3</span><span>4</span>
-                </div>
+            <section class="quizlearn-start-step" data-step="3">
+                <h2 class="quizlearn-title">Hol tartasz most?</h2>
 
-                <h2>Hol tartasz most?</h2>
-
-                <div class="ql-level-list">
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+                <div class="quizlearn-level-list">
                     @foreach (var level in Model.Levels)
                     {
-                        <label class="ql-choice ql-level-choice">
+                        <label class="quizlearn-start-option quizlearn-level-option">
                             <input type="radio" name="SelectedLevelId" value="@level.QuestionLevelId" />
-                            <span class="ql-icon-placeholder tiny"></span>
+                            <span class="quizlearn-option-icon">@GetLevelIcon(level.LevelName)</span>
                             <span>@GetLevelDisplayName(level.LevelName)</span>
                         </label>
                     }
 
-                    <label class="ql-choice ql-level-choice">
-                        <input type="radio" name="NeedLevelTest" value="true" />
-                        <span class="ql-icon-placeholder tiny"></span>
+                    <label class="quizlearn-start-option quizlearn-level-option">
+                        <input type="radio" name="LevelChoice" value="NeedLevelTest" />
+                        <span class="quizlearn-option-icon">?</span>
                         <span>Nem tudom - Szintfelmérő kitöltése</span>
                     </label>
                 </div>
 
-                <button type="button" class="ql-btn next-btn">Következő</button>
-            </div>
+                <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
+            </section>
 
             <!-- STEP 4 -->
-            <div class="ql-step" data-step="4">
-                <div class="ql-steps">
-                    <span class="done">1</span><span class="done">2</span><span class="done">3</span><span class="active">4</span>
-                </div>
+            <section class="quizlearn-start-step" data-step="4">
+                <h2 class="quizlearn-title">Milyen tempóban szeretnél haladni?</h2>
 
-                <h2>Milyen tempóban szeretnél haladni?</h2>
-
-                <div class="ql-pace-list">
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+                <div class="quizlearn-pace-list">
                     @foreach (var pace in Model.PaceTypes)
                     {
-                        <label class="ql-choice ql-pace-choice">
+                        <label class="quizlearn-start-option quizlearn-pace-option">
                             <input type="radio" name="PaceTypeId" value="@pace.PaceTypeId" />
-                            <span class="ql-icon-placeholder tiny"></span>
+                            <span class="quizlearn-option-icon">@GetPaceIcon(pace.PaceName)</span>
                             <span>@pace.PaceName</span>
                         </label>
                     }
                 </div>
 
-                <button type="submit" class="ql-btn">Ajánlás megtekintése</button>
-            </div>
+                <button type="submit" class="quizlearn-button">Ajánlás megtekintése</button>
+            </section>
         </form>
     </div>
 </div>
@@ -122,6 +133,19 @@
         }
     }
 
+    private string GetSkillIcon(string skillName)
+    {
+        switch (skillName)
+        {
+            case "Vocabulary": return "💬";
+            case "Reading": return "📖";
+            case "Listening": return "🎧";
+            case "Practice": return "📈";
+            case "SelfStudy": return "🎯";
+            default: return "✓";
+        }
+    }
+
     private string GetLevelDisplayName(string levelName)
     {
         switch (levelName)
@@ -134,32 +158,217 @@
             default: return levelName;
         }
     }
+
+    private string GetLevelIcon(string levelName)
+    {
+        switch (levelName)
+        {
+            case "A1": return "🚀";
+            case "A2": return "📖";
+            case "B1": return "💡";
+            case "B2": return "📈";
+            case "C1": return "🎯";
+            default: return "✓";
+        }
+    }
+
+    private string GetPaceIcon(string paceName)
+    {
+        if (paceName.ToLower().Contains("nyugodt")) return "🕒";
+        if (paceName.ToLower().Contains("gyors")) return "⚡";
+        return "🎯";
+    }
 }
 
 <script>
     (function () {
         var currentStep = 1;
-        var steps = document.querySelectorAll(".ql-step");
-        var nextButtons = document.querySelectorAll(".next-btn");
+        var maxStep = 4;
+
+        var steps = document.querySelectorAll(".quizlearn-start-step");
+        var circles = document.querySelectorAll(".quizlearn-step-circle");
+        var nextButtons = document.querySelectorAll(".quizlearn-next-button");
+        var needLevelTestInput = document.getElementById("NeedLevelTest");
+        var recommendationForm = document.getElementById("recommendationForm");
+
+        function validateStep(step) {
+            var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
+
+            if (!stepElement) return false;
+
+            var radios = stepElement.querySelectorAll('input[type="radio"]');
+            if (radios.length > 0) {
+                return Array.from(radios).some(function (r) {
+                    return r.checked;
+                });
+            }
+
+            var checkboxes = stepElement.querySelectorAll('input[type="checkbox"]');
+            if (checkboxes.length > 0) {
+                return Array.from(checkboxes).some(function (c) {
+                    return c.checked;
+                });
+            }
+
+            return true;
+        }
+
+        function showStepError(step) {
+            var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
+
+            if (!stepElement) return;
+
+            stepElement.querySelectorAll(".quizlearn-start-option").forEach(function (el) {
+                el.classList.add("quizlearn-invalid");
+            });
+
+            var errorElement = stepElement.querySelector(".quizlearn-step-error");
+            if (errorElement) {
+                errorElement.classList.add("active");
+            }
+        }
+
+        function clearStepError(stepElement) {
+            if (!stepElement) return;
+
+            stepElement.querySelectorAll(".quizlearn-start-option").forEach(function (el) {
+                el.classList.remove("quizlearn-invalid");
+            });
+
+            var errorElement = stepElement.querySelector(".quizlearn-step-error");
+            if (errorElement) {
+                errorElement.classList.remove("active");
+            }
+        }
 
         function showStep(step) {
+            currentStep = step;
+
             steps.forEach(function (el) {
                 el.classList.remove("active");
             });
 
-            var target = document.querySelector('.ql-step[data-step="' + step + '"]');
+            circles.forEach(function (circle) {
+                circle.addEventListener("click", function () {
+                    var targetStep = parseInt(circle.getAttribute("data-go-step"), 10);
+
+                    if (targetStep < 1 || targetStep > maxStep) {
+                        return;
+                    }
+
+                    /* Visszafelé mindig lehessen menni */
+                    if (targetStep <= currentStep) {
+                        showStep(targetStep);
+                        return;
+                    }
+
+                    /* Előre csak akkor, ha az aktuális step valid */
+                    if (!validateStep(currentStep)) {
+                        showStepError(currentStep);
+                        return;
+                    }
+
+                    /* Ne lehessen átugrani több lépést egyszerre */
+                    if (targetStep === currentStep + 1) {
+                        showStep(targetStep);
+                    }
+                });
+            });
+
+            var target = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
             if (target) {
                 target.classList.add("active");
             }
         }
 
+        function selectVisualState() {
+            var options = document.querySelectorAll(".quizlearn-start-option");
+
+            options.forEach(function (option) {
+                var input = option.querySelector("input");
+
+                if (!input) return;
+
+                option.classList.toggle("selected", input.checked);
+
+                input.addEventListener("change", function () {
+                    var parentStep = input.closest(".quizlearn-start-step");
+                    clearStepError(parentStep);
+
+                    if (input.type === "radio") {
+                        var sameName = document.querySelectorAll('input[name="' + input.name + '"]');
+
+                        sameName.forEach(function (radio) {
+                            var parent = radio.closest(".quizlearn-start-option");
+                            if (parent) parent.classList.remove("selected");
+                        });
+                    }
+
+                    option.classList.toggle("selected", input.checked);
+
+                    if (input.name === "SelectedLevelId") {
+                        needLevelTestInput.value = "false";
+
+                        var levelTestInput = document.querySelector('input[name="LevelChoice"]');
+                        if (levelTestInput) {
+                            levelTestInput.checked = false;
+
+                            var levelTestParent = levelTestInput.closest(".quizlearn-start-option");
+                            if (levelTestParent) {
+                                levelTestParent.classList.remove("selected");
+                            }
+                        }
+                    }
+
+                    if (input.name === "LevelChoice" && input.value === "NeedLevelTest") {
+                        needLevelTestInput.value = "true";
+
+                        var selectedLevels = document.querySelectorAll('input[name="SelectedLevelId"]');
+
+                        selectedLevels.forEach(function (levelInput) {
+                            levelInput.checked = false;
+
+                            var parent = levelInput.closest(".quizlearn-start-option");
+                            if (parent) parent.classList.remove("selected");
+                        });
+                    }
+                });
+            });
+        }
+
         nextButtons.forEach(function (btn) {
             btn.addEventListener("click", function () {
-                if (currentStep < 4) {
-                    currentStep++;
-                    showStep(currentStep);
+                if (!validateStep(currentStep)) {
+                    showStepError(currentStep);
+                    return;
+                }
+
+                if (currentStep < maxStep) {
+                    showStep(currentStep + 1);
                 }
             });
         });
+
+        circles.forEach(function (circle) {
+            circle.addEventListener("click", function () {
+                var targetStep = parseInt(circle.getAttribute("data-go-step"), 10);
+
+                if (targetStep >= 1 && targetStep <= maxStep) {
+                    showStep(targetStep);
+                }
+            });
+        });
+
+        if (recommendationForm) {
+            recommendationForm.addEventListener("submit", function (e) {
+                if (!validateStep(4)) {
+                    e.preventDefault();
+                    showStepError(4);
+                }
+            });
+        }
+
+        selectVisualState();
+        showStep(1);
     })();
 </script>
