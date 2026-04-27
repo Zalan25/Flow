@@ -520,7 +520,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 if (!int.TryParse(Request.Form["AnswerId"], out answerId) || answerId <= 0)
                 {
                     var currentModel = _assessmentService.GetQuestionForAssessment(sessionId, questionNumber);
-                    ModelState.AddModelError("", "Kérlek, válassz egy választ.");
+                    ModelState.AddModelError("", "Kérlek, válaszolj a kérdésre.");
                     return View("Question", currentModel);
                 }
 

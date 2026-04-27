@@ -560,33 +560,20 @@
 }
 
 .quizlearn-skill-grid {
-    max-width: 510px;
+    max-width: 620px;
     margin: 0 auto 26px auto;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 28px 44px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 28px;
 }
 
-.quizlearn-skill-option {
-    min-height: 130px;
-    padding: 20px 18px;
-    flex-direction: column;
-    font-size: 20px;
-}
-
-.quizlearn-skill-grid .quizlearn-skill-option:nth-child(1),
-.quizlearn-skill-grid .quizlearn-skill-option:nth-child(2),
-.quizlearn-skill-grid .quizlearn-skill-option:nth-child(3) {
-    grid-column: span 2;
-}
-
-.quizlearn-skill-grid .quizlearn-skill-option:nth-child(4) {
-    grid-column: 1 / 4;
-}
-
-.quizlearn-skill-grid .quizlearn-skill-option:nth-child(5) {
-    grid-column: 4 / 7;
-}
+    .quizlearn-skill-grid .quizlearn-skill-option {
+        grid-column: auto !important;
+        width: 100%;
+        min-height: 150px;
+        padding: 20px 14px;
+        box-sizing: border-box;
+    }
 
 .quizlearn-level-list,
 .quizlearn-pace-list {
@@ -740,15 +727,19 @@
         font-size: 28px;
     }
 
-    .quizlearn-language-grid,
+    .quizlearn-language-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
     .quizlearn-skill-grid {
         grid-template-columns: 1fr;
         gap: 12px;
     }
 
-        .quizlearn-skill-grid .quizlearn-skill-option:nth-child(4),
-        .quizlearn-skill-grid .quizlearn-skill-option:nth-child(5) {
-            grid-column: auto;
+        .quizlearn-skill-grid .quizlearn-skill-option {
+            grid-column: auto !important;
+            min-height: 92px;
         }
 
     .quizlearn-skill-option {
