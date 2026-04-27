@@ -37,6 +37,10 @@ namespace Dnn.Flow.QuizLearn.Data
         IEnumerable<RecommendationRuleInfo> FindGeneralRecommendationRules(
             int moduleId,
             int languageId);
+        IEnumerable<BundleCompositionRuleInfo> GetBundleCompositionRules(
+            int moduleId,
+            int focusSkillTypeId,
+            int paceTypeId);
 
         // Eredmények
         int AddRecommendationResult(RecommendationResultInfo resultInfo);

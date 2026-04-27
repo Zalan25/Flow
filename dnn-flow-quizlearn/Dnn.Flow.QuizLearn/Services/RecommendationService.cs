@@ -55,5 +55,68 @@ namespace Dnn.Flow.QuizLearn.Services
         {
             return _repository.AddRecommendationResultItem(itemInfo);
         }
+        public IEnumerable<string> GetRecommendedSkus(
+    int moduleId,
+    int languageId,
+    int questionLevelId,
+    IEnumerable<int> selectedSkillTypeIds,
+    int paceTypeId,
+    int? secondaryLanguageId)
+        {
+            var selectedSkus = new List<string>();
+
+            if (selectedSkillTypeIds == null)
+            {
+                return selectedSkus;
+            }
+
+            foreach (var focusSkillTypeId in selectedSkillTypeIds.Distinct())
+            {
+                var compositionRules = _repository.GetBundleCompositionRules(
+                    moduleId,
+                    focusSkillTypeId,
+                    paceTypeId
+                ).ToList();
+
+                if (!compositionRules.Any())
+                {
+                    compositionRules = new List<BundleCompositionRuleInfo>
+            {
+                new BundleCompositionRuleInfo
+                {
+                    ProductSkillTypeId = focusSkillTypeId,
+                    ProductCount = 1,
+                    Priority = 1
+                }
+            };
+                }
+
+                foreach (var compositionRule in compositionRules.OrderBy(x => x.Priority))
+                {
+                    var matchingRules = GetMatchingRules(
+                        moduleId,
+                        languageId,
+                        questionLevelId,
+                        compositionRule.ProductSkillTypeId,
+                        paceTypeId,
+                        secondaryLanguageId
+                    );
+
+                    var skus = matchingRules
+                        .Where(x => !string.IsNullOrWhiteSpace(x.HotcakesProductSKU))
+                        .OrderBy(x => x.Priority)
+                        .Select(x => x.HotcakesProductSKU)
+                        .Distinct()
+                        .Take(compositionRule.ProductCount);
+
+                    selectedSkus.AddRange(skus);
+                }
+            }
+
+            return selectedSkus
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct()
+                .ToList();
+        }
     }
 }

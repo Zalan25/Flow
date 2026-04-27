@@ -117,3 +117,40 @@ BEGIN
     (@ModuleId, @Practice, 3, @Listening, 1, 3),
     (@ModuleId, @Practice, 3, @Vocabulary, 1, 4);
 END
+
+IF EXISTS (
+    SELECT 1
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_BundleCompositionRules_Get]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_BundleCompositionRules_Get]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_BundleCompositionRules_Get]
+    @ModuleId INT,
+    @FocusSkillTypeId INT,
+    @PaceTypeId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        BundleCompositionRuleId,
+        ModuleId,
+        FocusSkillTypeId,
+        PaceTypeId,
+        ProductSkillTypeId,
+        ProductCount,
+        Priority,
+        IsActive
+    FROM {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
+    WHERE (ModuleId = @ModuleId OR ModuleId = 0)
+      AND FocusSkillTypeId = @FocusSkillTypeId
+      AND PaceTypeId = @PaceTypeId
+      AND IsActive = 1
+    ORDER BY
+        CASE WHEN ModuleId = @ModuleId THEN 0 ELSE 1 END,
+        Priority;
+END
+GO

@@ -640,6 +640,40 @@ namespace Dnn.Flow.QuizLearn.Data
 
             return answers;
         }
+
+        public IEnumerable<BundleCompositionRuleInfo> GetBundleCompositionRules(
+    int moduleId,
+    int focusSkillTypeId,
+    int paceTypeId)
+        {
+            var rules = new List<BundleCompositionRuleInfo>();
+
+            using (IDataReader reader = SqlHelper.ExecuteReader(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("BundleCompositionRules_Get"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@FocusSkillTypeId", focusSkillTypeId),
+                new System.Data.SqlClient.SqlParameter("@PaceTypeId", paceTypeId)))
+            {
+                while (reader.Read())
+                {
+                    rules.Add(new BundleCompositionRuleInfo
+                    {
+                        BundleCompositionRuleId = Null.SetNullInteger(reader["BundleCompositionRuleId"]),
+                        ModuleId = Null.SetNullInteger(reader["ModuleId"]),
+                        FocusSkillTypeId = Null.SetNullInteger(reader["FocusSkillTypeId"]),
+                        PaceTypeId = Null.SetNullInteger(reader["PaceTypeId"]),
+                        ProductSkillTypeId = Null.SetNullInteger(reader["ProductSkillTypeId"]),
+                        ProductCount = Null.SetNullInteger(reader["ProductCount"]),
+                        Priority = Null.SetNullInteger(reader["Priority"]),
+                        IsActive = Null.SetNullBoolean(reader["IsActive"])
+                    });
+                }
+            }
+
+            return rules;
+        }
     }
 }
 

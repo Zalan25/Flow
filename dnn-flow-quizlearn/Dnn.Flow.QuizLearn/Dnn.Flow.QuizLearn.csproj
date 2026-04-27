@@ -112,6 +112,7 @@
     <Compile Include="Models\AnswerInfo.cs" />
     <Compile Include="Models\AnswerOptionViewModel.cs" />
     <Compile Include="Models\AssessmentModeInfo.cs" />
+    <Compile Include="Models\BundleCompositionRuleInfo.cs" />
     <Compile Include="Models\QuestionType.cs" />
     <Compile Include="Models\ResultViewModel.cs" />
     <Compile Include="Models\AttemptAnswerSummaryInfo.cs" />

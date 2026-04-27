@@ -202,55 +202,22 @@ namespace Dnn.Flow.QuizLearn.Controllers
             ViewBag.SessionId = sessionId;
             ViewBag.RuleCount = rules.Count;
 
-            var practice = rules.Where(x => x.SkillTypeId == 4).ToList();
-            var book = rules.Where(x => x.SkillTypeId == 6).ToList();
-            var listening = rules.Where(x => x.SkillTypeId == 3).ToList();
-            var vocab = rules.Where(x => x.SkillTypeId == 1).ToList();
+            var skus = _recommendationService.GetRecommendedSkus(
+                ModuleContext.ModuleId,
+                model.LanguageId,
+                model.SelectedLevelId ?? 1,
+                model.SelectedSkillTypeIds,
+                model.PaceTypeId ?? 1,
+                model.SecondaryLanguageId
+            ).ToList();
 
-            int practiceCount = 1;
-            int bookCount = 0;
-            int listeningCount = 0;
-            int vocabCount = 0;
-
-            switch (model.PaceTypeId)
-            {
-                case 1:
-                    practiceCount = 1;
-                    bookCount = 1;
-                    break;
-
-                case 2:
-                    practiceCount = 2;
-                    bookCount = 1;
-                    break;
-
-                case 3:
-                    practiceCount = 2;
-                    bookCount = 1;
-                    listeningCount = 1;
-                    vocabCount = 1;
-                    break;
-            }
-
-            var selectedSkus = new List<string>();
-
-            selectedSkus.AddRange(practice.OrderBy(x => x.Priority).Take(practiceCount).Select(x => x.HotcakesProductSKU));
-            selectedSkus.AddRange(book.OrderBy(x => x.Priority).Take(bookCount).Select(x => x.HotcakesProductSKU));
-            selectedSkus.AddRange(listening.OrderBy(x => x.Priority).Take(listeningCount).Select(x => x.HotcakesProductSKU));
-            selectedSkus.AddRange(vocab.OrderBy(x => x.Priority).Take(vocabCount).Select(x => x.HotcakesProductSKU));
-
-            selectedSkus = selectedSkus
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .Distinct()
-                .ToList();
-
-            if (!selectedSkus.Any())
+            if (!skus.Any())
             {
                 return View("Start", BuildStartViewModel(moduleMode));
             }
 
             var cartUrl = "/hotcakesstore/cart?" + string.Join("&",
-                selectedSkus.Select(s => "AddSku=" + Server.UrlEncode(s) + "&AddSkuQty=1"));
+                skus.Select(s => "AddSku=" + Server.UrlEncode(s) + "&AddSkuQty=1"));
 
             return Redirect(cartUrl);
         }
