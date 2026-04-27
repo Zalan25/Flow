@@ -198,147 +198,159 @@
 }
 
 <script>
-    function validateStep(step) {
-        var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
-
-        if (!stepElement) return false;
-
-        var checkboxes = stepElement.querySelectorAll('input[type="checkbox"]');
-        if (checkboxes.length > 0) {
-            return Array.from(checkboxes).some(function (c) {
-                return c.checked;
-            });
-        }
-
-        var radios = stepElement.querySelectorAll('input[type="radio"]');
-        if (radios.length > 0) {
-            return Array.from(radios).some(function (r) {
-                return r.checked;
-            });
-        }
-
-        return true;
-    }
-
-    function showStepError(step) {
-        var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
-        if (!stepElement) return;
-
-        stepElement.querySelectorAll(".quizlearn-start-option").forEach(function (el) {
-            el.classList.add("quizlearn-invalid");
-        });
-
-        var errorElement = stepElement.querySelector(".quizlearn-step-error");
-        if (errorElement) {
-            errorElement.classList.add("active");
-            errorElement.style.display = "block";
-        }
-    }
     (function () {
         var currentStep = 1;
         var maxStep = 4;
 
-        var steps = document.querySelectorAll(".quizlearn-start-step");
-        var circles = document.querySelectorAll(".quizlearn-step-circle");
-        var nextButtons = document.querySelectorAll(".quizlearn-next-button");
+        var form = document.getElementById("recommendationForm");
         var needLevelTestInput = document.getElementById("NeedLevelTest");
-        var submitButton = document.getElementById("recommendationSubmitButton");
-        var recommendationForm = document.getElementById("recommendationForm");
 
-        
-
-        function clearStepError(stepElement) {
-            if (!stepElement) return;
-
-            stepElement.querySelectorAll(".quizlearn-start-option").forEach(function (el) {
-                el.classList.remove("quizlearn-invalid");
-            });
-
-            var errorElement = stepElement.querySelector(".quizlearn-step-error");
-            if (errorElement) {
-                errorElement.classList.remove("active");
-                errorElement.style.display = "none";
-            }
+        function getStep(step) {
+            return document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
         }
 
         function showStep(step) {
             currentStep = step;
-            sessionStorage.setItem("quizlearn-step", step);
 
-            steps.forEach(function (el) {
-                el.classList.remove("active");
-            });
-
-            var targetStep = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
-            if (targetStep) {
-                targetStep.classList.add("active");
+            var steps = document.querySelectorAll(".quizlearn-start-step");
+            for (var i = 0; i < steps.length; i++) {
+                steps[i].classList.remove("active");
             }
 
-            circles.forEach(function (circle) {
-                var circleStep = parseInt(circle.getAttribute("data-go-step"), 10);
+            var target = getStep(step);
+            if (target) {
+                target.classList.add("active");
+            }
 
-                circle.classList.remove("active");
-                circle.classList.remove("done");
+            var circles = document.querySelectorAll(".quizlearn-step-circle");
+            for (var j = 0; j < circles.length; j++) {
+                var circleStep = parseInt(circles[j].getAttribute("data-go-step"), 10);
 
-                if (circleStep < currentStep) {
-                    circle.classList.add("done");
+                circles[j].classList.remove("active");
+                circles[j].classList.remove("done");
+
+                if (circleStep < step) {
+                    circles[j].classList.add("done");
                 }
 
-                if (circleStep === currentStep) {
-                    circle.classList.add("active");
+                if (circleStep === step) {
+                    circles[j].classList.add("active");
                 }
-            });
+            }
         }
 
-        function updateSelectedStates(input) {
-            var parentStep = input.closest(".quizlearn-start-step");
-            clearStepError(parentStep);
+        function validateStep(step) {
+            var stepElement = getStep(step);
+            if (!stepElement) return false;
+
+            var inputs = stepElement.querySelectorAll("input");
+
+            for (var i = 0; i < inputs.length; i++) {
+                if ((inputs[i].type === "radio" || inputs[i].type === "checkbox") && inputs[i].checked) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function showStepError(step) {
+            var stepElement = getStep(step);
+            if (!stepElement) return;
+
+            var options = stepElement.querySelectorAll(".quizlearn-start-option");
+            for (var i = 0; i < options.length; i++) {
+                options[i].classList.add("quizlearn-invalid");
+            }
+
+            var error = stepElement.querySelector(".quizlearn-step-error");
+            if (error) {
+                error.innerHTML = "Kérlek válassz egy opciót!";
+                error.classList.add("active");
+                error.style.display = "block";
+                error.style.visibility = "visible";
+                error.style.opacity = "1";
+            }
+        }
+
+        function clearStepError(stepElement) {
+            if (!stepElement) return;
+
+            var options = stepElement.querySelectorAll(".quizlearn-start-option");
+            for (var i = 0; i < options.length; i++) {
+                options[i].classList.remove("quizlearn-invalid");
+            }
+
+            var error = stepElement.querySelector(".quizlearn-step-error");
+            if (error) {
+                error.classList.remove("active");
+                error.style.display = "none";
+            }
+        }
+
+        function updateSelectedState(input) {
+            var stepElement = input.closest(".quizlearn-start-step");
+            clearStepError(stepElement);
 
             if (input.type === "radio") {
                 var sameNameInputs = document.querySelectorAll('input[name="' + input.name + '"]');
 
-                sameNameInputs.forEach(function (radio) {
-                    var parent = radio.closest(".quizlearn-start-option");
-                    if (parent) parent.classList.remove("selected");
-                });
+                for (var i = 0; i < sameNameInputs.length; i++) {
+                    var radioParent = sameNameInputs[i].closest(".quizlearn-start-option");
+                    if (radioParent) {
+                        radioParent.classList.remove("selected");
+                    }
+                }
             }
 
             var parent = input.closest(".quizlearn-start-option");
-            if (parent) {
-                parent.classList.toggle("selected", input.checked);
+            if (parent && input.checked) {
+                parent.classList.add("selected");
             }
 
             if (input.name === "SelectedLevelId") {
-                needLevelTestInput.value = "false";
+                if (needLevelTestInput) {
+                    needLevelTestInput.value = "false";
+                }
 
-                var levelTestInput = document.querySelector('input[name="LevelChoice"]');
-                if (levelTestInput) {
-                    levelTestInput.checked = false;
-                    var levelTestParent = levelTestInput.closest(".quizlearn-start-option");
-                    if (levelTestParent) levelTestParent.classList.remove("selected");
+                var levelTest = document.querySelector('input[name="LevelChoice"]');
+                if (levelTest) {
+                    levelTest.checked = false;
+
+                    var levelTestParent = levelTest.closest(".quizlearn-start-option");
+                    if (levelTestParent) {
+                        levelTestParent.classList.remove("selected");
+                    }
                 }
             }
 
             if (input.name === "LevelChoice" && input.value === "NeedLevelTest") {
-                needLevelTestInput.value = "true";
+                if (needLevelTestInput) {
+                    needLevelTestInput.value = "true";
+                }
 
-                var selectedLevels = document.querySelectorAll('input[name="SelectedLevelId"]');
-                selectedLevels.forEach(function (levelInput) {
-                    levelInput.checked = false;
-                    var levelParent = levelInput.closest(".quizlearn-start-option");
-                    if (levelParent) levelParent.classList.remove("selected");
-                });
+                var levels = document.querySelectorAll('input[name="SelectedLevelId"]');
+                for (var j = 0; j < levels.length; j++) {
+                    levels[j].checked = false;
+
+                    var levelParent = levels[j].closest(".quizlearn-start-option");
+                    if (levelParent) {
+                        levelParent.classList.remove("selected");
+                    }
+                }
             }
         }
 
-        document.querySelectorAll(".quizlearn-start-option input").forEach(function (input) {
-            input.addEventListener("change", function () {
-                updateSelectedStates(input);
+        var allInputs = document.querySelectorAll(".quizlearn-start-option input");
+        for (var i = 0; i < allInputs.length; i++) {
+            allInputs[i].addEventListener("change", function () {
+                updateSelectedState(this);
             });
-        });
+        }
 
-        nextButtons.forEach(function (btn) {
-            btn.addEventListener("click", function () {
+        var nextButtons = document.querySelectorAll(".quizlearn-next-button");
+        for (var n = 0; n < nextButtons.length; n++) {
+            nextButtons[n].addEventListener("click", function () {
                 if (!validateStep(currentStep)) {
                     showStepError(currentStep);
                     return;
@@ -348,15 +360,12 @@
                     showStep(currentStep + 1);
                 }
             });
-        });
+        }
 
-        circles.forEach(function (circle) {
-            circle.addEventListener("click", function () {
-                var targetStep = parseInt(circle.getAttribute("data-go-step"), 10);
-
-                if (targetStep < 1 || targetStep > maxStep) {
-                    return;
-                }
+        var circles = document.querySelectorAll(".quizlearn-step-circle");
+        for (var c = 0; c < circles.length; c++) {
+            circles[c].addEventListener("click", function () {
+                var targetStep = parseInt(this.getAttribute("data-go-step"), 10);
 
                 if (targetStep <= currentStep) {
                     showStep(targetStep);
@@ -372,38 +381,21 @@
                     showStep(targetStep);
                 }
             });
-        });
+        }
 
-
-        var recommendationForm = document.getElementById("recommendationForm");
-
-        if (recommendationForm) {
-            recommendationForm.addEventListener("submit", function (e) {
+        if (form) {
+            form.addEventListener("submit", function (e) {
                 if (!validateStep(4)) {
                     e.preventDefault();
-
                     showStep(4);
                     showStepError(4);
-
                     return false;
                 }
 
-                sessionStorage.removeItem("quizlearn-step");
                 return true;
             });
         }
-
-        var serverValidationStepInput = document.getElementById("ServerValidationStep");
-        var serverValidationStep = serverValidationStepInput
-            ? parseInt(serverValidationStepInput.value, 10)
-            : 0;
-
-        if (serverValidationStep > 0) {
-            showStep(serverValidationStep);
-            showStepError(serverValidationStep);
-        } else {
-            sessionStorage.removeItem("quizlearn-step");
-            showStep(1);
-        }
+        s
+        showStep(1);
     })();
 </script>
