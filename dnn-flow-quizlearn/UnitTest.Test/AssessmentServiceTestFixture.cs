@@ -52,11 +52,11 @@ namespace Dnn.Flow.QuizLearn.Unittest
             };
 
             repositoryMock
-                .Setup(m => m.GetAttemptAnswerSummary(moduleId, sessionId))
-                .Returns(mockAnswers);
+                .Setup(m => m.AddAssessmentSessionSkill(10, sessionId, 5))
+                .Returns(1);
 
             repositoryMock
-                .Setup(m => m.CompleteAssessmentSession(moduleId, sessionId, expectedLevelId))
+                .Setup(m => m.AddAssessmentSessionSkill(10, sessionId, 8))
                 .Returns(1);
 
             var assessmentService = new AssessmentService(repositoryMock.Object);
@@ -83,17 +83,24 @@ namespace Dnn.Flow.QuizLearn.Unittest
 
             var sessionInfo = new AssessmentSessionInfo { ModuleId = 10 };
             var selectedSkillTypeIds = new List<int> { 5, 8 };
-            int expectedSessionId = 999;
 
+            // Itt definiáljuk a változót, amit a Setupokban és az Assertben használunk!
+            int sessionId = 999;
+
+            // Session hozzáadásának mockolása
             repositoryMock
                 .Setup(m => m.AddAssessmentSession(sessionInfo))
-                .Returns(expectedSessionId);
+                .Returns(sessionId);
 
+            // 1. Skill hozzáadásának mockolása
             repositoryMock
-                .Setup(m => m.AddAssessmentSessionSkill(10, expectedSessionId, 5));
+                .Setup(m => m.AddAssessmentSessionSkill(10, sessionId, 5))
+                .Returns(1);
 
+            // 2. Skill hozzáadásának mockolása
             repositoryMock
-                .Setup(m => m.AddAssessmentSessionSkill(10, expectedSessionId, 8));
+                .Setup(m => m.AddAssessmentSessionSkill(10, sessionId, 8))
+                .Returns(1);
 
             var assessmentService = new AssessmentService(repositoryMock.Object);
 
@@ -101,11 +108,12 @@ namespace Dnn.Flow.QuizLearn.Unittest
             var actualResult = assessmentService.StartAssessmentSession(sessionInfo, selectedSkillTypeIds);
 
             // Assert
-            Assert.AreEqual(expectedSessionId, actualResult);
+            Assert.AreEqual(sessionId, actualResult);
 
+            // Verifikáljuk, hogy tényleg meghívta-e a megfelelő paraméterekkel
             repositoryMock.Verify(m => m.AddAssessmentSession(sessionInfo), Times.Once);
-            repositoryMock.Verify(m => m.AddAssessmentSessionSkill(10, expectedSessionId, 5), Times.Once);
-            repositoryMock.Verify(m => m.AddAssessmentSessionSkill(10, expectedSessionId, 8), Times.Once);
+            repositoryMock.Verify(m => m.AddAssessmentSessionSkill(10, sessionId, 5), Times.Once);
+            repositoryMock.Verify(m => m.AddAssessmentSessionSkill(10, sessionId, 8), Times.Once);
         }
     }
 }
