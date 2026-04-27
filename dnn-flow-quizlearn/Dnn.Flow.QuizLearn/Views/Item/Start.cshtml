@@ -113,7 +113,7 @@
                     }
                 </div>
 
-                <button type="submit" class="quizlearn-button">
+                <button type="submit" id="recommendationSubmitButton" class="quizlearn-button">
                     Ajánlás megtekintése
                 </button>
             </section>
@@ -384,17 +384,40 @@
         }
         var submitButton = document.getElementById("recommendationSubmitButton");
 
-        if (submitButton) {
-            submitButton.addEventListener("click", function () {
-                var selectedPace = document.querySelector('input[name="PaceTypeId"]:checked');
+        var submitButton = document.getElementById("recommendationSubmitButton");
 
-                if (!selectedPace) {
+        function hasSelectedPace() {
+            var step4 = document.querySelector('.quizlearn-start-step[data-step="4"]');
+            return step4 && step4.querySelector('input[name="PaceTypeId"]:checked');
+        }
+
+        if (submitButton) {
+            submitButton.addEventListener("click", function (event) {
+                if (!hasSelectedPace()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
                     showStep(4);
                     showStepError(4);
-                    return;
+
+                    return false;
+                }
+            });
+        }
+
+        if (form) {
+            form.addEventListener("submit", function (event) {
+                if (!hasSelectedPace()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    showStep(4);
+                    showStepError(4);
+
+                    return false;
                 }
 
-                form.submit();
+                return true;
             });
         }
 
