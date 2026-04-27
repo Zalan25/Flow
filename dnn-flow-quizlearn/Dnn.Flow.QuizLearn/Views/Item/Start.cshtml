@@ -4,131 +4,120 @@
 <div class="quizlearn-wrapper">
     <div class="quizlearn-card quizlearn-recommendation-card">
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="quizlearn-error">
-                @foreach (var state in ViewData.ModelState.Values)
-                {
-                    foreach (var error in state.Errors)
+
+        <form method="post" class="quizlearn-form" id="recommendationForm">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="AssessmentAction" value="StartRecommendation" />
+            <input type="hidden" name="AssessmentModeId" value="@Model.AssessmentModeId" />
+            <input type="hidden" id="NeedLevelTest" name="NeedLevelTest" value="false" />
+            <input type="hidden" id="ServerValidationStep" value="@ViewBag.ServerValidationStep" />
+
+            <div class="quizlearn-step-nav">
+                <button type="button" class="quizlearn-step-circle active" data-go-step="1">1</button>
+                <span></span>
+                <button type="button" class="quizlearn-step-circle" data-go-step="2">2</button>
+                <span></span>
+                <button type="button" class="quizlearn-step-circle" data-go-step="3">3</button>
+                <span></span>
+                <button type="button" class="quizlearn-step-circle" data-go-step="4">4</button>
+            </div>
+
+            <!-- STEP 1 -->
+            <section class="quizlearn-start-step active" data-step="1">
+                <h2 class="quizlearn-title">Milyen nyelvet szeretnél tanulni?</h2>
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+
+                <div class="quizlearn-language-grid">
+                    @foreach (var language in Model.Languages)
                     {
-                        <div>@error.ErrorMessage</div>
+                        <label class="quizlearn-start-option quizlearn-language-option">
+                            <input type="radio" name="LanguageId" value="@language.LanguageId" />
+
+                            <span class="quizlearn-option-image quizlearn-language-flag">
+                                <img src="@GetLanguageFlagPath(language.Name)" alt="@language.Name" />
+                            </span>
+
+                            <span class="quizlearn-option-text">@language.Name</span>
+                        </label>
                     }
-                }
-            </div>
-        }
+                </div>
 
-    <form method="post" class="quizlearn-form" id="recommendationForm" onsubmit="return validateRecommendationSubmitClick(event)">
-        @Html.AntiForgeryToken()
+                <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
+            </section>
 
-        <input type="hidden" name="AssessmentAction" value="StartRecommendation" />
-        <input type="hidden" name="AssessmentModeId" value="@Model.AssessmentModeId" />
-        <input type="hidden" id="NeedLevelTest" name="NeedLevelTest" value="false" />
+            <!-- STEP 2 -->
+            <section class="quizlearn-start-step" data-step="2">
+                <h2 class="quizlearn-title">Miben szeretnél fejlődni?</h2>
 
-        <div class="quizlearn-step-nav">
-            <button type="button" class="quizlearn-step-circle active" data-go-step="1">1</button>
-            <span></span>
-            <button type="button" class="quizlearn-step-circle" data-go-step="2">2</button>
-            <span></span>
-            <button type="button" class="quizlearn-step-circle" data-go-step="3">3</button>
-            <span></span>
-            <button type="button" class="quizlearn-step-circle" data-go-step="4">4</button>
-        </div>
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+                <div class="quizlearn-skill-grid">
+                    @foreach (var skill in Model.Skills)
+                    {
+                        <label class="quizlearn-start-option quizlearn-skill-option">
+                            <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
+                            <span>@GetSkillDisplayName(skill.SkillName)</span>
+                            <span class="quizlearn-option-icon">@GetSkillIcon(skill.SkillName)</span>
+                        </label>
+                    }
+                </div>
 
-        <!-- STEP 1 -->
-        <section class="quizlearn-start-step active" data-step="1">
-            <h2 class="quizlearn-title">Milyen nyelvet szeretnél tanulni?</h2>
-            <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+                <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
+            </section>
 
-            <div class="quizlearn-language-grid">
-                @foreach (var language in Model.Languages)
-                {
-                    <label class="quizlearn-start-option quizlearn-language-option">
-                        <input type="radio" name="LanguageId" value="@language.LanguageId" />
+            <!-- STEP 3 -->
+            <section class="quizlearn-start-step" data-step="3">
+                <h2 class="quizlearn-title">Hol tartasz most?</h2>
 
-                        <span class="quizlearn-option-image quizlearn-language-flag">
-                            <img src="@GetLanguageFlagPath(language.Name)" alt="@language.Name" />
-                        </span>
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+                <div class="quizlearn-level-list">
+                    @foreach (var level in Model.Levels)
+                    {
+                        <label class="quizlearn-start-option quizlearn-level-option">
+                            <input type="radio" name="SelectedLevelId" value="@level.QuestionLevelId" />
+                            <span class="quizlearn-option-icon">@GetLevelIcon(level.LevelName)</span>
+                            <span>@GetLevelDisplayName(level.LevelName)</span>
+                        </label>
+                    }
 
-                        <span class="quizlearn-option-text">@language.Name</span>
-                    </label>
-                }
-            </div>
-
-            <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
-        </section>
-
-        <!-- STEP 2 -->
-        <section class="quizlearn-start-step" data-step="2">
-            <h2 class="quizlearn-title">Miben szeretnél fejlődni?</h2>
-
-            <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
-            <div class="quizlearn-skill-grid">
-                @foreach (var skill in Model.Skills)
-                {
-                    <label class="quizlearn-start-option quizlearn-skill-option">
-                        <input type="checkbox" name="SelectedSkillTypeIds" value="@skill.SkillTypeId" />
-                        <span>@GetSkillDisplayName(skill.SkillName)</span>
-                        <span class="quizlearn-option-icon">@GetSkillIcon(skill.SkillName)</span>
-                    </label>
-                }
-            </div>
-
-            <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
-        </section>
-
-        <!-- STEP 3 -->
-        <section class="quizlearn-start-step" data-step="3">
-            <h2 class="quizlearn-title">Hol tartasz most?</h2>
-
-            <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
-            <div class="quizlearn-level-list">
-                @foreach (var level in Model.Levels)
-                {
                     <label class="quizlearn-start-option quizlearn-level-option">
-                        <input type="radio" name="SelectedLevelId" value="@level.QuestionLevelId" />
-                        <span class="quizlearn-option-icon">@GetLevelIcon(level.LevelName)</span>
-                        <span>@GetLevelDisplayName(level.LevelName)</span>
+                        <input type="radio" name="LevelChoice" value="NeedLevelTest" />
+                        <span class="quizlearn-option-icon">?</span>
+                        <span>Nem tudom - Szintfelmérő kitöltése</span>
                     </label>
-                }
+                </div>
 
-                <label class="quizlearn-start-option quizlearn-level-option">
-                    <input type="radio" name="LevelChoice" value="NeedLevelTest" />
-                    <span class="quizlearn-option-icon">?</span>
-                    <span>Nem tudom - Szintfelmérő kitöltése</span>
-                </label>
-            </div>
+                <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
+            </section>
 
-            <button type="button" class="quizlearn-button quizlearn-next-button">Következő</button>
-        </section>
+            <!-- STEP 4 -->
+            <section class="quizlearn-start-step" data-step="4">
+                <h2 class="quizlearn-title">Milyen tempóban szeretnél haladni?</h2>
 
-        <!-- STEP 4 -->
-        <section class="quizlearn-start-step" data-step="4">
-            <h2 class="quizlearn-title">Milyen tempóban szeretnél haladni?</h2>
+                <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
 
-            <div class="quizlearn-step-error">Kérlek válassz egy opciót!</div>
+                <div class="quizlearn-pace-list">
+                    @foreach (var pace in Model.PaceTypes)
+                    {
+                        <label class="quizlearn-start-option quizlearn-pace-option">
+                            <input type="radio" name="PaceTypeId" value="@pace.PaceTypeId" />
 
-            <div class="quizlearn-pace-list">
-                @foreach (var pace in Model.PaceTypes)
-                {
-                    <label class="quizlearn-start-option quizlearn-pace-option">
-                        <input type="radio" name="PaceTypeId" value="@pace.PaceTypeId" />
+                            <span class="quizlearn-option-icon">
+                                @GetPaceIcon(pace.PaceName)
+                            </span>
 
-                        <span class="quizlearn-option-icon">
-                            @GetPaceIcon(pace.PaceName)
-                        </span>
+                            <span class="quizlearn-option-text">
+                                @pace.PaceName
+                            </span>
+                        </label>
+                    }
+                </div>
 
-                        <span class="quizlearn-option-text">
-                            @pace.PaceName
-                        </span>
-                    </label>
-                }
-            </div>
-
-            <button type="submit" class="quizlearn-button">
-                Ajánlás megtekintése
-            </button>
-        </section>
-    </form>
+                <button type="submit" class="quizlearn-button">
+                    Ajánlás megtekintése
+                </button>
+            </section>
+        </form>
     </div>
 </div>
 
@@ -209,17 +198,6 @@
 }
 
 <script>
-    function validateRecommendationSubmitClick(e) {
-        if (!validateStep(4)) {
-            e.preventDefault();
-            showStepError(4);
-            return false;
-        }
-
-        sessionStorage.setItem("quizlearn-step", 4); // EZ IS KELL
-
-        return true;
-    }
     function validateStep(step) {
         var stepElement = document.querySelector('.quizlearn-start-step[data-step="' + step + '"]');
 
@@ -253,6 +231,7 @@
         var errorElement = stepElement.querySelector(".quizlearn-step-error");
         if (errorElement) {
             errorElement.classList.add("active");
+            errorElement.style.display = "block";
         }
     }
     (function () {
@@ -278,6 +257,7 @@
             var errorElement = stepElement.querySelector(".quizlearn-step-error");
             if (errorElement) {
                 errorElement.classList.remove("active");
+                errorElement.style.display = "none";
             }
         }
 
@@ -399,22 +379,32 @@
 
         if (recommendationForm) {
             recommendationForm.addEventListener("submit", function (e) {
+                e.preventDefault();
 
                 if (!validateStep(4)) {
-                    e.preventDefault();
-
+                    showStep(4);
                     showStepError(4);
-
                     return false;
                 }
 
+                sessionStorage.removeItem("quizlearn-step");
+
+                HTMLFormElement.prototype.submit.call(recommendationForm);
             });
         }
 
-        if (!sessionStorage.getItem("quizlearn-step")) {
+        var serverValidationStepInput = document.getElementById("ServerValidationStep");
+        var serverValidationStep = serverValidationStepInput
+            ? parseInt(serverValidationStepInput.value, 10)
+            : 0;
+
+        if (serverValidationStep > 0) {
+            showStep(serverValidationStep);
+            showStepError(serverValidationStep);
+        } else if (!sessionStorage.getItem("quizlearn-step")) {
             showStep(1);
         } else {
-            showStep(parseInt(sessionStorage.getItem("quizlearn-step")));
+            showStep(parseInt(sessionStorage.getItem("quizlearn-step"), 10));
         }
     })();
 </script>

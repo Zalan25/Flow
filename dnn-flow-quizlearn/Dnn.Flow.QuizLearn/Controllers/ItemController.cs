@@ -109,15 +109,21 @@ namespace Dnn.Flow.QuizLearn.Controllers
             if (model.LanguageId <= 0)
             {
                 var fresh = BuildStartViewModel(moduleMode);
-                ModelState.AddModelError("", "A nyelv kiválasztása kötelező.");
+                ViewBag.ServerValidationStep = 1;
                 return View("Start", fresh);
             }
 
             if (!model.SelectedSkillTypeIds.Any())
             {
                 var fresh = BuildStartViewModel(moduleMode);
-                fresh.SelectedSkillTypeIds = model.SelectedSkillTypeIds;
-                ModelState.AddModelError("", "Legalább egy készséget ki kell választani.");
+                ViewBag.ServerValidationStep = 2;
+                return View("Start", fresh);
+            }
+
+            if (!model.PaceTypeId.HasValue)
+            {
+                var fresh = BuildStartViewModel(moduleMode);
+                ViewBag.ServerValidationStep = 4;
                 return View("Start", fresh);
             }
 
@@ -131,7 +137,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue)
             {
                 var fresh = BuildStartViewModel(moduleMode);
-                ModelState.AddModelError("", "Termékajánló módban a szint kiválasztása kötelező.");
+                ViewBag.ServerValidationStep = 3;
                 return View("Start", fresh);
             }
 
