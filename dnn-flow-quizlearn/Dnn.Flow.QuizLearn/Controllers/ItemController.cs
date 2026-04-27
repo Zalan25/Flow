@@ -127,30 +127,22 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("Start", fresh);
             }
 
-            var needLevelTestFromForm =
-                string.Equals(Request.Form["NeedLevelTest"], "true", StringComparison.OrdinalIgnoreCase);
 
-            var needLevelTest =
-                moduleMode == QuizLearnMode.LevelAssessment ||
-                needLevelTestFromForm ||
-                (
-                    moduleMode == QuizLearnMode.RecommendationWithLevelAssessment &&
-                    !model.SelectedLevelId.HasValue
-                );
 
-            if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue && !needLevelTest)
-            {
-                var fresh = BuildStartViewModel(moduleMode);
-                ViewBag.ServerValidationStep = 3;
-                return View("Start", fresh);
-            }
+            //var needLevelTest =
+            //    moduleMode == QuizLearnMode.LevelAssessment ||
+            //    (
+            //        moduleMode == QuizLearnMode.RecommendationWithLevelAssessment &&
+            //        !model.SelectedLevelId.HasValue
+            //    );
 
-            if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue)
-            {
-                var fresh = BuildStartViewModel(moduleMode);
-                ViewBag.ServerValidationStep = 3;
-                return View("Start", fresh);
-            }
+            //if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue)
+            //{
+            //    var fresh = BuildStartViewModel(moduleMode);
+            //    ModelState.AddModelError("", "Termékajánló módban a szint kiválasztása kötelező.");
+            //    return View("Start", fresh);
+            //}
+
 
             var sessionInfo = new AssessmentSessionInfo
             {

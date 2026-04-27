@@ -382,17 +382,19 @@
                 }
             });
         }
+        var submitButton = document.getElementById("recommendationSubmitButton");
 
-        if (form) {
-            form.addEventListener("submit", function (e) {
-                if (!validateStep(4)) {
-                    e.preventDefault();
+        if (submitButton) {
+            submitButton.addEventListener("click", function () {
+                var selectedPace = document.querySelector('input[name="PaceTypeId"]:checked');
+
+                if (!selectedPace) {
                     showStep(4);
                     showStepError(4);
-                    return false;
+                    return;
                 }
 
-                return true;
+                form.submit();
             });
         }
 
