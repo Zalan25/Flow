@@ -77,9 +77,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
             {
                 ModuleId = ModuleContext.ModuleId,
 
-                AssessmentModeId = int.TryParse(Request.Form["AssessmentModeId"], out int modeId)
+                AssessmentModeId = int.TryParse(Request.Form["AssessmentModeId"], out int modeId) && modeId > 0
                     ? modeId
-                    : 0,
+                    : (moduleMode == QuizLearnMode.LevelAssessment ? 2 : 1),
 
                 LanguageId = int.TryParse(Request.Form["LanguageId"], out int langId)
                     ? langId
@@ -149,7 +149,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
             var sessionInfo = new AssessmentSessionInfo
             {
                 ModuleId = ModuleContext.ModuleId,
-                AssessmentModeId = model.AssessmentModeId,
+                AssessmentModeId = model.AssessmentModeId > 0
+                ? model.AssessmentModeId
+                : (needLevelTest ? 2 : 1),
                 LanguageId = model.LanguageId,
                 SecondaryLanguageId = model.SecondaryLanguageId,
                 SelectedLevelId = model.SelectedLevelId ?? 1,
@@ -200,13 +202,24 @@ namespace Dnn.Flow.QuizLearn.Controllers
             ViewBag.SessionId = sessionId;
             ViewBag.RuleCount = rules.Count;
 
+            var maxProducts = rules
+                .Where(x => x.MaxProducts > 0)
+                .Select(x => x.MaxProducts)
+                .DefaultIfEmpty(3)
+                .Max();
+
             var skus = rules
-            .Where(x => !string.IsNullOrWhiteSpace(x.HotcakesProductSKU))
-            .OrderBy(x => x.Priority)
-            .Select(x => x.HotcakesProductSKU)
-            .Distinct()
-            .Take(maxProducts)
-            .ToList();
+                .Where(x => !string.IsNullOrWhiteSpace(x.HotcakesProductSKU))
+                .OrderBy(x => x.Priority)
+                .Select(x => x.HotcakesProductSKU)
+                .Distinct()
+                .Take(maxProducts)
+                .ToList();
+
+            if (!skus.Any())
+            {
+                return View("Start", BuildStartViewModel(moduleMode));
+            }
 
             var cartUrl = "/hotcakesstore/cart?" + string.Join("&",
                 skus.Select(s => "AddSku=" + Server.UrlEncode(s) + "&AddSkuQty=1"));
