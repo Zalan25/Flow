@@ -145,7 +145,8 @@
             case "Reading": return "Olvasás";
             case "Listening": return "Hallás utáni értés";
             case "Practice": return "Gyakorlás";
-            case "SelfStudy": return "Komplett tanulás";
+            case "SelfStudy": return "Egyéni felkészülés";
+            case "Book": return "Nyelvtan";
             default: return skillName;
         }
     }
@@ -159,6 +160,7 @@
             case "Listening": return "🎧";
             case "Practice": return "📈";
             case "SelfStudy": return "🎯";
+            case "Book": return "📚";
             default: return "✓";
         }
     }
@@ -191,8 +193,8 @@
 
     private string GetPaceIcon(string paceName)
     {
-        if (paceName.ToLower().Contains("nyugodt")) return "🕒";
-        if (paceName.ToLower().Contains("gyors")) return "⚡";
+        if (paceName.ToLower().Contains("kényelmesen")) return "🕒";
+        if (paceName.ToLower().Contains("intenzív")) return "⚡";
         return "🎯";
     }
 }
