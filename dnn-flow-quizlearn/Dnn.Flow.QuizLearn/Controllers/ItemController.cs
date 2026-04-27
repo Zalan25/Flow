@@ -202,6 +202,52 @@ namespace Dnn.Flow.QuizLearn.Controllers
             ViewBag.SessionId = sessionId;
             ViewBag.RuleCount = rules.Count;
 
+            var selectedSkills = model.SelectedSkillTypeIds.Distinct().ToList();
+
+            int totalCount;
+
+            switch (model.PaceTypeId)
+            {
+                case 1:
+                    totalCount = 2;
+                    break;
+                case 2:
+                    totalCount = 3;
+                    break;
+                case 3:
+                    totalCount = 5;
+                    break;
+                default:
+                    totalCount = 3;
+                    break;
+            }
+
+            int basePerSkill = totalCount / selectedSkills.Count;
+            int remainder = totalCount % selectedSkills.Count;
+
+            var finalSkus = new List<string>();
+
+            foreach (var skillId in selectedSkills)
+            {
+                int count = basePerSkill;
+
+                if (remainder > 0)
+                {
+                    count++;
+                    remainder--;
+                }
+
+                var skillRules = rules
+                    .Where(x => x.SkillTypeId == skillId)
+                    .OrderBy(x => x.Priority)
+                    .Select(x => x.HotcakesProductSKU)
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Distinct()
+                    .Take(count);
+
+                finalSkus.AddRange(skillRules);
+            }
+
             var skus = _recommendationService.GetRecommendedSkus(
                 ModuleContext.ModuleId,
                 model.LanguageId,
