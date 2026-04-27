@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using Dnn.Flow.QuizLearn.Data;
+﻿using Dnn.Flow.QuizLearn.Data;
 using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services.Interfaces;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Dnn.Flow.QuizLearn.Services
@@ -56,12 +57,12 @@ namespace Dnn.Flow.QuizLearn.Services
             return _repository.AddRecommendationResultItem(itemInfo);
         }
         public IEnumerable<string> GetRecommendedSkus(
-    int moduleId,
-    int languageId,
-    int questionLevelId,
-    IEnumerable<int> selectedSkillTypeIds,
-    int paceTypeId,
-    int? secondaryLanguageId)
+            int moduleId,
+            int languageId,
+            int questionLevelId,
+            IEnumerable<int> selectedSkillTypeIds,
+            int paceTypeId,
+            int? secondaryLanguageId)
         {
             var selectedSkus = new List<string>();
 
@@ -70,29 +71,70 @@ namespace Dnn.Flow.QuizLearn.Services
                 return selectedSkus;
             }
 
-            foreach (var focusSkillTypeId in selectedSkillTypeIds.Distinct())
+            var focusSkillTypeId = selectedSkillTypeIds
+                .Distinct()
+                .FirstOrDefault();
+
+            if (focusSkillTypeId <= 0)
             {
-                var compositionRules = _repository.GetBundleCompositionRules(
+                return selectedSkus;
+            }
+
+            var compositionRules = _repository.GetBundleCompositionRules(
+                moduleId,
+                focusSkillTypeId,
+                paceTypeId
+            ).ToList();
+
+            if (!compositionRules.Any())
+            {
+                return selectedSkus;
+            }
+
+            var targetProductCount = compositionRules.Sum(x => x.ProductCount);
+
+            var focusRule = compositionRules
+                .FirstOrDefault(x => x.ProductSkillTypeId == focusSkillTypeId);
+
+            if (focusRule != null && focusRule.ProductCount < 2)
+            {
+                focusRule.ProductCount = 2;
+            }
+
+            foreach (var compositionRule in compositionRules
+                .Where(x => x.ProductCount > 0)
+                .OrderBy(x => x.Priority))
+            {
+                var matchingRules = GetMatchingRules(
                     moduleId,
-                    focusSkillTypeId,
-                    paceTypeId
-                ).ToList();
+                    languageId,
+                    questionLevelId,
+                    compositionRule.ProductSkillTypeId,
+                    paceTypeId,
+                    secondaryLanguageId
+                );
 
-                if (!compositionRules.Any())
-                {
-                    compositionRules = new List<BundleCompositionRuleInfo>
+                var skus = matchingRules
+                    .Where(x => !string.IsNullOrWhiteSpace(x.HotcakesProductSKU))
+                    .OrderBy(x => x.Priority)
+                    .Select(x => x.HotcakesProductSKU)
+                    .Distinct()
+                    .Where(x => !selectedSkus.Contains(x))
+                    .Take(compositionRule.ProductCount);
+
+                selectedSkus.AddRange(skus);
+            }
+
+            if (selectedSkus.Count < targetProductCount)
             {
-                new BundleCompositionRuleInfo
+                foreach (var compositionRule in compositionRules
+                    .OrderBy(x => x.Priority))
                 {
-                    ProductSkillTypeId = focusSkillTypeId,
-                    ProductCount = 1,
-                    Priority = 1
-                }
-            };
-                }
+                    if (selectedSkus.Count >= targetProductCount)
+                    {
+                        break;
+                    }
 
-                foreach (var compositionRule in compositionRules.OrderBy(x => x.Priority))
-                {
                     var matchingRules = GetMatchingRules(
                         moduleId,
                         languageId,
@@ -102,20 +144,22 @@ namespace Dnn.Flow.QuizLearn.Services
                         secondaryLanguageId
                     );
 
-                    var skus = matchingRules
+                    var extraSkus = matchingRules
                         .Where(x => !string.IsNullOrWhiteSpace(x.HotcakesProductSKU))
                         .OrderBy(x => x.Priority)
                         .Select(x => x.HotcakesProductSKU)
                         .Distinct()
-                        .Take(compositionRule.ProductCount);
+                        .Where(x => !selectedSkus.Contains(x))
+                        .Take(targetProductCount - selectedSkus.Count);
 
-                    selectedSkus.AddRange(skus);
+                    selectedSkus.AddRange(extraSkus);
                 }
             }
 
             return selectedSkus
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Distinct()
+                .Take(targetProductCount)
                 .ToList();
         }
     }
