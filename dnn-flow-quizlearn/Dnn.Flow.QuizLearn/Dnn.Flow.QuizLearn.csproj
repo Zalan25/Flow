@@ -142,6 +142,7 @@
   <ItemGroup>
     <Content Include="css\quizlearn.css" />
     <Content Include="css\recommendation.css" />
+    <Content Include="css\start.css" />
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="License.txt" />
