@@ -140,6 +140,8 @@
     <Compile Include="Services\RecommendationService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\quizlearn.css" />
+    <Content Include="css\recommendation.css" />
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="License.txt" />
