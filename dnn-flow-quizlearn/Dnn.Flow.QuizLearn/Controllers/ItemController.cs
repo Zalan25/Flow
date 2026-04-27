@@ -211,15 +211,28 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 model.SecondaryLanguageId
             ).ToList();
 
-            if (!skus.Any())
+            var cleanSkus = skus
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Distinct()
+                .ToList();
+
+            if (!cleanSkus.Any())
             {
                 return View("Start", BuildStartViewModel(moduleMode));
             }
 
-            var cartUrl = "/hotcakesstore/cart?" + string.Join("&",
-                skus.Select(s => "AddSku=" + Server.UrlEncode(s) + "&AddSkuQty=1"));
+            var skuParam = string.Join(",", cleanSkus.Select(s => Server.UrlEncode(s)));
+            var qtyParam = string.Join(",", cleanSkus.Select(s => "1"));
+
+            var cartUrl = "/hotcakesstore/cart/AddSKU/"
+                + skuParam
+                + "/AddSKUQTY/"
+                + qtyParam
+                + "/ClearCart/true";
 
             return Redirect(cartUrl);
+
+
         }
 
         private List<RecommendationRuleInfo> GetRecommendationRulesForAllSelectedSkills(AssessmentStartViewModel model)
