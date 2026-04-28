@@ -364,27 +364,19 @@ namespace Dnn.Flow.QuizLearn.Controllers
         {
             var modeValue = ModuleContext.Configuration.ModuleSettings["QuizLearnMode"] as string;
 
-            if (string.IsNullOrWhiteSpace(modeValue))
+            int parsedMode;
+
+            if (!int.TryParse(modeValue, out parsedMode))
             {
                 return QuizLearnMode.RecommendationWithLevelAssessment;
             }
 
-            int parsedMode;
-
-            if (int.TryParse(modeValue, out parsedMode) &&
-                Enum.IsDefined(typeof(QuizLearnMode), parsedMode))
+            if (!Enum.IsDefined(typeof(QuizLearnMode), parsedMode))
             {
-                return (QuizLearnMode)parsedMode;
+                return QuizLearnMode.RecommendationWithLevelAssessment;
             }
 
-            QuizLearnMode parsedEnum;
-
-            if (Enum.TryParse(modeValue, true, out parsedEnum))
-            {
-                return parsedEnum;
-            }
-
-            return QuizLearnMode.RecommendationWithLevelAssessment;
+            return (QuizLearnMode)parsedMode;
         }
 
         private ActionResult HandleStartLevelTestPost()
