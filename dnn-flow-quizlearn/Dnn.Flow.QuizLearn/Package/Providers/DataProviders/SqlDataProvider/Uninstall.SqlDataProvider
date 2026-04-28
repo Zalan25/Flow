@@ -1,0 +1,122 @@
+﻿/************************************************************/
+/*****           QuizLearn FULL UNINSTALL               *****/
+/************************************************************/
+
+SET NOCOUNT ON;
+
+
+/* =========================================
+   STORED PROCEDURES TÖRLÉSE
+========================================= */
+
+DECLARE @procName NVARCHAR(255)
+
+DECLARE proc_cursor CURSOR FOR
+SELECT name
+FROM sys.procedures
+WHERE name LIKE '{objectQualifier}lm_%'
+
+OPEN proc_cursor
+FETCH NEXT FROM proc_cursor INTO @procName
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    EXEC('DROP PROCEDURE {databaseOwner}[' + @procName + ']')
+    FETCH NEXT FROM proc_cursor INTO @procName
+END
+
+CLOSE proc_cursor
+DEALLOCATE proc_cursor
+
+
+/* =========================================
+   FOREIGN KEY-k törlése (biztos módszer)
+========================================= */
+
+DECLARE @sql NVARCHAR(MAX) = N''
+
+SELECT @sql += 'ALTER TABLE [' + OBJECT_SCHEMA_NAME(parent_object_id) + '].[' + OBJECT_NAME(parent_object_id) + '] DROP CONSTRAINT [' + name + '];'
+FROM sys.foreign_keys
+WHERE name LIKE '%lm_%'
+
+EXEC sp_executesql @sql
+
+
+/* =========================================
+   TÁBLÁK TÖRLÉSE (DEPENDENCY SORREND)
+========================================= */
+
+-- 1. legalsó szint (child)
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_test_attempt_answer_options]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_test_attempt_answer_options]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_test_attempt_answers]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_test_attempts]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_test_attempts]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_assessment_session_skills]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_session_skills]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_assessment_session_questions]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+
+
+-- 2. középszint
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_answers]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_answers]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_test_questions]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_test_questions]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_tests]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_tests]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_recommendation_result_items]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_recommendation_result_items]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_recommendation_results]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_recommendation_results]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_bundle_composition_rules]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_recommendation_rules]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+
+
+-- 3. felső szint
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_questions]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_questions]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_assessment_sessions]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+
+
+-- 4. lookup / törzsadatok
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_languages]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_languages]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_question_levels]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_question_levels]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_question_types]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_question_types]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_skill_types]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_skill_types]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_pace_types]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_pace_types]
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_assessment_modes]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_modes]
+
+
+/* =========================================
+   KÉSZ
+========================================= */
+
+PRINT 'QuizLearn uninstall completed successfully.'
+GO

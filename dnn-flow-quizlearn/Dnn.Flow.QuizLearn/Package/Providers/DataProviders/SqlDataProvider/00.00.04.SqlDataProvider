@@ -1,0 +1,336 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****       DNN Module: QuizLearn                      *****/
+/*****       Version: 00.00.04                          *****/
+/*****                                                  *****/
+/*****       This file contains ONLY new procedure      *****/
+/*****       updates for test attempts and lookups.     *****/
+/************************************************************/
+
+
+/* ---------------------------------------------
+   lm_TestAttempts_Start
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_TestAttempts_Start]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttempts_Start]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttempts_Start]
+    @ModuleId INT,
+    @AssessmentSessionId INT,
+    @TestId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @AttemptNumber INT;
+
+    SELECT @AttemptNumber = ISNULL(MAX([AttemptNumber]), 0) + 1
+    FROM {databaseOwner}[{objectQualifier}lm_test_attempts]
+    WHERE [AssessmentSessionId] = @AssessmentSessionId;
+
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_test_attempts]
+    (
+        [ModuleId],
+        [AssessmentSessionId],
+        [TestId],
+        [StartedOn],
+        [IsCompleted],
+        [TotalScore],
+        [AttemptNumber]
+    )
+    VALUES
+    (
+        @ModuleId,
+        @AssessmentSessionId,
+        @TestId,
+        SYSUTCDATETIME(),
+        0,
+        0,
+        @AttemptNumber
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS [TestAttemptId];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_AssessmentSessions_GetById
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessions_GetById]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_GetById]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_GetById]
+    @ModuleId INT,
+    @AssessmentSessionId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [AssessmentSessionId],
+        [ModuleId],
+        [AssessmentModeId],
+        [LanguageId],
+        [SecondaryLanguageId],
+        [SelectedLevelId],
+        [SessionKey],
+        [PaceTypeId],
+        [UserId],
+        [NeedLevelTest],
+        [Status],
+        [FinalLevelId],
+        [CreatedOn],
+        [CompletedOn]
+    FROM {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+    WHERE [AssessmentSessionId] = @AssessmentSessionId
+      AND [ModuleId] = @ModuleId;
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_Questions_GetForAssessment
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_Questions_GetForAssessment]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_Questions_GetForAssessment]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_Questions_GetForAssessment]
+    @ModuleId INT,
+    @LanguageId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [QuestionId],
+        [ModuleId],
+        [QuestionText],
+        [LanguageId],
+        [QuestionLevelId],
+        [QuestionTypeId],
+        [SkillTypeId],
+        [Points],
+        [IsActive]
+    FROM {databaseOwner}[{objectQualifier}lm_questions]
+    WHERE ([ModuleId] = @ModuleId OR [ModuleId] = 0)
+      AND [LanguageId] = @LanguageId
+      AND [IsActive] = 1
+    ORDER BY
+        CASE WHEN [ModuleId] = @ModuleId THEN 0 ELSE 1 END,
+        [QuestionLevelId],
+        [QuestionId];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_Answers_GetByQuestionId
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_Answers_GetByQuestionId]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_Answers_GetByQuestionId]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_Answers_GetByQuestionId]
+    @ModuleId INT,
+    @QuestionId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        [AnswerId],
+        [ModuleId],
+        [QuestionId],
+        [AnswerText],
+        [IsCorrect],
+        [AnswerOrder]
+    FROM {databaseOwner}[{objectQualifier}lm_answers]
+    WHERE ([ModuleId] = @ModuleId OR [ModuleId] = 0)
+      AND [QuestionId] = @QuestionId
+    ORDER BY
+        [AnswerOrder],
+        [AnswerId];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_TestAttemptAnswers_Add
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_TestAttemptAnswers_Add]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttemptAnswers_Add]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttemptAnswers_Add]
+    @ModuleId INT,
+    @AssessmentSessionId INT,
+    @QuestionId INT,
+    @SelectedAnswerId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TestAttemptId INT;
+    DECLARE @IsCorrect BIT;
+    DECLARE @EarnedPoints INT;
+
+    SELECT TOP 1
+        @TestAttemptId = [TestAttemptId]
+    FROM {databaseOwner}[{objectQualifier}lm_test_attempts]
+    WHERE [ModuleId] = @ModuleId
+      AND [AssessmentSessionId] = @AssessmentSessionId
+      AND [IsCompleted] = 0
+    ORDER BY [TestAttemptId] DESC;
+
+    IF @TestAttemptId IS NULL
+    BEGIN
+        RAISERROR('No active test attempt found for this assessment session.', 16, 1);
+        RETURN;
+    END;
+
+    SELECT
+        @IsCorrect = a.[IsCorrect],
+        @EarnedPoints =
+            CASE
+                WHEN a.[IsCorrect] = 1 THEN q.[Points]
+                ELSE 0
+            END
+    FROM {databaseOwner}[{objectQualifier}lm_answers] a
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_questions] q
+        ON q.[QuestionId] = a.[QuestionId]
+    WHERE (a.[ModuleId] = @ModuleId OR a.[ModuleId] = 0)
+      AND (q.[ModuleId] = @ModuleId OR q.[ModuleId] = 0)
+      AND a.[QuestionId] = @QuestionId
+      AND a.[AnswerId] = @SelectedAnswerId;
+
+    IF @IsCorrect IS NULL
+    BEGIN
+        RAISERROR('Selected answer does not belong to the given question.', 16, 1);
+        RETURN;
+    END;
+
+    IF EXISTS (
+        SELECT 1
+        FROM {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+        WHERE [ModuleId] = @ModuleId
+          AND [TestAttemptId] = @TestAttemptId
+          AND [QuestionId] = @QuestionId
+    )
+    BEGIN
+        UPDATE {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+        SET
+            [SelectedAnswerId] = @SelectedAnswerId,
+            [IsCorrect] = @IsCorrect,
+            [EarnedPoints] = @EarnedPoints,
+            [AnsweredOn] = SYSUTCDATETIME()
+        WHERE [ModuleId] = @ModuleId
+          AND [TestAttemptId] = @TestAttemptId
+          AND [QuestionId] = @QuestionId;
+
+        SELECT [TestAttemptAnswerId]
+        FROM {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+        WHERE [ModuleId] = @ModuleId
+          AND [TestAttemptId] = @TestAttemptId
+          AND [QuestionId] = @QuestionId;
+
+        RETURN;
+    END;
+
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_test_attempt_answers]
+    (
+        [ModuleId],
+        [TestAttemptId],
+        [QuestionId],
+        [SelectedAnswerId],
+        [IsCorrect],
+        [EarnedPoints]
+    )
+    VALUES
+    (
+        @ModuleId,
+        @TestAttemptId,
+        @QuestionId,
+        @SelectedAnswerId,
+        @IsCorrect,
+        @EarnedPoints
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS [TestAttemptAnswerId];
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_TestAttemptAnswers_GetSummary
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_TestAttemptAnswers_GetSummary]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttemptAnswers_GetSummary]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttemptAnswers_GetSummary]
+    @ModuleId INT,
+    @AssessmentSessionId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        q.[QuestionId],
+        q.[QuestionLevelId],
+        q.[Points],
+        taa.[IsCorrect],
+        taa.[EarnedPoints]
+    FROM {databaseOwner}[{objectQualifier}lm_test_attempts] ta
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_test_attempt_answers] taa
+        ON taa.[TestAttemptId] = ta.[TestAttemptId]
+       AND taa.[ModuleId] = ta.[ModuleId]
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_questions] q
+        ON q.[QuestionId] = taa.[QuestionId]
+    WHERE ta.[ModuleId] = @ModuleId
+      AND ta.[AssessmentSessionId] = @AssessmentSessionId
+      AND (q.[ModuleId] = @ModuleId OR q.[ModuleId] = 0)
+    ORDER BY
+        q.[QuestionLevelId],
+        q.[QuestionId];
+END
+GO

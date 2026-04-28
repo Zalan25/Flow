@@ -1,0 +1,18 @@
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewModel>
+
+<div class="form-group">
+    <label for="Mode">Modul működési módja</label>
+
+    <select id="Mode" name="Mode" class="form-control">
+        @foreach (var item in Model.AvailableModes)
+        {
+            <option value="@item.Value" @(item.Value == ((int)Model.Mode).ToString() ? "selected" : "")>
+                @item.Text
+            </option>
+        }
+    </select>
+</div>
+
+<div class="alert alert-info">
+    Válaszd ki a működési módot, majd alul kattints a DNN Update gombra.
+</div>

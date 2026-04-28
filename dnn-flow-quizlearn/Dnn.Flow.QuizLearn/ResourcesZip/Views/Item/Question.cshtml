@@ -1,0 +1,82 @@
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.QuestionViewModel>
+<link rel="stylesheet" href="/DesktopModules/YourRfProjects/dnn-flow-quizlearn/Dnn.Flow.QuizLearn/css/quizlearn.css" />
+<div class="quizlearn-wrapper">
+    <div class="quizlearn-card">
+
+        <div class="quizlearn-progress-text">
+            Kérdés @Model.QuestionNumber / @Model.TotalQuestions
+        </div>
+
+        <div class="quizlearn-progress">
+            <div class="quizlearn-progress-bar" style="width:@((Model.QuestionNumber * 100) / Model.TotalQuestions)%"></div>
+        </div>
+
+        <h2 class="quizlearn-title">
+            @Model.QuestionText
+        </h2>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="quizlearn-error">
+                @foreach (var state in ViewData.ModelState.Values)
+                {
+                    foreach (var error in state.Errors)
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                }
+            </div>
+        }
+
+        <form method="post" class="quizlearn-form">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="AssessmentAction" value="AnswerQuestion" />
+            <input type="hidden" name="SessionId" value="@Model.SessionId" />
+            <input type="hidden" name="QuestionId" value="@Model.QuestionId" />
+            <input type="hidden" name="QuestionNumber" value="@Model.QuestionNumber" />
+            <input type="hidden" name="QuestionTypeId" value="@Model.QuestionTypeId" />
+
+            <div class="quizlearn-options">
+
+                @if (Model.RequiresTextAnswer)
+                {
+                    <textarea id="TextAnswer"
+                              name="TextAnswer"
+                              class="quizlearn-textarea"
+                              rows="5"
+                              placeholder="Írd ide a válaszodat..."></textarea>
+                }
+                else if (Model.AllowsMultipleAnswers)
+                {
+                    foreach (var answer in Model.Answers)
+                    {
+                        <label class="quizlearn-option">
+                            <input type="checkbox"
+                                   name="SelectedAnswerIds"
+                                   value="@answer.AnswerId" />
+                            <span>@answer.AnswerText</span>
+                        </label>
+                    }
+                }
+                else
+                {
+                    foreach (var answer in Model.Answers)
+                    {
+                        <label class="quizlearn-option">
+                            <input type="radio"
+                                   name="AnswerId"
+                                   value="@answer.AnswerId" />
+                            <span>@answer.AnswerText</span>
+                        </label>
+                    }
+                }
+
+            </div>
+
+            <button type="submit" class="quizlearn-button">
+                Következő
+            </button>
+        </form>
+    </div>
+</div>
