@@ -1,7 +1,7 @@
 ﻿/************************************************************/
 /*****              SqlDataProvider                     *****/
 /*****       DNN Module: QuizLearn                      *****/
-/*****       Version: 00.00.11                          *****/
+/*****       Version: 00.00.10                          *****/
 /*****                                                  *****/
 /*****       Imports default level-test questions       *****/
 /*****       for all supported languages.               *****/
