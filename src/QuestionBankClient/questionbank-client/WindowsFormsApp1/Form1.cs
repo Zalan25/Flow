@@ -208,14 +208,37 @@ namespace QuestionBankClient
 
         private int SaveQuizHeader(SqlConnection conn, SqlTransaction trans)
         {
-            string sql = @"INSERT INTO dbo.lm_tests (ModuleId, TestName, Characterization, LanguageId, TotalPoints, IsRandom, IsActive) 
-                           OUTPUT INSERTED.TestId
-                           VALUES (1, @name, @desc, 1, 0, 0, 1)";
-            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+            // HA EZ EGY MÁR LÉTEZŐ KÉRDŐÍV (Van azonosítója) -> UPDATE
+            if (ActiveQuiz.TestId > 0)
             {
-                cmd.Parameters.AddWithValue("@name", string.IsNullOrWhiteSpace(ActiveQuiz.Title) ? "Névtelen teszt" : ActiveQuiz.Title);
-                cmd.Parameters.AddWithValue("@desc", ActiveQuiz.Description ?? "");
-                return (int)cmd.ExecuteScalar();
+                string sql = @"UPDATE dbo.lm_tests
+                       SET TestName = @name, Characterization = @desc
+                       WHERE TestId = @id";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+                {
+                    cmd.Parameters.AddWithValue("@name", string.IsNullOrWhiteSpace(ActiveQuiz.Title) ? "Névtelen teszt" : ActiveQuiz.Title);
+                    cmd.Parameters.AddWithValue("@desc", ActiveQuiz.Description ?? "");
+                    cmd.Parameters.AddWithValue("@id", ActiveQuiz.TestId);
+
+                    cmd.ExecuteNonQuery(); // Frissítjük a sort
+                }
+                return ActiveQuiz.TestId; // Visszaadjuk a már meglévő ID-t
+            }
+            // HA EZ EGY TELJESEN ÚJ KÉRDŐÍV -> INSERT
+            else
+            {
+                string sql = @"INSERT INTO dbo.lm_tests (ModuleId, TestName, Characterization, LanguageId, TotalPoints, IsRandom, IsActive)
+                       OUTPUT INSERTED.TestId
+                       VALUES (1, @name, @desc, 1, 0, 0, 1)";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+                {
+                    cmd.Parameters.AddWithValue("@name", string.IsNullOrWhiteSpace(ActiveQuiz.Title) ? "Névtelen teszt" : ActiveQuiz.Title);
+                    cmd.Parameters.AddWithValue("@desc", ActiveQuiz.Description ?? "");
+
+                    return (int)cmd.ExecuteScalar(); // Visszaadjuk a frissen generált ID-t
+                }
             }
         }
 
@@ -225,7 +248,7 @@ namespace QuestionBankClient
             if (data.UI_TypeKey == "tf") qTypeId = 2;
             else if (data.UI_TypeKey == "Short") qTypeId = 3;
 
-            string sql = @"INSERT INTO dbo.lm_questions (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive) 
+            string sql = @"INSERT INTO dbo.lm_questions (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
                            OUTPUT INSERTED.QuestionId
                            VALUES (1, @text, 1, 1, @typeId, 1, @pts, 1)";
             using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
