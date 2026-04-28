@@ -21,6 +21,8 @@ namespace QuestionBankClient
         {
             InitializeComponent();
 
+            panel1.Dock = DockStyle.Fill;
+
             this.HandleCreated += (s, e) => {
                 SetPlaceholder(txtQuestionText, "Milyen nyelven szeretnél tanulni?");
              

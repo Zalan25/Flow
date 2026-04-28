@@ -23,7 +23,6 @@
             this.pnlSep1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtQuestionText = new System.Windows.Forms.TextBox();
-            this.pnlSep1_5 = new System.Windows.Forms.Panel();
             this.lblCheck = new System.Windows.Forms.Label();
             this.pnlSep2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,7 +45,6 @@
             this.panel1.Controls.Add(this.pnlSep1);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtQuestionText);
-            this.panel1.Controls.Add(this.pnlSep1_5);
             this.panel1.Controls.Add(this.lblCheck);
             this.panel1.Controls.Add(this.pnlSep2);
             this.panel1.Controls.Add(this.label2);
@@ -117,15 +115,6 @@
             this.txtQuestionText.Name = "txtQuestionText";
             this.txtQuestionText.Size = new System.Drawing.Size(816, 92);
             this.txtQuestionText.TabIndex = 3;
-            // 
-            // pnlSep1_5
-            // 
-            this.pnlSep1_5.BackColor = System.Drawing.Color.LightGray;
-            this.pnlSep1_5.Location = new System.Drawing.Point(90, 413);
-            this.pnlSep1_5.Margin = new System.Windows.Forms.Padding(6);
-            this.pnlSep1_5.Name = "pnlSep1_5";
-            this.pnlSep1_5.Size = new System.Drawing.Size(820, 2);
-            this.pnlSep1_5.TabIndex = 6;
             // 
             // lblCheck
             // 
@@ -256,7 +245,6 @@
         private System.Windows.Forms.Panel pnlSep1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtQuestionText;
-        private System.Windows.Forms.Panel pnlSep1_5;
         private System.Windows.Forms.Label lblCheck;
         private System.Windows.Forms.Panel pnlSep2;
         private System.Windows.Forms.Label label2;

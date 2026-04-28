@@ -14,6 +14,8 @@ namespace QuestionBankClient
         {
             InitializeComponent();
 
+            panel1.Dock = DockStyle.Fill;
+
             this.HandleCreated += (s, e) => {
                 SetPlaceholder(txtQuestionText, "Írd be az Igaz-Hamis kérdést ide...");
                 SetPlaceholder(txtPoints, "Pont");
