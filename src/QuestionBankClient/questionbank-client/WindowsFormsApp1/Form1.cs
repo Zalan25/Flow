@@ -138,27 +138,42 @@ namespace QuestionBankClient
                     {
                         try
                         {
-                            // 1. LÉPÉS: Mindenképpen lementjük a kérdőív nevét és leírását (ha üres, ha nem)
+                            // 1. KÉRDŐÍV FEJLÉC MENTÉSE (Ezt mindenképp megcsinálja, ha vannak kérdések, ha nincsenek!)
                             int testId = SaveQuizHeader(conn, transaction);
 
-                            // 2. LÉPÉS: Megnézzük, hogy vannak-e egyáltalán kérdések a képernyőn
-                            var typeSelector = pnlbetamain.Controls.OfType<UC_TypeSelector>().FirstOrDefault();
-                            if (typeSelector != null)
+                            // 2. RÉGI KÉRDÉSEK TÖRLÉSE (Csak frissítésnél takarítunk)
+                            if (ActiveQuiz.TestId > 0)
                             {
-                                var flp = typeSelector.Controls.Find("flpQuestionList", true).FirstOrDefault() as FlowLayoutPanel;
+                                string delSql = "DELETE FROM dbo.lm_test_questions WHERE TestId = @tid";
+                                using (SqlCommand cmdDel = new SqlCommand(delSql, conn, transaction))
+                                {
+                                    cmdDel.Parameters.AddWithValue("@tid", testId);
+                                    cmdDel.ExecuteNonQuery();
+                                }
+                            }
 
-                                // Ha megvan a panel és vannak rajta kártyák, akkor elmentjük azokat is!
+                            // 3. KÉRDÉSEK MEGKERESÉSE ÉS MENTÉSE
+                            // HIBA JAVÍTVA: A "this.Controls.Find" az EGÉSZ ablakban keres, bármelyik panelen is van!
+                            var flpArray = this.Controls.Find("flpQuestionList", true);
+
+                            if (flpArray.Length > 0)
+                            {
+                                var flp = flpArray[0] as FlowLayoutPanel;
                                 if (flp != null && flp.Controls.OfType<UC_QuestionCard>().Any())
                                 {
                                     int order = 1;
                                     foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
                                     {
+                                        // Biztonsági ellenőrzés
+                                        if (card.Data == null) card.Data = new Question();
                                         if (card.Data.Points == 0) card.Data.Points = 1;
 
+                                        // Kérdés mentése és összekötése
                                         int questionId = SaveQuestion(card.Data, conn, transaction);
                                         LinkQuestionToTest(testId, questionId, order++, conn, transaction);
 
-                                        if (card.Data.Answers.Count > 0)
+                                        // Válaszok mentése
+                                        if (card.Data.Answers != null && card.Data.Answers.Count > 0)
                                         {
                                             SaveAnswers(questionId, card.Data.Answers, conn, transaction);
                                         }
@@ -166,24 +181,28 @@ namespace QuestionBankClient
                                 }
                             }
 
-                            // 3. LÉPÉS: Tranzakció véglegesítése (Commit)
+                            // 4. MINDEN SIKERES -> MENTÉS VÉGLEGESÍTÉSE
                             transaction.Commit();
-                            MessageBox.Show("A kérdőív sikeresen elmentve az adatbázisba!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            // Kényszerített visszatérés a főoldalra
+                            // Frissítjük a memóriában lévő azonosítót, ha esetleg új volt
+                            ActiveQuiz.TestId = testId;
+
+                            MessageBox.Show("A kérdőív sikeresen elmentve!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Visszatérés a főoldalra
                             this.btnBack_Click_1(null, null);
                         }
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            MessageBox.Show("Hiba a mentés során: " + ex.Message);
+                            MessageBox.Show("Hiba a mentés során: " + ex.Message, "Adatbázis hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Adatbázis hiba:\n" + ex.Message, "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nem sikerült csatlakozni az adatbázishoz:\n" + ex.Message, "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

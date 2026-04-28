@@ -266,5 +266,10 @@ namespace QuestionBankClient
         {
 
         }
+
+        private void UC_QuizList_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

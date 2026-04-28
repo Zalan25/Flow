@@ -42,7 +42,7 @@
             this.flpQuizzes.BackColor = System.Drawing.Color.White;
             this.flpQuizzes.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpQuizzes.Location = new System.Drawing.Point(90, 173);
-            this.flpQuizzes.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.flpQuizzes.Margin = new System.Windows.Forms.Padding(6);
             this.flpQuizzes.Name = "flpQuizzes";
             this.flpQuizzes.Size = new System.Drawing.Size(1700, 1058);
             this.flpQuizzes.TabIndex = 1;
@@ -56,9 +56,10 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.Controls.Add(this.flpQuizzes);
             this.Controls.Add(this.lblTitle);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "UC_QuizList";
             this.Size = new System.Drawing.Size(1900, 1308);
+            this.Load += new System.EventHandler(this.UC_QuizList_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
