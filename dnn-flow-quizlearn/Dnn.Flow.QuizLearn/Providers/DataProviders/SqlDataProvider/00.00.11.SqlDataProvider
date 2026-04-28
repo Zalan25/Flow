@@ -9,12 +9,6 @@
 IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_recommendation_rules]', N'U') IS NOT NULL
 BEGIN
 
-    IF COL_LENGTH('{objectQualifier}lm_recommendation_rules', 'ProductKind') IS NULL
-    BEGIN
-        ALTER TABLE {databaseOwner}[{objectQualifier}lm_recommendation_rules]
-        ADD [ProductKind] NVARCHAR(50) NULL;
-    END;
-
     DECLARE @ModuleId INT = 0;
 
     DELETE FROM {databaseOwner}[{objectQualifier}lm_recommendation_rules]

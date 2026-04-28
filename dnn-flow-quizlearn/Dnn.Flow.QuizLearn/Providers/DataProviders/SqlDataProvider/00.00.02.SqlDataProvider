@@ -438,6 +438,7 @@ BEGIN
         [HotcakesProductSKU]   NVARCHAR(100) NULL,
         [HotcakesCategoryKey]  NVARCHAR(100) NULL,
         [HotcakesTag]          NVARCHAR(100) NULL,
+        [ProductKind]          NVARCHAR(50) NULL,
         [MinProducts]          INT NOT NULL,
         [MaxProducts]          INT NOT NULL,
         [IsActive]             BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_recommendation_rules_IsActive] DEFAULT 1,

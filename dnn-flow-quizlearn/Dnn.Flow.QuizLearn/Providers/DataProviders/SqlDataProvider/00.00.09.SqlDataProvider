@@ -21,14 +21,6 @@ END
 GO
 
 
-/* --- 2. ProductKind oszlop hozzáadása --- */
-
-IF COL_LENGTH('{objectQualifier}lm_recommendation_rules', 'ProductKind') IS NULL
-BEGIN
-    ALTER TABLE {databaseOwner}[{objectQualifier}lm_recommendation_rules]
-    ADD [ProductKind] NVARCHAR(50) NULL;
-END
-GO
 
 
 /* --- 3. Pace nevek frissítése --- */
@@ -221,10 +213,10 @@ VALUES
 GO
 
 IF EXISTS (
-    SELECT 1
-    FROM sys.objects
-    WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_BundleCompositionRules_Get]')
-      AND type = N'P'
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_BundleCompositionRules_Get]')
+      AND type = 'P'
 )
     DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_BundleCompositionRules_Get]
 GO
@@ -245,7 +237,8 @@ BEGIN
         [ProductSkillTypeId],
         [ProductCount],
         [Priority],
-        [IsActive]
+        [IsActive],
+        [CreatedOn]
     FROM {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
     WHERE ([ModuleId] = @ModuleId OR [ModuleId] = 0)
       AND [FocusSkillTypeId] = @FocusSkillTypeId
