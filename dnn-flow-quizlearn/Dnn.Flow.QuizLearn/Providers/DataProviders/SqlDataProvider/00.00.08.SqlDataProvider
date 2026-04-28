@@ -1,67 +1,42 @@
-﻿/* ---------------------------------------------
-   English level test question seed
-   Module-specific seed
-   --------------------------------------------- */
-
-DECLARE @ModuleId INT = 395;
-
-DECLARE @EnglishId INT;
-DECLARE @A1 INT;
-DECLARE @A2 INT;
-DECLARE @B1 INT;
-DECLARE @B2 INT;
-DECLARE @C1 INT;
-
-DECLARE @SingleChoice INT;
-DECLARE @MultipleChoice INT;
-DECLARE @TrueFalse INT;
-DECLARE @Essay INT;
-DECLARE @Translation INT;
-
-DECLARE @Vocabulary INT;
-DECLARE @Reading INT;
-DECLARE @Practice INT;
-
-SELECT @EnglishId = LanguageId
-FROM dbo.lm_languages
-WHERE Code = N'en';
-
-SELECT @A1 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1';
-SELECT @A2 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2';
-SELECT @B1 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1';
-SELECT @B2 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2';
-SELECT @C1 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1';
-
-SELECT @SingleChoice = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice';
-SELECT @MultipleChoice = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice';
-SELECT @TrueFalse = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse';
-SELECT @Essay = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay';
-SELECT @Translation = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation';
-
-SELECT @Vocabulary = SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary';
-SELECT @Reading = SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Reading';
-SELECT @Practice = SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice';
-
-
-/* Helper pattern:
-   insert question if not exists, then insert answers if missing.
-*/
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****       DNN Module: QuizLearn                      *****/
+/*****       Version: 00.00.08                          *****/
+/*****                                                  *****/
+/*****       Seeds default English level test questions.*****/
+/************************************************************/
 
 
 /* ---------------------------------------------
-   A1 questions - 5 db
+   English level test question seed
+   Global/default seed: ModuleId = 0
    --------------------------------------------- */
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct word: I ___ a student.')
+
+/* ==========================================================
+   A1 questions - 5 db
+   ========================================================== */
+
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A1');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @TrueFalse INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'TrueFalse');
+DECLARE @Translation INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Translation');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
+
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the correct word: I ___ a student.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the correct word: I ___ a student.', @EnglishId, @A1, @SingleChoice, @Vocabulary, 1, 1);
 
-    DECLARE @Q1 INT = SCOPE_IDENTITY();
+    DECLARE @Q1 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q1, N'am', 1, 1),
     (@ModuleId, @Q1, N'is', 0, 2),
@@ -70,49 +45,46 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A1');
+DECLARE @TrueFalse INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'TrueFalse');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'True or false: "Book" means "könyv".')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'True or false: "Book" means "könyv".')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'True or false: "Book" means "könyv".', @EnglishId, @A1, @TrueFalse, @Vocabulary, 1, 1);
 
-    DECLARE @Q2 INT = SCOPE_IDENTITY();
+    DECLARE @Q2 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q2, N'True', 1, 1),
     (@ModuleId, @Q2, N'False', 0, 2);
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A1');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct plural: one child, two ___.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the correct plural: one child, two ___.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the correct plural: one child, two ___.', @EnglishId, @A1, @SingleChoice, @Vocabulary, 1, 1);
 
-    DECLARE @Q3 INT = SCOPE_IDENTITY();
+    DECLARE @Q3 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q3, N'childs', 0, 1),
     (@ModuleId, @Q3, N'children', 1, 2),
@@ -121,22 +93,23 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A1');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct answer: What is the opposite of "big"?')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the correct answer: What is the opposite of "big"?')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the correct answer: What is the opposite of "big"?', @EnglishId, @A1, @SingleChoice, @Vocabulary, 1, 1);
 
-    DECLARE @Q4 INT = SCOPE_IDENTITY();
+    DECLARE @Q4 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q4, N'small', 1, 1),
     (@ModuleId, @Q4, N'tall', 0, 2),
@@ -145,22 +118,23 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A1');
+DECLARE @Translation INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Translation');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Ez egy ház."')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Translate into English: "Ez egy ház."')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Translate into English: "Ez egy ház."', @EnglishId, @A1, @Translation, @Practice, 1, 1);
 
-    DECLARE @Q5 INT = SCOPE_IDENTITY();
+    DECLARE @Q5 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q5, N'This is a house', 1, 1),
     (@ModuleId, @Q5, N'It is a house', 1, 2);
@@ -168,30 +142,27 @@ END
 GO
 
 
-/* ---------------------------------------------
+/* ==========================================================
    A2 questions - 5 db
-   --------------------------------------------- */
+   ========================================================== */
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A2');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct form: She ___ to school every day.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the correct form: She ___ to school every day.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the correct form: She ___ to school every day.', @EnglishId, @A2, @SingleChoice, @Practice, 2, 1);
 
-    DECLARE @Q6 INT = SCOPE_IDENTITY();
+    DECLARE @Q6 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q6, N'go', 0, 1),
     (@ModuleId, @Q6, N'goes', 1, 2),
@@ -200,22 +171,23 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A2');
+DECLARE @MultipleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'MultipleChoice');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Select all words that are fruits.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Select all words that are fruits.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Select all words that are fruits.', @EnglishId, @A2, @MultipleChoice, @Vocabulary, 2, 1);
 
-    DECLARE @Q7 INT = SCOPE_IDENTITY();
+    DECLARE @Q7 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q7, N'apple', 1, 1),
     (@ModuleId, @Q7, N'banana', 1, 2),
@@ -224,44 +196,46 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A2');
+DECLARE @TrueFalse INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'TrueFalse');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'True or false: "Yesterday I go to the cinema" is grammatically correct.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'True or false: "Yesterday I go to the cinema" is grammatically correct.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'True or false: "Yesterday I go to the cinema" is grammatically correct.', @EnglishId, @A2, @TrueFalse, @Practice, 2, 1);
 
-    DECLARE @Q8 INT = SCOPE_IDENTITY();
+    DECLARE @Q8 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q8, N'True', 0, 1),
     (@ModuleId, @Q8, N'False', 1, 2);
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A2');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct sentence.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the correct sentence.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the correct sentence.', @EnglishId, @A2, @SingleChoice, @Practice, 2, 1);
 
-    DECLARE @Q9 INT = SCOPE_IDENTITY();
+    DECLARE @Q9 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q9, N'I have got two brothers.', 1, 1),
     (@ModuleId, @Q9, N'I has got two brothers.', 0, 2),
@@ -270,22 +244,23 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @A2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A2');
+DECLARE @Translation INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Translation');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Tegnap filmet néztem."')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Translate into English: "Tegnap filmet néztem."')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Translate into English: "Tegnap filmet néztem."', @EnglishId, @A2, @Translation, @Practice, 2, 1);
 
-    DECLARE @Q10 INT = SCOPE_IDENTITY();
+    DECLARE @Q10 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q10, N'Yesterday I watched a film', 1, 1),
     (@ModuleId, @Q10, N'Yesterday I watched a movie', 1, 2);
@@ -293,32 +268,27 @@ END
 GO
 
 
-/* ---------------------------------------------
+/* ==========================================================
    B1 questions - 5 db
-   --------------------------------------------- */
+   ========================================================== */
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Essay INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @Reading INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Reading');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B1');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct option: If I ___ more time, I would travel more.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the correct option: If I ___ more time, I would travel more.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the correct option: If I ___ more time, I would travel more.', @EnglishId, @B1, @SingleChoice, @Practice, 3, 1);
 
-    DECLARE @Q11 INT = SCOPE_IDENTITY();
+    DECLARE @Q11 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q11, N'have', 0, 1),
     (@ModuleId, @Q11, N'had', 1, 2),
@@ -327,22 +297,23 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B1');
+DECLARE @MultipleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'MultipleChoice');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Select all words related to work.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Select all words related to work.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Select all words related to work.', @EnglishId, @B1, @MultipleChoice, @Vocabulary, 3, 1);
 
-    DECLARE @Q12 INT = SCOPE_IDENTITY();
+    DECLARE @Q12 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q12, N'employee', 1, 1),
     (@ModuleId, @Q12, N'salary', 1, 2),
@@ -351,66 +322,69 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Reading INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Reading');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B1');
+DECLARE @TrueFalse INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'TrueFalse');
+DECLARE @Reading INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Reading');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'True or false: "I have lived here for five years" means the speaker still lives here.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'True or false: "I have lived here for five years" means the speaker still lives here.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'True or false: "I have lived here for five years" means the speaker still lives here.', @EnglishId, @B1, @TrueFalse, @Reading, 3, 1);
 
-    DECLARE @Q13 INT = SCOPE_IDENTITY();
+    DECLARE @Q13 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q13, N'True', 1, 1),
     (@ModuleId, @Q13, N'False', 0, 2);
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B1');
+DECLARE @Translation INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Translation');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Szerintem ez jó ötlet."')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Translate into English: "Szerintem ez jó ötlet."')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Translate into English: "Szerintem ez jó ötlet."', @EnglishId, @B1, @Translation, @Practice, 3, 1);
 
-    DECLARE @Q14 INT = SCOPE_IDENTITY();
+    DECLARE @Q14 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q14, N'I think this is a good idea', 1, 1),
     (@ModuleId, @Q14, N'In my opinion this is a good idea', 1, 2);
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @Essay INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B1');
+DECLARE @Essay INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Essay');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Write one sentence about your last holiday.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Write one sentence about your last holiday.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Write one sentence about your last holiday.', @EnglishId, @B1, @Essay, @Practice, 3, 1);
 
-    DECLARE @Q15 INT = SCOPE_IDENTITY();
+    DECLARE @Q15 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q15, N'I went', 1, 1),
     (@ModuleId, @Q15, N'I visited', 1, 2),
@@ -419,29 +393,27 @@ END
 GO
 
 
-/* ---------------------------------------------
+/* ==========================================================
    B2 questions - 3 db
-   --------------------------------------------- */
+   ========================================================== */
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B2');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the best synonym for "significant".')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the best synonym for "significant".')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the best synonym for "significant".', @EnglishId, @B2, @SingleChoice, @Vocabulary, 4, 1);
 
-    DECLARE @Q16 INT = SCOPE_IDENTITY();
+    DECLARE @Q16 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q16, N'important', 1, 1),
     (@ModuleId, @Q16, N'ordinary', 0, 2),
@@ -450,22 +422,23 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B2');
+DECLARE @MultipleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'MultipleChoice');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Select all formal expressions.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Select all formal expressions.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Select all formal expressions.', @EnglishId, @B2, @MultipleChoice, @Vocabulary, 4, 1);
 
-    DECLARE @Q17 INT = SCOPE_IDENTITY();
+    DECLARE @Q17 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q17, N'I would like to request...', 1, 1),
     (@ModuleId, @Q17, N'Could you please...', 1, 2),
@@ -474,22 +447,23 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @B2 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B2');
+DECLARE @Translation INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Translation');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Annak ellenére, hogy fáradt voltam, befejeztem a munkát."')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Translate into English: "Annak ellenére, hogy fáradt voltam, befejeztem a munkát."')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Translate into English: "Annak ellenére, hogy fáradt voltam, befejeztem a munkát."', @EnglishId, @B2, @Translation, @Practice, 4, 1);
 
-    DECLARE @Q18 INT = SCOPE_IDENTITY();
+    DECLARE @Q18 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q18, N'Although I was tired I finished the work', 1, 1),
     (@ModuleId, @Q18, N'Despite being tired I finished the work', 1, 2);
@@ -497,28 +471,27 @@ END
 GO
 
 
-/* ---------------------------------------------
+/* ==========================================================
    C1 questions - 2 db
-   --------------------------------------------- */
+   ========================================================== */
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @C1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Essay INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @C1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'C1');
+DECLARE @SingleChoice INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice');
+DECLARE @Vocabulary INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the best phrase: His argument was persuasive, albeit somewhat ___.')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Choose the best phrase: His argument was persuasive, albeit somewhat ___.')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Choose the best phrase: His argument was persuasive, albeit somewhat ___.', @EnglishId, @C1, @SingleChoice, @Vocabulary, 4, 1);
 
-    DECLARE @Q19 INT = SCOPE_IDENTITY();
+    DECLARE @Q19 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q19, N'flawed', 1, 1),
     (@ModuleId, @Q19, N'hungry', 0, 2),
@@ -527,548 +500,24 @@ BEGIN
 END
 GO
 
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @C1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1');
-DECLARE @Essay INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
+DECLARE @ModuleId INT = 0;
+DECLARE @EnglishId INT = (SELECT [LanguageId] FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en');
+DECLARE @C1 INT = (SELECT [QuestionLevelId] FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'C1');
+DECLARE @Essay INT = (SELECT [QuestionTypeId] FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Essay');
+DECLARE @Practice INT = (SELECT [SkillTypeId] FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice');
 
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Write one complex sentence using the word "nevertheless".')
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_questions] WHERE [ModuleId] = @ModuleId AND [QuestionText] = N'Write one complex sentence using the word "nevertheless".')
 BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+    ([ModuleId], [QuestionText], [LanguageId], [QuestionLevelId], [QuestionTypeId], [SkillTypeId], [Points], [IsActive])
     VALUES
     (@ModuleId, N'Write one complex sentence using the word "nevertheless".', @EnglishId, @C1, @Essay, @Practice, 4, 1);
 
-    DECLARE @Q20 INT = SCOPE_IDENTITY();
+    DECLARE @Q20 INT = CAST(SCOPE_IDENTITY() AS INT);
 
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    ([ModuleId], [QuestionId], [AnswerText], [IsCorrect], [AnswerOrder])
     VALUES
     (@ModuleId, @Q20, N'nevertheless', 1, 1);
-END
-GO
-
-/* ---------------------------------------------
-   English level test question seed
-   Module-specific seed
-   --------------------------------------------- */
-
-DECLARE @ModuleId INT = 395;
-
-DECLARE @EnglishId INT;
-DECLARE @A1 INT;
-DECLARE @A2 INT;
-DECLARE @B1 INT;
-DECLARE @B2 INT;
-DECLARE @C1 INT;
-
-DECLARE @SingleChoice INT;
-DECLARE @MultipleChoice INT;
-DECLARE @TrueFalse INT;
-DECLARE @Essay INT;
-DECLARE @Translation INT;
-
-DECLARE @Vocabulary INT;
-DECLARE @Reading INT;
-DECLARE @Practice INT;
-
-SELECT @EnglishId = LanguageId
-FROM dbo.lm_languages
-WHERE Code = N'en';
-
-SELECT @A1 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1';
-SELECT @A2 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2';
-SELECT @B1 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1';
-SELECT @B2 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2';
-SELECT @C1 = QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1';
-
-SELECT @SingleChoice = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice';
-SELECT @MultipleChoice = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice';
-SELECT @TrueFalse = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse';
-SELECT @Essay = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay';
-SELECT @Translation = QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation';
-
-SELECT @Vocabulary = SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary';
-SELECT @Reading = SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Reading';
-SELECT @Practice = SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice';
-
-
-/* ---------------------------------------------
-   A1 questions - 5 db
-   --------------------------------------------- */
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct word: ___ name is Anna.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Choose the correct word: ___ name is Anna.', @EnglishId, @A1, @SingleChoice, @Vocabulary, 1, 1);
-
-    DECLARE @Q1 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q1, N'Her', 1, 1),
-    (@ModuleId, @Q1, N'She', 0, 2),
-    (@ModuleId, @Q1, N'Hers', 0, 3),
-    (@ModuleId, @Q1, N'Him', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'True or false: "Cat" means "kutya".')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'True or false: "Cat" means "kutya".', @EnglishId, @A1, @TrueFalse, @Vocabulary, 1, 1);
-
-    DECLARE @Q2 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q2, N'True', 0, 1),
-    (@ModuleId, @Q2, N'False', 1, 2);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct number: five + three = ___.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Choose the correct number: five + three = ___.', @EnglishId, @A1, @SingleChoice, @Vocabulary, 1, 1);
-
-    DECLARE @Q3 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q3, N'seven', 0, 1),
-    (@ModuleId, @Q3, N'eight', 1, 2),
-    (@ModuleId, @Q3, N'nine', 0, 3),
-    (@ModuleId, @Q3, N'six', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'What colour is the sky on a clear day?')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'What colour is the sky on a clear day?', @EnglishId, @A1, @SingleChoice, @Vocabulary, 1, 1);
-
-    DECLARE @Q4 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q4, N'blue', 1, 1),
-    (@ModuleId, @Q4, N'green', 0, 2),
-    (@ModuleId, @Q4, N'red', 0, 3),
-    (@ModuleId, @Q4, N'yellow', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A1');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Jó reggelt!"')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Translate into English: "Jó reggelt!"', @EnglishId, @A1, @Translation, @Practice, 1, 1);
-
-    DECLARE @Q5 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q5, N'Good morning', 1, 1),
-    (@ModuleId, @Q5, N'Good morning!', 1, 2);
-END
-GO
-
-
-/* ---------------------------------------------
-   A2 questions - 5 db
-   --------------------------------------------- */
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct form: They ___ football yesterday.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Choose the correct form: They ___ football yesterday.', @EnglishId, @A2, @SingleChoice, @Practice, 2, 1);
-
-    DECLARE @Q6 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q6, N'play', 0, 1),
-    (@ModuleId, @Q6, N'played', 1, 2),
-    (@ModuleId, @Q6, N'plays', 0, 3),
-    (@ModuleId, @Q6, N'playing', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Select all words that describe weather.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Select all words that describe weather.', @EnglishId, @A2, @MultipleChoice, @Vocabulary, 2, 1);
-
-    DECLARE @Q7 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q7, N'sunny', 1, 1),
-    (@ModuleId, @Q7, N'rainy', 1, 2),
-    (@ModuleId, @Q7, N'hungry', 0, 3),
-    (@ModuleId, @Q7, N'windy', 1, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'True or false: "She don''t like coffee" is grammatically correct.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'True or false: "She don''t like coffee" is grammatically correct.', @EnglishId, @A2, @TrueFalse, @Practice, 2, 1);
-
-    DECLARE @Q8 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q8, N'True', 0, 1),
-    (@ModuleId, @Q8, N'False', 1, 2);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct question: ___ do you live?')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Choose the correct question: ___ do you live?', @EnglishId, @A2, @SingleChoice, @Practice, 2, 1);
-
-    DECLARE @Q9 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q9, N'Where', 1, 1),
-    (@ModuleId, @Q9, N'What', 0, 2),
-    (@ModuleId, @Q9, N'Who', 0, 3),
-    (@ModuleId, @Q9, N'When', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @A2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'A2');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Szeretek úszni."')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Translate into English: "Szeretek úszni."', @EnglishId, @A2, @Translation, @Practice, 2, 1);
-
-    DECLARE @Q10 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q10, N'I like swimming', 1, 1),
-    (@ModuleId, @Q10, N'I love swimming', 1, 2);
-END
-GO
-
-
-/* ---------------------------------------------
-   B1 questions - 5 db
-   --------------------------------------------- */
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the correct option: By the time she arrived, we ___ for an hour.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Choose the correct option: By the time she arrived, we ___ for an hour.', @EnglishId, @B1, @SingleChoice, @Practice, 3, 1);
-
-    DECLARE @Q11 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q11, N'waited', 0, 1),
-    (@ModuleId, @Q11, N'had been waiting', 1, 2),
-    (@ModuleId, @Q11, N'have waited', 0, 3),
-    (@ModuleId, @Q11, N'were waiting', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Select all words that can follow "make".')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Select all words that can follow "make".', @EnglishId, @B1, @MultipleChoice, @Vocabulary, 3, 1);
-
-    DECLARE @Q12 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q12, N'a decision', 1, 1),
-    (@ModuleId, @Q12, N'a mistake', 1, 2),
-    (@ModuleId, @Q12, N'a travel', 0, 3),
-    (@ModuleId, @Q12, N'progress', 1, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @TrueFalse INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'TrueFalse');
-DECLARE @Reading INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Reading');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'True or false: "Used to" describes a habit that no longer happens.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'True or false: "Used to" describes a habit that no longer happens.', @EnglishId, @B1, @TrueFalse, @Reading, 3, 1);
-
-    DECLARE @Q13 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q13, N'True', 1, 1),
-    (@ModuleId, @Q13, N'False', 0, 2);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Régóta tanulok angolul."')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Translate into English: "Régóta tanulok angolul."', @EnglishId, @B1, @Translation, @Practice, 3, 1);
-
-    DECLARE @Q14 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q14, N'I have been learning English for a long time', 1, 1),
-    (@ModuleId, @Q14, N'I have been studying English for a long time', 1, 2);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B1');
-DECLARE @Essay INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Write one sentence about what you would do if you won the lottery.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Write one sentence about what you would do if you won the lottery.', @EnglishId, @B1, @Essay, @Practice, 3, 1);
-
-    DECLARE @Q15 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q15, N'I would', 1, 1),
-    (@ModuleId, @Q15, N'I could', 1, 2),
-    (@ModuleId, @Q15, N'I might', 1, 3);
-END
-GO
-
-
-/* ---------------------------------------------
-   B2 questions - 3 db
-   --------------------------------------------- */
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the best synonym for "ambiguous".')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Choose the best synonym for "ambiguous".', @EnglishId, @B2, @SingleChoice, @Vocabulary, 4, 1);
-
-    DECLARE @Q16 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q16, N'unclear', 1, 1),
-    (@ModuleId, @Q16, N'certain', 0, 2),
-    (@ModuleId, @Q16, N'simple', 0, 3),
-    (@ModuleId, @Q16, N'cheerful', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
-DECLARE @MultipleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'MultipleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Select all sentences that use the passive voice correctly.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Select all sentences that use the passive voice correctly.', @EnglishId, @B2, @MultipleChoice, @Vocabulary, 4, 1);
-
-    DECLARE @Q17 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q17, N'The report was written by Sarah.', 1, 1),
-    (@ModuleId, @Q17, N'The cake has been eaten.', 1, 2),
-    (@ModuleId, @Q17, N'They built the bridge.', 0, 3),
-    (@ModuleId, @Q17, N'The window was broken by the ball.', 1, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @B2 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'B2');
-DECLARE @Translation INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Translation');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Translate into English: "Bárcsak több időm lenne tanulni."')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Translate into English: "Bárcsak több időm lenne tanulni."', @EnglishId, @B2, @Translation, @Practice, 4, 1);
-
-    DECLARE @Q18 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q18, N'I wish I had more time to study', 1, 1),
-    (@ModuleId, @Q18, N'If only I had more time to study', 1, 2);
-END
-GO
-
-
-/* ---------------------------------------------
-   C1 questions - 2 db
-   --------------------------------------------- */
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @C1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1');
-DECLARE @SingleChoice INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'SingleChoice');
-DECLARE @Vocabulary INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Vocabulary');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Choose the word that best completes the sentence: The new policy was met with ___ opposition from the public.')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Choose the word that best completes the sentence: The new policy was met with ___ opposition from the public.', @EnglishId, @C1, @SingleChoice, @Vocabulary, 4, 1);
-
-    DECLARE @Q19 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q19, N'vehement', 1, 1),
-    (@ModuleId, @Q19, N'cheerful', 0, 2),
-    (@ModuleId, @Q19, N'narrow', 0, 3),
-    (@ModuleId, @Q19, N'silent', 0, 4);
-END
-GO
-
-DECLARE @ModuleId INT = 395;
-DECLARE @EnglishId INT = (SELECT LanguageId FROM dbo.lm_languages WHERE Code = N'en');
-DECLARE @C1 INT = (SELECT QuestionLevelId FROM dbo.lm_question_levels WHERE LevelName = N'C1');
-DECLARE @Essay INT = (SELECT QuestionTypeId FROM dbo.lm_question_types WHERE TypeName = N'Essay');
-DECLARE @Practice INT = (SELECT SkillTypeId FROM dbo.lm_skill_types WHERE SkillName = N'Practice');
-
-IF NOT EXISTS (SELECT 1 FROM dbo.lm_questions WHERE ModuleId = @ModuleId AND QuestionText = N'Write one complex sentence using the word "notwithstanding".')
-BEGIN
-    INSERT INTO dbo.lm_questions
-    (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-    VALUES
-    (@ModuleId, N'Write one complex sentence using the word "notwithstanding".', @EnglishId, @C1, @Essay, @Practice, 4, 1);
-
-    DECLARE @Q20 INT = SCOPE_IDENTITY();
-
-    INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder)
-    VALUES
-    (@ModuleId, @Q20, N'notwithstanding', 1, 1);
 END
 GO

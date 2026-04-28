@@ -1,4 +1,4 @@
-﻿﻿/************************************************************/
+﻿/************************************************************/
 /*****              SqlDataProvider                     *****/
 /*****                                                  *****/
 /*****                                                  *****/
@@ -15,7 +15,7 @@ IF NOT EXISTS (
     SELECT 1
     FROM sys.columns
     WHERE Name = N'ModuleId'
-      AND Object_ID = OBJECT_ID(N'dbo.Dnn_Flow_QuizLearn_Items')
+      AND Object_ID = OBJECT_ID(N'{databaseOwner}[{objectQualifier}Dnn_Flow_QuizLearn_Items]')
 )
 BEGIN
     ALTER TABLE dbo.Dnn_Flow_QuizLearn_Items
@@ -661,7 +661,7 @@ BEGIN
         [IsActive]
     FROM {databaseOwner}[{objectQualifier}lm_pace_types]
     WHERE [IsActive] = 1
-    ORDER BY [PaceName];
+    ORDER BY [PaceTypeId];
 END
 GO
 
@@ -839,7 +839,9 @@ BEGIN
             (@SecondaryLanguageId IS NULL AND [SecondaryLanguageId] IS NULL)
             OR [SecondaryLanguageId] = @SecondaryLanguageId
           )
-    ORDER BY [Priority];
+    ORDER BY
+        CASE WHEN [ModuleId] = @ModuleId THEN 0 ELSE 1 END,
+        [Priority];
 END
 GO
 
@@ -888,7 +890,9 @@ BEGIN
             (@SecondaryLanguageId IS NULL AND [SecondaryLanguageId] IS NULL)
             OR [SecondaryLanguageId] = @SecondaryLanguageId
           )
-    ORDER BY [Priority];
+    ORDER BY
+        CASE WHEN [ModuleId] = @ModuleId THEN 0 ELSE 1 END,
+        [Priority];
 END
 GO
 
@@ -928,7 +932,9 @@ BEGIN
       AND [LanguageId] = @LanguageId
       AND [MatchMode]  = 'GENERAL'
       AND [IsActive]   = 1
-    ORDER BY [Priority];
+    ORDER BY
+        CASE WHEN [ModuleId] = @ModuleId THEN 0 ELSE 1 END,
+        [Priority];
 END
 GO
 

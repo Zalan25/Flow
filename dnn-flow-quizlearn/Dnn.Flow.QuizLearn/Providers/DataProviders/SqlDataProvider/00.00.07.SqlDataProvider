@@ -1,138 +1,108 @@
-﻿/* ---------------------------------------------
-   Kérdés típusok
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****       DNN Module: QuizLearn                      *****/
+/*****       Version: 00.00.07                          *****/
+/*****                                                  *****/
+/*****       Seeds base lookup data.                    *****/
+/************************************************************/
+
+
+/* ---------------------------------------------
+   Question types seed
    --------------------------------------------- */
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types]
-    WHERE TypeName = N'SingleChoice'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] (TypeName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName])
     VALUES (N'SingleChoice');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types]
-    WHERE TypeName = N'MultipleChoice'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'MultipleChoice')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] (TypeName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName])
     VALUES (N'MultipleChoice');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types]
-    WHERE TypeName = N'TrueFalse'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'TrueFalse')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] (TypeName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName])
     VALUES (N'TrueFalse');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types]
-    WHERE TypeName = N'Essay'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Essay')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] (TypeName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName])
     VALUES (N'Essay');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types]
-    WHERE TypeName = N'Translation'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Translation')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] (TypeName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName])
     VALUES (N'Translation');
 END
 GO
 
 
 /* ---------------------------------------------
-   Nyelvek
+   Languages seed
    --------------------------------------------- */
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'en'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Angol', N'en', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'el'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'el')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Görög', N'el', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'zh'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'zh')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Kínai', N'zh', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'ru'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'ru')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Orosz', N'ru', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'ja'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'ja')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Japán', N'ja', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'tr'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'tr')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Török', N'tr', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'hr'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'hr')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Horvát', N'hr', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages]
-    WHERE Code = N'pt'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'pt')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] (Name, Code, IsActive)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive])
     VALUES (N'Portugál', N'pt', 1);
 END
 GO
@@ -142,106 +112,77 @@ GO
    Question levels seed
    --------------------------------------------- */
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels]
-    WHERE LevelName = N'A1'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A1')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] (LevelName, LevelOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder])
     VALUES (N'A1', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels]
-    WHERE LevelName = N'A2'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A2')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] (LevelName, LevelOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder])
     VALUES (N'A2', 2);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels]
-    WHERE LevelName = N'B1'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B1')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] (LevelName, LevelOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder])
     VALUES (N'B1', 3);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels]
-    WHERE LevelName = N'B2'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B2')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] (LevelName, LevelOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder])
     VALUES (N'B2', 4);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels]
-    WHERE LevelName = N'C1'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'C1')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] (LevelName, LevelOrder)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder])
     VALUES (N'C1', 5);
 END
 GO
+
 
 /* ---------------------------------------------
    Skill types seed
    --------------------------------------------- */
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types]
-    WHERE SkillName = N'Vocabulary'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] (SkillName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName])
     VALUES (N'Vocabulary');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types]
-    WHERE SkillName = N'Reading'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Reading')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] (SkillName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName])
     VALUES (N'Reading');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types]
-    WHERE SkillName = N'Listening'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Listening')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] (SkillName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName])
     VALUES (N'Listening');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types]
-    WHERE SkillName = N'Practice'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] (SkillName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName])
     VALUES (N'Practice');
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types]
-    WHERE SkillName = N'SelfStudy'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'SelfStudy')
 BEGIN
-    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] (SkillName)
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName])
     VALUES (N'SelfStudy');
 END
 GO
@@ -251,61 +192,47 @@ GO
    Pace types seed
    --------------------------------------------- */
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_pace_types]
-    WHERE PaceKey = N'SLOW'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_pace_types] WHERE [PaceKey] = N'SLOW')
 BEGIN
     INSERT INTO {databaseOwner}[{objectQualifier}lm_pace_types]
-    (PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
+    ([PaceKey], [PaceName], [MinProducts], [MaxProducts], [IsActive])
     VALUES (N'SLOW', N'Nyugodt tempó', 2, 3, 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_pace_types]
-    WHERE PaceKey = N'MEDIUM'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_pace_types] WHERE [PaceKey] = N'MEDIUM')
 BEGIN
     INSERT INTO {databaseOwner}[{objectQualifier}lm_pace_types]
-    (PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
+    ([PaceKey], [PaceName], [MinProducts], [MaxProducts], [IsActive])
     VALUES (N'MEDIUM', N'Kiegyensúlyozott', 3, 5, 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_pace_types]
-    WHERE PaceKey = N'FAST'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_pace_types] WHERE [PaceKey] = N'FAST')
 BEGIN
     INSERT INTO {databaseOwner}[{objectQualifier}lm_pace_types]
-    (PaceKey, PaceName, MinProducts, MaxProducts, IsActive)
+    ([PaceKey], [PaceName], [MinProducts], [MaxProducts], [IsActive])
     VALUES (N'FAST', N'Gyors fejlődés', 5, 7, 1);
 END
 GO
+
 
 /* ---------------------------------------------
    Assessment modes seed
    --------------------------------------------- */
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_assessment_modes]
-    WHERE ModeKey = N'STUDY_GUIDE'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_assessment_modes] WHERE [ModeKey] = N'STUDY_GUIDE')
 BEGIN
     INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_modes]
-    (ModeKey, ModeName, IsActive)
+    ([ModeKey], [ModeName], [IsActive])
     VALUES (N'STUDY_GUIDE', N'Study Guide', 1);
 END
 GO
 
-IF NOT EXISTS (
-    SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_assessment_modes]
-    WHERE ModeKey = N'LEVEL_TEST'
-)
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_assessment_modes] WHERE [ModeKey] = N'LEVEL_TEST')
 BEGIN
     INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_modes]
-    (ModeKey, ModeName, IsActive)
+    ([ModeKey], [ModeName], [IsActive])
     VALUES (N'LEVEL_TEST', N'Level Test', 1);
 END
 GO

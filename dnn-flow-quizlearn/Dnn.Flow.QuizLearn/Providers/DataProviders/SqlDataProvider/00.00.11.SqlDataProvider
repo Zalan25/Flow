@@ -1,0 +1,123 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****       DNN Module: QuizLearn                      *****/
+/*****       Version: 00.00.12                          *****/
+/*****                                                  *****/
+/*****       Seeds fallback recommendation rules.       *****/
+/************************************************************/
+
+/* ProductKind column safety check */
+IF COL_LENGTH('{objectQualifier}lm_recommendation_rules', 'ProductKind') IS NULL
+BEGIN
+    ALTER TABLE {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+    ADD [ProductKind] NVARCHAR(50) NULL;
+END
+GO
+
+/* ---------------------------------------------------------
+   Default FALLBACK rules
+   ModuleId = 0 means global/default rules.
+
+   These rows are intentionally generic. Exact product/category
+   matching can still override them with MatchMode = 'EXACT'.
+--------------------------------------------------------- */
+
+DECLARE @ModuleId INT = 0;
+
+DELETE FROM {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+WHERE [ModuleId] = @ModuleId
+  AND [MatchMode] IN (N'FALLBACK', N'GENERAL');
+
+/* FALLBACK: language + level + focus skill + pace */
+INSERT INTO {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+(
+    [ModuleId],
+    [LanguageId],
+    [QuestionLevelId],
+    [SkillTypeId],
+    [SecondaryLanguageId],
+    [PaceTypeId],
+    [Priority],
+    [MatchMode],
+    [HotcakesProductSKU],
+    [HotcakesCategoryKey],
+    [HotcakesTag],
+    [ProductKind],
+    [MinProducts],
+    [MaxProducts],
+    [IsActive]
+)
+SELECT
+    @ModuleId,
+    l.[LanguageId],
+    ql.[QuestionLevelId],
+    st.[SkillTypeId],
+    NULL,
+    pt.[PaceTypeId],
+    100,
+    N'FALLBACK',
+    NULL,
+    LOWER(l.[Code] + N'-' + ql.[LevelName] + N'-' + st.[SkillName]),
+    LOWER(l.[Code] + N'-' + ql.[LevelName] + N'-' + st.[SkillName]),
+    CASE
+        WHEN st.[SkillName] = N'Book' THEN N'Book'
+        WHEN st.[SkillName] = N'Practice' THEN N'Practice'
+        WHEN st.[SkillName] = N'Listening' THEN N'Listening'
+        WHEN st.[SkillName] = N'Vocabulary' THEN N'Vocabulary'
+        WHEN st.[SkillName] = N'SelfStudy' THEN N'SelfStudy'
+        ELSE st.[SkillName]
+    END,
+    pt.[MinProducts],
+    pt.[MaxProducts],
+    1
+FROM {databaseOwner}[{objectQualifier}lm_languages] l
+CROSS JOIN {databaseOwner}[{objectQualifier}lm_question_levels] ql
+CROSS JOIN {databaseOwner}[{objectQualifier}lm_skill_types] st
+CROSS JOIN {databaseOwner}[{objectQualifier}lm_pace_types] pt
+WHERE l.[IsActive] = 1
+  AND pt.[IsActive] = 1
+  AND st.[SkillName] IN (N'Book', N'Practice', N'Listening', N'Vocabulary', N'SelfStudy');
+
+/* GENERAL: final safety net per language + level + pace, always book/self-study based */
+INSERT INTO {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+(
+    [ModuleId],
+    [LanguageId],
+    [QuestionLevelId],
+    [SkillTypeId],
+    [SecondaryLanguageId],
+    [PaceTypeId],
+    [Priority],
+    [MatchMode],
+    [HotcakesProductSKU],
+    [HotcakesCategoryKey],
+    [HotcakesTag],
+    [ProductKind],
+    [MinProducts],
+    [MaxProducts],
+    [IsActive]
+)
+SELECT
+    @ModuleId,
+    l.[LanguageId],
+    ql.[QuestionLevelId],
+    st.[SkillTypeId],
+    NULL,
+    pt.[PaceTypeId],
+    999,
+    N'GENERAL',
+    NULL,
+    LOWER(l.[Code] + N'-' + ql.[LevelName] + N'-general'),
+    LOWER(l.[Code] + N'-' + ql.[LevelName] + N'-general'),
+    CASE WHEN st.[SkillName] = N'SelfStudy' THEN N'SelfStudy' ELSE N'Book' END,
+    pt.[MinProducts],
+    pt.[MaxProducts],
+    1
+FROM {databaseOwner}[{objectQualifier}lm_languages] l
+CROSS JOIN {databaseOwner}[{objectQualifier}lm_question_levels] ql
+CROSS JOIN {databaseOwner}[{objectQualifier}lm_pace_types] pt
+INNER JOIN {databaseOwner}[{objectQualifier}lm_skill_types] st
+    ON st.[SkillName] = N'Book'
+WHERE l.[IsActive] = 1
+  AND pt.[IsActive] = 1;
+GO
