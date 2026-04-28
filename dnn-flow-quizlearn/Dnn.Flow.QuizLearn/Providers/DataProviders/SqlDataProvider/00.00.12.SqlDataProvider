@@ -1,0 +1,495 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****       DNN Module: QuizLearn                      *****/
+/*****       Version: 00.00.12                          *****/
+/*****                                                  *****/
+/*****       Seeds EXACT recommendation rules from      *****/
+/*****       bundle.docx product mapping.               *****/
+/************************************************************/
+IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_product_mappings]', N'U') IS NULL
+BEGIN
+    CREATE TABLE {databaseOwner}[{objectQualifier}lm_product_mappings]
+    (
+        [ProductMappingId] INT IDENTITY(1,1) NOT NULL,
+        [ModuleId] INT NOT NULL,
+        [HotcakesProductSKU] NVARCHAR(100) NOT NULL,
+        [LanguageId] INT NOT NULL,
+        [QuestionLevelId] INT NULL,
+        [SkillTypeId] INT NOT NULL,
+        [ProductKind] NVARCHAR(50) NULL,
+        [Priority] INT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_pm_Priority] DEFAULT 100,
+        [IsActive] BIT NOT NULL CONSTRAINT [DF_{objectQualifier}lm_pm_IsActive] DEFAULT 1,
+
+        CONSTRAINT [PK_{objectQualifier}lm_product_mappings]
+            PRIMARY KEY CLUSTERED ([ProductMappingId]),
+
+        CONSTRAINT [FK_{objectQualifier}lm_pm_LanguageId]
+            FOREIGN KEY ([LanguageId])
+            REFERENCES {databaseOwner}[{objectQualifier}lm_languages]([LanguageId]),
+
+        CONSTRAINT [FK_{objectQualifier}lm_pm_QuestionLevelId]
+            FOREIGN KEY ([QuestionLevelId])
+            REFERENCES {databaseOwner}[{objectQualifier}lm_question_levels]([QuestionLevelId]),
+
+        CONSTRAINT [FK_{objectQualifier}lm_pm_SkillTypeId]
+            FOREIGN KEY ([SkillTypeId])
+            REFERENCES {databaseOwner}[{objectQualifier}lm_skill_types]([SkillTypeId]),
+
+        CONSTRAINT [UQ_{objectQualifier}lm_pm_unique]
+            UNIQUE ([ModuleId], [HotcakesProductSKU], [LanguageId], [QuestionLevelId], [SkillTypeId])
+    );
+END
+GO
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_ProductMappings_Get]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_ProductMappings_Get]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_ProductMappings_Get]
+    @ModuleId INT,
+    @LanguageId INT,
+    @QuestionLevelId INT,
+    @SkillTypeId INT,
+    @Take INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP (@Take)
+        [ProductMappingId],
+        [ModuleId],
+        [HotcakesProductSKU],
+        [LanguageId],
+        [QuestionLevelId],
+        [SkillTypeId],
+        [ProductKind],
+        [Priority],
+        [IsActive]
+    FROM {databaseOwner}[{objectQualifier}lm_product_mappings]
+    WHERE ([ModuleId] = @ModuleId OR [ModuleId] = 0)
+      AND [LanguageId] = @LanguageId
+      AND ([QuestionLevelId] = @QuestionLevelId OR [QuestionLevelId] IS NULL)
+      AND [SkillTypeId] = @SkillTypeId
+      AND [IsActive] = 1
+    ORDER BY
+        CASE WHEN [ModuleId] = @ModuleId THEN 0 ELSE 1 END,
+        CASE WHEN [QuestionLevelId] = @QuestionLevelId THEN 0 ELSE 1 END,
+        [Priority],
+        NEWID();
+END
+GO
+
+
+DECLARE @ModuleId INT = 0;
+
+/* Clean only generated EXACT rules for the global seed. */
+DELETE FROM {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+WHERE [ModuleId] = @ModuleId
+  AND [MatchMode] = N'EXACT';
+
+DECLARE @ProductSeed TABLE
+(
+    [SourceOrder] INT NOT NULL,
+    [LanguageCode] NVARCHAR(10) NOT NULL,
+    [LevelName] NVARCHAR(20) NOT NULL,
+    [SkillName] NVARCHAR(50) NOT NULL,
+    [ProductKind] NVARCHAR(50) NOT NULL,
+    [HotcakesProductSKU] NVARCHAR(100) NOT NULL
+);
+
+INSERT INTO @ProductSeed
+([SourceOrder], [LanguageCode], [LevelName], [SkillName], [ProductKind], [HotcakesProductSKU])
+VALUES
+(1, N'en', N'A1', N'Practice', N'Practice', N'BK-PON-OLVAIZGU-4371'),
+(2, N'en', N'A1', N'Practice', N'Practice', N'BK-PON-KEPENYEL-8428'),
+(3, N'en', N'A2', N'Practice', N'Practice', N'BK-OXF-ENGFILE-A1-WB'),
+(4, N'en', N'A2', N'Practice', N'Practice', N'BK-PON-250NYEL-8053'),
+(5, N'en', N'B1', N'Practice', N'Practice', N'BK-PON-10PERC-1201'),
+(6, N'en', N'B2', N'Practice', N'Practice', N'BK-PON-IGETUJ-9268'),
+(7, N'en', N'B2', N'Practice', N'Practice', N'BK-PON-GYAKHIBA-8541'),
+(8, N'en', N'A1', N'Reading', N'Reading', N'BK-PON-KEPRNYEL-4791'),
+(9, N'en', N'A1', N'Reading', N'Reading', N'BK-PON-5PERC-0075'),
+(10, N'en', N'A2', N'Reading', N'Reading', N'BK-PON-INTHE-1768'),
+(11, N'en', N'A2', N'Reading', N'Reading', N'BK-PON-5PERC-1140'),
+(12, N'en', N'B1', N'Reading', N'Reading', N'BK-PON-ATAST-0181'),
+(13, N'en', N'B1', N'Reading', N'Reading', N'BK-PON-ESCAENGL-1157'),
+(14, N'en', N'B2', N'Reading', N'Reading', N'BK-PON-HUNGINSI-8787'),
+(15, N'en', N'B2', N'Reading', N'Reading', N'BK-PON-BESTOF-A2-0105'),
+(16, N'en', N'C1', N'Reading', N'Reading', N'BK-PON-GASZKALA-8114'),
+(17, N'en', N'C1', N'Reading', N'Reading', N'BK-PON-TODIE-9497'),
+(18, N'en', N'A1', N'Vocabulary', N'Vocabulary', N'BK-PON-KEPESZOT-8367'),
+(19, N'en', N'A2', N'Vocabulary', N'Vocabulary', N'BK-PON-KEPESZOT-1218'),
+(20, N'en', N'B1', N'Vocabulary', N'Vocabulary', N'BK-PON-250SZOK-4944'),
+(21, N'en', N'B1', N'Vocabulary', N'Vocabulary', N'BK-PON-SZOK2019-4845'),
+(22, N'en', N'B2', N'Vocabulary', N'Vocabulary', N'BK-PON-DONT-4838'),
+(23, N'en', N'B2', N'Vocabulary', N'Vocabulary', N'BK-PON-BESZUGY-1355'),
+(24, N'en', N'C1', N'Vocabulary', N'Vocabulary', N'BK-PON-NYELFEJT-4401'),
+(25, N'en', N'C1', N'Vocabulary', N'Vocabulary', N'BK-PON-SHAKA-9596'),
+(26, N'en', N'A1', N'Listening', N'Listening', N'BK-PON-AUDINYEL-4326'),
+(27, N'en', N'A1', N'Listening', N'Listening', N'BK-PON-NYELLUST-9428'),
+(28, N'en', N'A2', N'Listening', N'Listening', N'BK-PON-ARECI-A1-4616'),
+(29, N'en', N'A2', N'Listening', N'Listening', N'BK-PON-MURDIN-A1-8251'),
+(30, N'en', N'B1', N'Listening', N'Listening', N'BK-PON-MURDIN-B1-8268'),
+(31, N'en', N'B2', N'Listening', N'Listening', N'BK-PON-THELAST-B2-4357'),
+(32, N'en', N'A1', N'SelfStudy', N'SelfStudy', N'BK-PON-NYELKEZD-0952'),
+(33, N'en', N'A1', N'SelfStudy', N'SelfStudy', N'BK-PON-MEGS1-4708'),
+(34, N'en', N'A2', N'SelfStudy', N'SelfStudy', N'CRS-ENG-EXAM-B2-2026SPR'),
+(35, N'en', N'A2', N'SelfStudy', N'SelfStudy', N'BK-PON-MONDMOND-A2-4937'),
+(36, N'en', N'B1', N'SelfStudy', N'SelfStudy', N'EXAM-OXF-OTE-COMP'),
+(37, N'en', N'B1', N'SelfStudy', N'SelfStudy', N'BK-PON-EPITAZ-9602'),
+(38, N'en', N'B2', N'SelfStudy', N'SelfStudy', N'CRS-ENG-ITOLC-EXAM'),
+(39, N'en', N'B2', N'SelfStudy', N'SelfStudy', N'BK-PON-MONDMOND-0433'),
+(40, N'en', N'C1', N'SelfStudy', N'SelfStudy', N'EXAM-OXF-OTEADV-COMP'),
+(41, N'en', N'A1', N'Book', N'Book', N'BK-OXF-ENGFILE-A1'),
+(42, N'en', N'A1', N'Book', N'Book', N'BK-PON-KEPRNYEL-4791'),
+(43, N'en', N'A2', N'Book', N'Book', N'BK-OXF-ENGFILE-A2'),
+(44, N'en', N'A2', N'Book', N'Book', N'BK-PON-IGEKES-0235'),
+(45, N'en', N'B1', N'Book', N'Book', N'BK-OXF-ENGFILE-B1'),
+(46, N'en', N'B1', N'Book', N'Book', N'BK-PON-IGEIMAGO-9893'),
+(47, N'en', N'B2', N'Book', N'Book', N'BK-OXF-ENGFILE-B2'),
+(48, N'en', N'B2', N'Book', N'Book', N'BK-PON-FORDGYAK-0723'),
+(49, N'en', N'C1', N'Book', N'Book', N'BK-OXF-ENGFILE-C1'),
+(50, N'el', N'A1', N'Book', N'Book', N'BK-HOL-KEZDGORO-2680'),
+(51, N'el', N'A1', N'SelfStudy', N'SelfStudy', N'BK-HOD-GREESCRI-9825'),
+(52, N'el', N'A1', N'SelfStudy', N'SelfStudy', N'BK-HOD-TEACYOUR-6138'),
+(53, N'el', N'A2', N'Book', N'Book', N'BK-HOD-TEACYOUR-5003'),
+(54, N'el', N'B2', N'Book', N'Book', N'BK-PRS-AGV-B2-GR'),
+(55, N'el', N'B2', N'Vocabulary', N'Vocabulary', N'BK-COL-COLLGEM-5898'),
+(56, N'el', N'B2', N'Vocabulary', N'Vocabulary', N'BK-COL-COLLGREE-4913'),
+(57, N'el', N'B2', N'Vocabulary', N'Vocabulary', N'BK-HIP-HIPPCONC-0029'),
+(58, N'el', N'C1', N'Book', N'Book', N'BK-HOD-TEACYOUR-7727'),
+(59, N'el', N'C1', N'Book', N'Book', N'BK-OXF-OXFOGRAM-4563'),
+(60, N'el', N'C1', N'Vocabulary', N'Vocabulary', N'BK-OXF-POCKOXFO-3276'),
+(61, N'el', N'C1', N'Vocabulary', N'Vocabulary', N'BK-OXF-POCKOXFO-5126'),
+(62, N'el', N'C1', N'Reading', N'Reading', N'BK-DTV-WOHEKOMM-4085'),
+(63, N'el', N'C1', N'Reading', N'Reading', N'BK-EDI-HEINHOFF-4977'),
+(64, N'hr', N'A1', N'Book', N'Book', N'BK-HOL-KEZDHORV-2840'),
+(65, N'hr', N'A1', N'Listening', N'Listening', N'BK-HIP-SCROA-4089'),
+(66, N'hr', N'A2', N'Book', N'Book', N'BK-HOD-TEACYOUR-2321'),
+(67, N'hr', N'A2', N'Book', N'Book', N'BK-LIN-HORVTARS-0345'),
+(68, N'hr', N'B1', N'Book', N'Book', N'BK-LIN-HORVTARS-3789'),
+(69, N'hr', N'B1', N'Vocabulary', N'Vocabulary', N'BK-LAN-LANGTASC-3109'),
+(70, N'hr', N'B1', N'Vocabulary', N'Vocabulary', N'BK-DOR-VISUWORT-9730'),
+(71, N'ja', N'A1', N'Book', N'Book', N'BK-PON-NYELKEZD'),
+(72, N'ja', N'A1', N'Listening', N'Listening', N'BK-TUT-BASIJAPA-3909'),
+(73, N'ja', N'A1', N'Book', N'Book', N'BK-TUT-BASIJAPA-1431'),
+(74, N'ja', N'A1', N'Book', N'Book', N'BK-TUT-IM-5538'),
+(75, N'ja', N'A1', N'Book', N'Book', N'BK-TUT-JAPAFOR-3671'),
+(76, N'ja', N'A1', N'Practice', N'Practice', N'BK-TUT-JAPAHIRA-7402'),
+(77, N'ja', N'A1', N'Practice', N'Practice', N'BK-TUT-LEARJAPA-2278'),
+(78, N'ja', N'A1', N'Practice', N'Practice', N'BK-TUT-JAPALANG-6122'),
+(79, N'ja', N'A1', N'Practice', N'Practice', N'BK-PON-IRASKEZD'),
+(80, N'ja', N'A1', N'Vocabulary', N'Vocabulary', N'BK-PON-MAGYKEPE'),
+(81, N'ja', N'A1', N'Vocabulary', N'Vocabulary', N'BK-TUT-POCKJAPA-5132'),
+(82, N'ja', N'A1', N'Vocabulary', N'Vocabulary', N'BK-TUT-JAPAPICT-8998'),
+(83, N'ja', N'A2', N'Book', N'Book', N'BK-TUT-EASYJAPA-5873'),
+(84, N'ja', N'A2', N'SelfStudy', N'SelfStudy', N'BK-TUT-SPEAJAPA-1158'),
+(85, N'ja', N'A2', N'Vocabulary', N'Vocabulary', N'BK-TUT-SURVJAPA-3626'),
+(86, N'ja', N'A2', N'Vocabulary', N'Vocabulary', N'BK-TUT-JAPAFOR-8621'),
+(87, N'ja', N'A2', N'Reading', N'Reading', N'BK-TUT-JAPASTOR-4685'),
+(88, N'ja', N'B1', N'Book', N'Book', N'BK-TUT-ESSEJAPA-1172'),
+(89, N'ja', N'B1', N'Book', N'Book', N'BK-TUT-ESSEJAPA-1271'),
+(90, N'ja', N'B1', N'Practice', N'Practice', N'BK-TUT-JAPAGRAM-5682'),
+(91, N'ja', N'B1', N'Practice', N'Practice', N'BK-TUT-JAPAKANJ-0496'),
+(92, N'ja', N'B1', N'SelfStudy', N'SelfStudy', N'BK-PON-BESZUGY'),
+(93, N'ja', N'B2', N'Book', N'Book', N'BK-TUT-JAPAWITH-0483'),
+(94, N'ja', N'B2', N'Reading', N'Reading', N'BK-TUT-ERIKSATO-7846'),
+(95, N'ja', N'B2', N'Reading', N'Reading', N'BK-TUT-JAPAPROV-8829'),
+(96, N'ja', N'C1', N'Book', N'Book', N'BK-TUT-HARUKIND-8831'),
+(97, N'ja', N'C1', N'Reading', N'Reading', N'BK-TUT-BOYELAFA-8812'),
+(98, N'ja', N'C1', N'Book', N'Book', N'BK-TUT-600BASI-2377'),
+(99, N'zh', N'A1', N'Book', N'Book', N'BK-HOL-KEZDKINA-2796'),
+(100, N'zh', N'A1', N'Book', N'Book', N'BK-KNK-KINAI-A1'),
+(101, N'zh', N'A1', N'Book', N'Book', N'BK-BAS-HOGYTANU-9679'),
+(102, N'zh', N'A1', N'Listening', N'Listening', N'BK-HIP-SCHIN-3983'),
+(103, N'zh', N'A1', N'SelfStudy', N'SelfStudy', N'BK-TUT-MANDCHIN-9463'),
+(104, N'zh', N'A1', N'SelfStudy', N'SelfStudy', N'BK-TEA-TEACYOUR-8223'),
+(105, N'zh', N'A1', N'Book', N'Book', N'BK-HOL-KEZDMAGY-2802'),
+(106, N'zh', N'A1', N'Book', N'Book', N'BK-BEI-HSKSTAN-7099'),
+(107, N'zh', N'A1', N'Practice', N'Practice', N'BK-BEI-HSKSTAN-7105'),
+(108, N'zh', N'A1', N'Vocabulary', N'Vocabulary', N'BK-TUT-POCKMAND-8459'),
+(109, N'zh', N'A1', N'Vocabulary', N'Vocabulary', N'BK-PON-KINAMAGY-0754'),
+(110, N'zh', N'A1', N'Vocabulary', N'Vocabulary', N'BK-COL-COLLEASY-0289'),
+(111, N'zh', N'A1', N'Vocabulary', N'Vocabulary', N'BK-COL-COLLMAND-0368'),
+(112, N'zh', N'A1', N'Vocabulary', N'Vocabulary', N'BK-LON-LONEPLAN-0363'),
+(113, N'zh', N'A1', N'Vocabulary', N'Vocabulary', N'BK-HAR-MANDCHIN-9850'),
+(114, N'zh', N'A1', N'Reading', N'Reading', N'BK-MIL-MYFIRS-5987'),
+(115, N'zh', N'A2', N'Book', N'Book', N'BK-BEI-HSKSTAN-7266'),
+(116, N'zh', N'A2', N'Practice', N'Practice', N'BK-BEI-HSKSTAN-7808'),
+(117, N'zh', N'A2', N'Book', N'Book', N'BK-SIN-CONTCHIN-6190'),
+(118, N'zh', N'A2', N'SelfStudy', N'SelfStudy', N'BK-TEA-TEACYOUR-9376'),
+(119, N'zh', N'A2', N'Practice', N'Practice', N'BK-TUT-CHINLANG-6652'),
+(120, N'zh', N'A2', N'Practice', N'Practice', N'BK-TUT-LEARMAND-4918'),
+(121, N'zh', N'A2', N'Practice', N'Practice', N'BK-TUT-LEARMAND-4949'),
+(122, N'zh', N'A2', N'Vocabulary', N'Vocabulary', N'BK-TUT-MANDCHIN-5694'),
+(123, N'zh', N'A2', N'Reading', N'Reading', N'BK-KAT-IFOUN-1197'),
+(124, N'zh', N'B1', N'Book', N'Book', N'BK-BEI-HSKSTAN-8188'),
+(125, N'zh', N'B1', N'Practice', N'Practice', N'BK-BEI-HSKSTAN-8157'),
+(126, N'zh', N'B1', N'Book', N'Book', N'BK-TUT-ESSEMAND-1404'),
+(127, N'zh', N'B1', N'Book', N'Book', N'BK-MCG-CHINVERB-3047'),
+(128, N'zh', N'B1', N'Practice', N'Practice', N'BK-TUT-CHINGRAM-3231'),
+(129, N'zh', N'B1', N'Reading', N'Reading', N'BK-TUT-CHINSTOR-2784'),
+(130, N'zh', N'B1', N'Reading', N'Reading', N'BK-TUT-CHINFOLK-7284'),
+(131, N'zh', N'B1', N'Reading', N'Reading', N'BK-ELI-MULABRAV-3972'),
+(132, N'zh', N'B1', N'Reading', N'Reading', N'BK-ELI-CHINLEGE-6950'),
+(133, N'zh', N'B1', N'Reading', N'Reading', N'BK-MOR-JANIEVA-4894'),
+(134, N'zh', N'B1', N'Reading', N'Reading', N'BK-DTV-CHININ-5129'),
+(135, N'zh', N'B1', N'Reading', N'Reading', N'BK-EDI-ANTODE-0596'),
+(136, N'zh', N'B1', N'Reading', N'Reading', N'BK-EDI-BEATPOTT-4762'),
+(137, N'zh', N'B2', N'Book', N'Book', N'BK-BEI-HSKSTAN-9307'),
+(138, N'zh', N'B2', N'Practice', N'Practice', N'BK-BEI-HSKSTAN-1447'),
+(139, N'zh', N'B2', N'Practice', N'Practice', N'BK-MCG-WRITCHIN-8031'),
+(140, N'zh', N'B2', N'Vocabulary', N'Vocabulary', N'BK-DOR-VISUWORT-9648'),
+(141, N'zh', N'B2', N'Book', N'Book', N'BK-LIN-KINANYEL-0895'),
+(142, N'zh', N'B2', N'Book', N'Book', N'BK-LIN-KINATARS-1496'),
+(143, N'zh', N'B2', N'Reading', N'Reading', N'BK-DTV-MITOMA-5488'),
+(144, N'zh', N'C1', N'Book', N'Book', N'BK-BEI-HSKSTAN-0334'),
+(145, N'zh', N'C1', N'Book', N'Book', N'BK-BEI-HSKSTAN-2451'),
+(146, N'zh', N'C1', N'Book', N'Book', N'BK-BEI-HSKSTAN-2543'),
+(147, N'zh', N'C1', N'Book', N'Book', N'BK-BEI-HSKSTAN-7791'),
+(148, N'zh', N'C1', N'Practice', N'Practice', N'BK-BEI-HSKSTAN-7814'),
+(149, N'zh', N'C1', N'Practice', N'Practice', N'BK-BEI-HSKSTAN-0838'),
+(150, N'zh', N'C1', N'Vocabulary', N'Vocabulary', N'BK-AKA-9789634890447'),
+(151, N'zh', N'C1', N'Book', N'Book', N'BK-HOD-TEACYOUR-0829'),
+(152, N'ru', N'A1', N'Book', N'Book', N'BK-RUS-KLJUCS-A1'),
+(153, N'ru', N'A1', N'Listening', N'Listening', N'BK-ZLA-SPASNACH-A1-4784'),
+(154, N'ru', N'A1', N'Listening', N'Listening', N'BK-ZLA-SPASNACH-A1-7549'),
+(155, N'ru', N'A1', N'Listening', N'Listening', N'BK-ZLA-DAJA-8669'),
+(156, N'ru', N'A1', N'Listening', N'Listening', N'BK-ZLA-DOROV-A1-3373'),
+(157, N'ru', N'A1', N'Book', N'Book', N'BK-ZLA-POEK1-6613'),
+(158, N'ru', N'A1', N'Practice', N'Practice', N'BK-ZLA-POEK1-1892'),
+(159, N'ru', N'A1', N'Book', N'Book', N'BK-ZLA-POEK1-1458'),
+(160, N'ru', N'A1', N'Practice', N'Practice', N'BK-ZLA-POEK1-3568'),
+(161, N'ru', N'A1', N'Practice', N'Practice', N'BK-ZLA-RUSSGRAM-A1-9819'),
+(162, N'ru', N'A1', N'Practice', N'Practice', N'BK-ZLA-ACHTO-A1-9925'),
+(163, N'ru', N'A1', N'Reading', N'Reading', N'BK-ZLA-ZHILBYLI-7891'),
+(164, N'ru', N'A2', N'Book', N'Book', N'BK-ZLA-ESSERUSS-A2-7174'),
+(165, N'ru', N'A2', N'Book', N'Book', N'BK-ZLA-POEK2-A2-3575'),
+(166, N'ru', N'A2', N'Book', N'Book', N'BK-ZLA-POEK2-3502'),
+(167, N'ru', N'A2', N'Practice', N'Practice', N'BK-ZLA-RUSSGRAM-A2-9826'),
+(168, N'ru', N'A2', N'Practice', N'Practice', N'BK-ZLA-DAVAS-A1-9420'),
+(169, N'ru', N'A2', N'Reading', N'Reading', N'BK-ZLA-ZHIVI-A2-7648'),
+(170, N'ru', N'A2', N'Reading', N'Reading', N'BK-ZLA-ZHILBYLI-5132'),
+(171, N'ru', N'A2', N'Practice', N'Practice', N'BK-ZLA-ZHYLBYLI-7969'),
+(172, N'ru', N'B1', N'Book', N'Book', N'BK-ZLA-CHISGRAM-8713'),
+(173, N'ru', N'B1', N'Book', N'Book', N'BK-ZLA-GRAMRUSS-3407'),
+(174, N'ru', N'B1', N'Book', N'Book', N'BK-ZLA-GRAMRUSS-8683'),
+(175, N'ru', N'B1', N'SelfStudy', N'SelfStudy', N'BK-ZLA-RUSSGRAM-6217'),
+(176, N'ru', N'B1', N'Book', N'Book', N'BK-ZLA-RUSSJIZI-C1-7136'),
+(177, N'ru', N'B1', N'Practice', N'Practice', N'BK-ZLA-RUSSGRAM-B1-3964'),
+(178, N'ru', N'B1', N'Reading', N'Reading', N'BK-ZLA-OROSS-B1-6054'),
+(179, N'ru', N'B1', N'Reading', N'Reading', N'BK-ZLA-IONIBIBL-6757'),
+(180, N'ru', N'B1', N'Reading', N'Reading', N'BK-ZLA-JUBIBIBL-7211'),
+(181, N'ru', N'B1', N'Book', N'Book', N'BK-ZLA-LETS-9468'),
+(182, N'ru', N'B1', N'Book', N'Book', N'BK-ZLA-PROGPO-6283'),
+(183, N'ru', N'B1', N'Book', N'Book', N'BK-ZLA-LEKSMINI-7990'),
+(184, N'ru', N'B1', N'Listening', N'Listening', N'BK-ZLA-SLUSI-8744'),
+(185, N'ru', N'B1', N'Listening', N'Listening', N'BK-ZLA-POSLVYPU-7556'),
+(186, N'ru', N'B1', N'Listening', N'Listening', N'BK-ZLA-POSLVYPU-7563'),
+(187, N'ru', N'B1', N'Listening', N'Listening', N'BK-ZLA-POSLVYPU-7570'),
+(188, N'ru', N'B1', N'Listening', N'Listening', N'BK-ZLA-ZHIVRUSS-9536'),
+(189, N'ru', N'B2', N'Book', N'Book', N'BK-ZLA-RUSSJIZI-8515'),
+(190, N'ru', N'B2', N'Book', N'Book', N'BK-ZLA-RUSSJIZI-8522'),
+(191, N'ru', N'B2', N'Book', N'Book', N'BK-ZLA-RUSSJIZI-B2-8539'),
+(192, N'ru', N'B2', N'Book', N'Book', N'BK-ZLA-LETS-7921'),
+(193, N'ru', N'B2', N'Book', N'Book', N'BK-ZLA-LETS-7938'),
+(194, N'ru', N'B2', N'Book', N'Book', N'BK-ZLA-LEKSMINI-9703'),
+(195, N'ru', N'B2', N'Reading', N'Reading', N'BK-ZLA-RUSSKORO-9475'),
+(196, N'ru', N'B2', N'Reading', N'Reading', N'BK-ZLA-VMIRE-3458'),
+(197, N'ru', N'B2', N'Reading', N'Reading', N'BK-ZLA-RUSSJAZI-7068'),
+(198, N'ru', N'B2', N'Practice', N'Practice', N'BK-ZLA-UCHETREN-B2-8157'),
+(199, N'ru', N'B2', N'Practice', N'Practice', N'BK-ZLA-UCHETREN-B2-4944'),
+(200, N'ru', N'B2', N'Practice', N'Practice', N'BK-ZLA-UCHETREN-B2-3476'),
+(201, N'ru', N'B2', N'Practice', N'Practice', N'BK-ZLA-UCHETREN-B2-3236'),
+(202, N'ru', N'B2', N'Practice', N'Practice', N'BK-ZLA-TESTTEST-B2-8201'),
+(203, N'ru', N'B2', N'Practice', N'Practice', N'BK-ZLA-TRENTEST-3434'),
+(204, N'ru', N'B2', N'Vocabulary', N'Vocabulary', N'BK-ZLA-UCHESLOV-6825'),
+(205, N'ru', N'C1', N'Practice', N'Practice', N'BK-ZLA-TRENTEST-8126'),
+(206, N'ru', N'C1', N'Practice', N'Practice', N'BK-ZLA-TESTTEST-C1-6637'),
+(207, N'ru', N'C1', N'Reading', N'Reading', N'BK-ZLA-ZDRAKOLL-B2-3847'),
+(208, N'ru', N'C1', N'Book', N'Book', N'BK-ZLA-BUSIRUSS-9994'),
+(209, N'pt', N'A1', N'Book', N'Book', N'BK-HOL-9789633492765'),
+(210, N'pt', N'A1', N'Listening', N'Listening', N'BK-HIP-SBRAZ-4072'),
+(211, N'pt', N'A1', N'SelfStudy', N'SelfStudy', N'BK-TEA-TEACYOUR-1650'),
+(212, N'pt', N'A1', N'SelfStudy', N'SelfStudy', N'BK-TEA-TEACYOUR-1735'),
+(213, N'pt', N'A1', N'Book', N'Book', N'BK-LID-PORTEM-3793'),
+(214, N'pt', N'A1', N'Practice', N'Practice', N'BK-LID-PORTEM-4936'),
+(215, N'pt', N'A1', N'Book', N'Book', N'BK-LID-ENTRNOS-3878'),
+(216, N'pt', N'A1', N'Book', N'Book', N'BK-LID-PASSPARA-A1-3885'),
+(217, N'pt', N'A1', N'Book', N'Book', N'BK-LID-PASSPARA-8507'),
+(218, N'pt', N'A1', N'Book', N'Book', N'BK-LID-PORTA-8422'),
+(219, N'pt', N'A1', N'Listening', N'Listening', N'BK-LID-HISTDO-A1-7814'),
+(220, N'pt', N'A1', N'Reading', N'Reading', N'BK-LID-OMANE-A1-4578'),
+(221, N'pt', N'A1', N'Reading', N'Reading', N'BK-LID-OSGAIA-A1-5223'),
+(222, N'pt', N'A1', N'Reading', N'Reading', N'BK-LID-UMDIA-A1-4561'),
+(223, N'pt', N'A1', N'Reading', N'Reading', N'BK-CIR-MORTNO-A1-1763'),
+(224, N'pt', N'A1', N'Reading', N'Reading', N'BK-PAC-AALMO-1247'),
+(225, N'pt', N'A1', N'Reading', N'Reading', N'BK-PAC-OGRAN-1254'),
+(226, N'pt', N'A1', N'Reading', N'Reading', N'BK-PAC-OPASS-1209'),
+(227, N'pt', N'A1', N'Reading', N'Reading', N'BK-PAC-OURSO-1193'),
+(228, N'pt', N'A1', N'Practice', N'Practice', N'BK-LID-EXERDE-A1-8545'),
+(229, N'pt', N'A1', N'Practice', N'Practice', N'BK-LID-TESTDE-A1-9252'),
+(230, N'pt', N'A2', N'Book', N'Book', N'BK-LID-ENTRNOS-A1-6166'),
+(231, N'pt', N'A2', N'Book', N'Book', N'BK-LID-PORTEM-2178'),
+(232, N'pt', N'A2', N'Practice', N'Practice', N'BK-LID-PORTEM-5032'),
+(233, N'pt', N'A2', N'Listening', N'Listening', N'BK-LID-COMPORAL-A1-6329'),
+(234, N'pt', N'A2', N'Reading', N'Reading', N'BK-LID-HISTDO-A2-6831'),
+(235, N'pt', N'A2', N'Reading', N'Reading', N'BK-CIR-PARAE-A2-9449'),
+(236, N'pt', N'A2', N'Reading', N'Reading', N'BK-LID-CONTCOM-A1-4981'),
+(237, N'pt', N'A2', N'Reading', N'Reading', N'BK-LID-CONTCOM-A2-1713'),
+(238, N'pt', N'A2', N'Reading', N'Reading', N'BK-GIR-9789896337766'),
+(239, N'pt', N'A2', N'Vocabulary', N'Vocabulary', N'BK-OXF-OXFOESSE-0973'),
+(240, N'pt', N'A2', N'Vocabulary', N'Vocabulary', N'BK-HAR-PORTESSE-0886'),
+(241, N'pt', N'A2', N'Book', N'Book', N'BK-LID-ENTRNOS-A1-8993'),
+(242, N'pt', N'B1', N'Book', N'Book', N'BK-LID-ENTRNOS-3830'),
+(243, N'pt', N'B1', N'Book', N'Book', N'BK-LID-PORTEM-2772'),
+(244, N'pt', N'B1', N'Practice', N'Practice', N'BK-LID-PORTEM-5049'),
+(245, N'pt', N'B1', N'Listening', N'Listening', N'BK-LID-COMPORAL-B1-7692'),
+(246, N'pt', N'B1', N'Reading', N'Reading', N'BK-LID-CONTCOM-A2-4066'),
+(247, N'pt', N'B1', N'Reading', N'Reading', N'BK-DTV-MICRMINI-5181'),
+(248, N'pt', N'B1', N'Reading', N'Reading', N'BK-DTV-PRIMLEIT-4122'),
+(249, N'pt', N'B1', N'Practice', N'Practice', N'BK-LID-PREPEM-5735'),
+(250, N'pt', N'B1', N'Practice', N'Practice', N'BK-LID-PRONDE-0747'),
+(251, N'pt', N'B1', N'Practice', N'Practice', N'BK-LID-VERBNO-5087'),
+(252, N'pt', N'B1', N'Practice', N'Practice', N'BK-LID-MANUDE-2406'),
+(253, N'pt', N'B1', N'Book', N'Book', N'BK-LIN-9786155409004'),
+(254, N'pt', N'B1', N'Book', N'Book', N'BK-LIN-9786155663772'),
+(255, N'pt', N'B1', N'Book', N'Book', N'BK-MCG-PORTVERB-8074'),
+(256, N'pt', N'B1', N'Book', N'Book', N'BK-ESP-GRAMPORT-4545'),
+(257, N'pt', N'B1', N'Practice', N'Practice', N'BK-TYP-9789639664005'),
+(258, N'pt', N'B1', N'Practice', N'Practice', N'BK-LID-EXAMDE-A2-4622'),
+(259, N'pt', N'B2', N'Book', N'Book', N'BK-LID-ENTRNOS-9006'),
+(260, N'pt', N'B2', N'Book', N'Book', N'BK-LID-PASSPARA-B2-9146'),
+(261, N'pt', N'B2', N'Reading', N'Reading', N'BK-LID-CONTCOM-A2-2901'),
+(262, N'pt', N'B2', N'Reading', N'Reading', N'BK-LID-HISTDE-4998'),
+(263, N'pt', N'B2', N'Listening', N'Listening', N'BK-LID-COMPORAL-B1-7692'),
+(264, N'pt', N'B2', N'Book', N'Book', N'BK-LID-NOTA10-0594'),
+(265, N'pt', N'A2', N'Book', N'Book', N'BK-LID-PORTATUA-A1-3717'),
+(266, N'pt', N'B2', N'Book', N'Book', N'BK-LID-PORTXXI-9976'),
+(267, N'pt', N'B2', N'Book', N'Book', N'BK-LID-PORTEM-7791'),
+(268, N'pt', N'B2', N'Book', N'Book', N'BK-LID-NACRIS-8279'),
+(269, N'pt', N'B2', N'Book', N'Book', N'BK-LID-NACRIS-8286'),
+(270, N'pt', N'B2', N'Book', N'Book', N'BK-LID-AMIGPELO-8255'),
+(271, N'pt', N'C1', N'Book', N'Book', N'BK-LID-PORTEM-3960'),
+(272, N'pt', N'C1', N'Practice', N'Practice', N'BK-LID-PORTEM-C1-5056'),
+(273, N'pt', N'C1', N'Listening', N'Listening', N'BK-LID-COMPORAL-C1-8224'),
+(274, N'tr', N'A1', N'Book', N'Book', N'BK-HOL-KEZDTORO-3854'),
+(275, N'tr', N'A1', N'Listening', N'Listening', N'BK-HOD-TEACYOUR-3207'),
+(276, N'tr', N'A1', N'Book', N'Book', N'BK-HOD-COMPTURK-2390'),
+(277, N'tr', N'A1', N'Book', N'Book', N'BK-HUE-GULEGULE-2349'),
+(278, N'tr', N'A1', N'SelfStudy', N'SelfStudy', N'BK-CRE-THEDELI-9432'),
+(279, N'tr', N'A1', N'Vocabulary', N'Vocabulary', N'BK-COL-COLLTURK-0650'),
+(280, N'tr', N'A1', N'Vocabulary', N'Vocabulary', N'BK-LAN-LANGTASC-3758'),
+(281, N'tr', N'A1', N'Vocabulary', N'Vocabulary', N'BK-DOR-VISUWORT-9853'),
+(282, N'tr', N'A1', N'Vocabulary', N'Vocabulary', N'BK-LON-TURKPHRA-1953'),
+(283, N'tr', N'A1', N'Reading', N'Reading', N'BK-CIR-SONDURA-A1-9004'),
+(284, N'tr', N'A2', N'SelfStudy', N'SelfStudy', N'BK-HOD-TEACYOUR-5259'),
+(285, N'tr', N'A2', N'Reading', N'Reading', N'BK-HOD-SHORSTOR-2929'),
+(286, N'tr', N'A2', N'Reading', N'Reading', N'BK-DTV-TURKOKUM-4825'),
+(287, N'tr', N'A2', N'Reading', N'Reading', N'BK-DTV-COCUTEKE-5174'),
+(288, N'tr', N'A2', N'Reading', N'Reading', N'BK-DTV-TURKATAS-3545'),
+(289, N'tr', N'A2', N'Reading', N'Reading', N'BK-BKH-TURES-7428'),
+(290, N'tr', N'A2', N'Book', N'Book', N'BK-LIN-TOROTARS-1090'),
+(291, N'tr', N'A2', N'Vocabulary', N'Vocabulary', N'BK-EKS-TURERUSS-1042'),
+(292, N'tr', N'B1', N'Reading', N'Reading', N'BK-DTV-HEPKEBA-5549'),
+(293, N'tr', N'B1', N'Reading', N'Reading', N'BK-DTV-CELAOZCA-5211'),
+(294, N'tr', N'B1', N'Reading', N'Reading', N'BK-DTV-MODETURK-5341'),
+(295, N'tr', N'B1', N'Reading', N'Reading', N'BK-DOG-ELIFSAFA-7995'),
+(296, N'tr', N'B2', N'Reading', N'Reading', N'BK-YAP-JD-6360'),
+(297, N'tr', N'B2', N'Reading', N'Reading', N'BK-YAP-JK-2942'),
+(298, N'tr', N'B2', N'Reading', N'Reading', N'BK-YAP-JK-2959'),
+(299, N'tr', N'B2', N'Reading', N'Reading', N'BK-YAP-JK-3116'),
+(300, N'tr', N'B2', N'Reading', N'Reading', N'BK-ITH-JR-3732'),
+(301, N'tr', N'B2', N'Reading', N'Reading', N'BK-YAP-MOLNFERE-5546'),
+(302, N'tr', N'B2', N'Reading', N'Reading', N'BK-YAP-SZABMAGD-0333'),
+(303, N'tr', N'B2', N'Reading', N'Reading', N'BK-DIA-BEDETIBO-3682'),
+(304, N'tr', N'B2', N'Reading', N'Reading', N'BK-DIA-UJKECSAB-3255'),
+(305, N'tr', N'B2', N'Reading', N'Reading', N'BK-BIR-UJKECSAB-9136'),
+(306, N'tr', N'B2', N'Reading', N'Reading', N'BK-CAN-ANTODE-4435');
+
+/* Fail loudly if a lookup value is missing. This prevents silent partial seeds. */
+IF EXISTS (
+    SELECT 1
+    FROM @ProductSeed ps
+    LEFT JOIN {databaseOwner}[{objectQualifier}lm_languages] l
+        ON l.[Code] = ps.[LanguageCode]
+    LEFT JOIN {databaseOwner}[{objectQualifier}lm_question_levels] ql
+        ON ql.[LevelName] = ps.[LevelName]
+    LEFT JOIN {databaseOwner}[{objectQualifier}lm_skill_types] st
+        ON st.[SkillName] = ps.[SkillName]
+    WHERE l.[LanguageId] IS NULL
+       OR ql.[QuestionLevelId] IS NULL
+       OR st.[SkillTypeId] IS NULL
+)
+BEGIN
+    RAISERROR('Missing lookup value for exact recommendation product seed.', 16, 1);
+    RETURN;
+END;
+
+;WITH RankedSource AS
+(
+    SELECT
+        ps.[SourceOrder],
+        ps.[LanguageCode],
+        ps.[LevelName],
+        ps.[SkillName],
+        ps.[ProductKind],
+        ps.[HotcakesProductSKU],
+        ROW_NUMBER() OVER (
+            PARTITION BY ps.[LanguageCode], ps.[LevelName], ps.[SkillName]
+            ORDER BY ps.[SourceOrder]
+        ) AS [Priority]
+    FROM @ProductSeed ps
+)
+INSERT INTO {databaseOwner}[{objectQualifier}lm_recommendation_rules]
+(
+    [ModuleId],
+    [LanguageId],
+    [QuestionLevelId],
+    [SkillTypeId],
+    [SecondaryLanguageId],
+    [PaceTypeId],
+    [Priority],
+    [MatchMode],
+    [HotcakesProductSKU],
+    [HotcakesCategoryKey],
+    [HotcakesTag],
+    [ProductKind],
+    [MinProducts],
+    [MaxProducts],
+    [IsActive]
+)
+SELECT
+    @ModuleId,
+    l.[LanguageId],
+    ql.[QuestionLevelId],
+    st.[SkillTypeId],
+    NULL,
+    pt.[PaceTypeId],
+    rs.[Priority],
+    N'EXACT',
+    rs.[HotcakesProductSKU],
+    NULL,
+    NULL,
+    rs.[ProductKind],
+    pt.[MinProducts],
+    pt.[MaxProducts],
+    1
+FROM RankedSource rs
+INNER JOIN {databaseOwner}[{objectQualifier}lm_languages] l
+    ON l.[Code] = rs.[LanguageCode]
+INNER JOIN {databaseOwner}[{objectQualifier}lm_question_levels] ql
+    ON ql.[LevelName] = rs.[LevelName]
+INNER JOIN {databaseOwner}[{objectQualifier}lm_skill_types] st
+    ON st.[SkillName] = rs.[SkillName]
+INNER JOIN {databaseOwner}[{objectQualifier}lm_pace_types] pt
+    ON pt.[IsActive] = 1
+WHERE l.[IsActive] = 1;
+GO
+
+/* Expected result: 306 source rows x active pace count. With 3 paces, this creates 918 EXACT rows. */
