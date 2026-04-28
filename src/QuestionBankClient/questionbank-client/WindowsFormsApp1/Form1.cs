@@ -86,6 +86,9 @@ namespace QuestionBankClient
 
             lblMainTitle.Text = "Új kérdőív létrehozása";
             btnBack.Visible = true;
+
+            // EZ A SOR KAPCSOLJA VISSZA A MENTÉS GOMBOT!
+            if (btnFinalSave != null) btnFinalSave.Visible = true;
         }
 
         private void btnexisting_Click(object sender, EventArgs e)
@@ -111,6 +114,9 @@ namespace QuestionBankClient
 
             lblMainTitle.Text = "Saját kérdőív összeállítása";
             btnBack.Visible = false;
+
+            // FŐMENÜBEN ELREJTJÜK A MENTÉS GOMBOT (hiszen itt még nincs mit menteni)
+            if (btnFinalSave != null) btnFinalSave.Visible = false;
         }
 
         // --- VÉGLEGES MENTÉS (SQL) ---
