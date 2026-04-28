@@ -103,7 +103,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 );
 
                 return Redirect(
-                    "/leveltest/moduleId/" + ModuleContext.ModuleId +
+                    "/szintfelmero/moduleId/" + ModuleContext.ModuleId +
                     "/controller/Item/action/Question?sessionId=" + sessionId +
                     "&questionNumber=1"
                 );
