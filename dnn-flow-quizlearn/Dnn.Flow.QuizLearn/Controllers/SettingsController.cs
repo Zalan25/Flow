@@ -71,7 +71,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             TempData["SettingsSaved"] = true;
 
-            return RedirectToAction("Settings");
+            return RedirectToAction("Index", "Item");
         }
         private QuizLearnMode ParseQuizLearnMode(string value)
         {

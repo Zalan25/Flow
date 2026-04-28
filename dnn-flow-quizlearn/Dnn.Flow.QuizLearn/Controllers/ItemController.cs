@@ -26,7 +26,10 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         public ActionResult Index()
         {
+
+        
             var mode = GetModuleMode();
+
             if (Request.HttpMethod == "POST")
             {
                 var assessmentAction = Request.Form["AssessmentAction"];
@@ -41,9 +44,13 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return HandleAnswerQuestionPost();
                 }
 
+                if (mode == QuizLearnMode.LevelAssessment)
+                {
+                    return View("StartAssessment", BuildStartViewModel(mode));
+                }
+
                 return HandleStartPost(mode);
             }
-
 
             switch (mode)
             {
@@ -56,6 +63,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return View("Start", BuildStartViewModel(mode));
             }
         }
+        
 
         public ActionResult Start()
         {
