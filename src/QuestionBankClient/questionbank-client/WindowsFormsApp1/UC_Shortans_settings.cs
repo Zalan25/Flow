@@ -24,7 +24,7 @@ namespace QuestionBankClient
 
             this.HandleCreated += (s, e) => {
                 SetPlaceholder(txtQuestionText, "pl. Mi az angol 'alma' szó?");
-                SetPlaceholder(txtHint, "Ide írd a választ...");
+                
                 SetPlaceholder(txtPoints, "1");
             };
             if (txtPoints != null) txtPoints.KeyPress += TxtPoints_KeyPress;
@@ -44,15 +44,9 @@ namespace QuestionBankClient
             set { if (txtPoints != null) txtPoints.Text = value; }
         }
 
-        public string MaxCharacters
-        {
-            get => txtMaxChars?.Text ?? "";
-            set { if (txtMaxChars != null) txtMaxChars.Text = value; }
-        }
+        
 
-        public string TextType => cmbTextType.SelectedItem?.ToString() ?? "szöveg";
-
-        public bool IsMandatory => chkMandatory != null && chkMandatory.Checked;
+       
 
         // --- MŰVELETEK ---
 

@@ -23,7 +23,7 @@ namespace QuestionBankClient
 
             this.HandleCreated += (s, e) => {
                 SetPlaceholder(txtQuestionText, "Milyen nyelven szeretnél tanulni?");
-                SetPlaceholder(txtHint, "Ide írd a súgó szöveget...");
+             
                 SetPlaceholder(txtPoints, "Pont");
             };
             if (txtPoints != null) txtPoints.KeyPress += TxtPoints_KeyPress;
@@ -43,7 +43,7 @@ namespace QuestionBankClient
             set { if (txtPoints != null) txtPoints.Text = value; }
         }
 
-        public bool IsMandatory => chkMandatory != null && chkMandatory.Checked;
+        
 
         // --- MŰVELETEK ---
 

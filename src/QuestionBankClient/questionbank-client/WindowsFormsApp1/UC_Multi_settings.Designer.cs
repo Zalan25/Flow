@@ -18,20 +18,16 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnSave = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtQuestionText = new System.Windows.Forms.TextBox();
-            this.lblMandatory = new System.Windows.Forms.Label();
-            this.chkMandatory = new System.Windows.Forms.CheckBox();
             this.pnlSeparator = new System.Windows.Forms.Panel();
             this.lblOptions = new System.Windows.Forms.Label();
             this.flpOptions = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddOption = new System.Windows.Forms.Button();
-            this.lblHint = new System.Windows.Forms.Label();
-            this.txtHint = new System.Windows.Forms.TextBox();
             this.lblrate = new System.Windows.Forms.Label();
             this.txtPoints = new System.Windows.Forms.TextBox();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,24 +38,35 @@
             this.panel1.Controls.Add(this.btnSave);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtQuestionText);
-            this.panel1.Controls.Add(this.lblMandatory);
-            this.panel1.Controls.Add(this.chkMandatory);
             this.panel1.Controls.Add(this.pnlSeparator);
             this.panel1.Controls.Add(this.lblOptions);
             this.panel1.Controls.Add(this.flpOptions);
             this.panel1.Controls.Add(this.btnAddOption);
-            this.panel1.Controls.Add(this.lblHint);
-            this.panel1.Controls.Add(this.txtHint);
             this.panel1.Controls.Add(this.lblrate);
             this.panel1.Controls.Add(this.txtPoints);
             this.panel1.Controls.Add(this.btnDelete);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panel1.Margin = new System.Windows.Forms.Padding(6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1000, 1538);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // btnSave
+            // 
+            this.btnSave.BackColor = System.Drawing.Color.White;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
+            this.btnSave.Location = new System.Drawing.Point(563, 1173);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(300, 87);
+            this.btnSave.TabIndex = 26;
+            this.btnSave.Text = "Mentés";
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label1
             // 
@@ -76,37 +83,17 @@
             // 
             this.txtQuestionText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.txtQuestionText.Location = new System.Drawing.Point(90, 106);
-            this.txtQuestionText.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.txtQuestionText.Margin = new System.Windows.Forms.Padding(6);
             this.txtQuestionText.Multiline = true;
             this.txtQuestionText.Name = "txtQuestionText";
             this.txtQuestionText.Size = new System.Drawing.Size(816, 92);
             this.txtQuestionText.TabIndex = 1;
             // 
-            // lblMandatory
-            // 
-            this.lblMandatory.AutoSize = true;
-            this.lblMandatory.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblMandatory.Location = new System.Drawing.Point(80, 250);
-            this.lblMandatory.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblMandatory.Name = "lblMandatory";
-            this.lblMandatory.Size = new System.Drawing.Size(307, 51);
-            this.lblMandatory.TabIndex = 2;
-            this.lblMandatory.Text = "Kötelező kérdés";
-            // 
-            // chkMandatory
-            // 
-            this.chkMandatory.AutoSize = true;
-            this.chkMandatory.Location = new System.Drawing.Point(760, 263);
-            this.chkMandatory.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.chkMandatory.Name = "chkMandatory";
-            this.chkMandatory.Size = new System.Drawing.Size(28, 27);
-            this.chkMandatory.TabIndex = 3;
-            // 
             // pnlSeparator
             // 
             this.pnlSeparator.BackColor = System.Drawing.Color.LightGray;
             this.pnlSeparator.Location = new System.Drawing.Point(90, 337);
-            this.pnlSeparator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.pnlSeparator.Margin = new System.Windows.Forms.Padding(6);
             this.pnlSeparator.Name = "pnlSeparator";
             this.pnlSeparator.Size = new System.Drawing.Size(820, 2);
             this.pnlSeparator.TabIndex = 4;
@@ -127,7 +114,7 @@
             this.flpOptions.AutoScroll = true;
             this.flpOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpOptions.Location = new System.Drawing.Point(90, 442);
-            this.flpOptions.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.flpOptions.Margin = new System.Windows.Forms.Padding(6);
             this.flpOptions.Name = "flpOptions";
             this.flpOptions.Size = new System.Drawing.Size(820, 288);
             this.flpOptions.TabIndex = 6;
@@ -140,33 +127,13 @@
             this.btnAddOption.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnAddOption.ForeColor = System.Drawing.Color.White;
             this.btnAddOption.Location = new System.Drawing.Point(200, 760);
-            this.btnAddOption.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnAddOption.Margin = new System.Windows.Forms.Padding(6);
             this.btnAddOption.Name = "btnAddOption";
             this.btnAddOption.Size = new System.Drawing.Size(600, 77);
             this.btnAddOption.TabIndex = 7;
             this.btnAddOption.Text = "+ Opció hozzáadása";
             this.btnAddOption.UseVisualStyleBackColor = false;
             this.btnAddOption.Click += new System.EventHandler(this.btnAddOption_Click);
-            // 
-            // lblHint
-            // 
-            this.lblHint.AutoSize = true;
-            this.lblHint.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblHint.Location = new System.Drawing.Point(80, 885);
-            this.lblHint.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblHint.Name = "lblHint";
-            this.lblHint.Size = new System.Drawing.Size(257, 51);
-            this.lblHint.TabIndex = 8;
-            this.lblHint.Text = "Súgó szöveg:";
-            // 
-            // txtHint
-            // 
-            this.txtHint.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtHint.Location = new System.Drawing.Point(90, 942);
-            this.txtHint.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.txtHint.Name = "txtHint";
-            this.txtHint.Size = new System.Drawing.Size(816, 50);
-            this.txtHint.TabIndex = 9;
             // 
             // lblrate
             // 
@@ -183,7 +150,7 @@
             // 
             this.txtPoints.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.txtPoints.Location = new System.Drawing.Point(340, 1042);
-            this.txtPoints.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.txtPoints.Margin = new System.Windows.Forms.Padding(6);
             this.txtPoints.Name = "txtPoints";
             this.txtPoints.Size = new System.Drawing.Size(156, 57);
             this.txtPoints.TabIndex = 11;
@@ -195,7 +162,7 @@
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDelete.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
             this.btnDelete.Location = new System.Drawing.Point(90, 1173);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(6);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(300, 87);
             this.btnDelete.TabIndex = 12;
@@ -203,27 +170,12 @@
             this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // btnSave
-            // 
-            this.btnSave.BackColor = System.Drawing.Color.White;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnSave.Location = new System.Drawing.Point(563, 1173);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(300, 87);
-            this.btnSave.TabIndex = 26;
-            this.btnSave.Text = "Mentés";
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // UC_Multi_settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "UC_Multi_settings";
             this.Size = new System.Drawing.Size(1000, 1538);
             this.panel1.ResumeLayout(false);
@@ -237,14 +189,10 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtQuestionText;
-        private System.Windows.Forms.Label lblMandatory;
-        private System.Windows.Forms.CheckBox chkMandatory;
         private System.Windows.Forms.Panel pnlSeparator;
         private System.Windows.Forms.Label lblOptions;
         private System.Windows.Forms.FlowLayoutPanel flpOptions;
         private System.Windows.Forms.Button btnAddOption;
-        private System.Windows.Forms.Label lblHint;
-        private System.Windows.Forms.TextBox txtHint;
         private System.Windows.Forms.Label lblrate;
         private System.Windows.Forms.TextBox txtPoints;
         private System.Windows.Forms.Button btnDelete;

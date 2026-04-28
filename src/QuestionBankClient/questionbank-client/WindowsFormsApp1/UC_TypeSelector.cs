@@ -82,8 +82,7 @@ namespace QuestionBankClient
                 settings.QuestionText = selectedIndex.Data.QuestionText;
                 settings.Points = selectedIndex.Data.Points.ToString();
 
-                // 1. Betöltjük a validációs adatokat
-                settings.MaxCharacters = selectedIndex.Data.MaxCharacters.ToString();
+                
 
                 // 2. Visszatöltjük az ÖSSZES alternatív választ
                 var flp = settings.Controls.Find("flpAnswers", true).FirstOrDefault() as FlowLayoutPanel;
@@ -235,8 +234,8 @@ namespace QuestionBankClient
 
         // --- DESIGNER METÓDUSOK ---
         private void flpQuestionList_Resize(object sender, EventArgs e) { ResizeCards(); }
-        private void UC_TypeSelector_Load(object sender, EventArgs e) { CenterControls(); }
-        private void CenterControls() { btnAdd.Left = (pnlCenter.Width - btnAdd.Width) / 2; }
+        
+        
         private void UC_TypeSelector_Load_1(object sender, EventArgs e) { }
         private void pnlright_Paint(object sender, PaintEventArgs e) { }
         private void flpQuestionList_Paint(object sender, PaintEventArgs e) { }

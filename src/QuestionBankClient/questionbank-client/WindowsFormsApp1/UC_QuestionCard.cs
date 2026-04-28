@@ -12,7 +12,7 @@ namespace QuestionBankClient
 {
     public partial class UC_QuestionCard : UserControl
     {
-        // Ez a "lelke" a kártyának: minden adat itt lakik (ID, Pont, Válaszok, stb.)
+        
         public Question Data { get; set; } = new Question();
 
         public UC_QuestionCard()
@@ -30,7 +30,7 @@ namespace QuestionBankClient
             // A 'displayContent' mostantól a kérdést ÉS az összefoglalót is tartalmazza
             lblText.Text = string.IsNullOrWhiteSpace(displayContent) ? "Nincs megadva tartalom..." : displayContent;
 
-            // UI tipp: Állítsd be a lblText-et a designerben:
+            
             // AutoSize = False
             // Anchor = Top, Left, Right, Bottom (vagy Dock = Fill egy panelen belül)
         }
@@ -40,7 +40,7 @@ namespace QuestionBankClient
             Control paintControl = sender as Control;
             if (paintControl == null) return;
 
-            // Szép, sötétkék keret rajzolása (a 2 a vonalvastagságot jelenti)
+            
             using (Pen pen = new Pen(Color.Navy, 2))
             {
                 e.Graphics.DrawRectangle(pen, 1, 1, paintControl.Width - 3, paintControl.Height - 3);

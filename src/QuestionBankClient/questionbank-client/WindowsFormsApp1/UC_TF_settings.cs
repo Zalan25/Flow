@@ -35,8 +35,7 @@ namespace QuestionBankClient
             set { if (txtPoints != null) txtPoints.Text = value; }
         }
 
-        // Később ezt is elmenthetjük az SQL-be, ha a Modelben felveszünk egy IsMandatory mezőt!
-        public bool IsMandatory => chkMandatory != null && chkMandatory.Checked;
+        
 
         public bool IsTrueSelected => rbTrue != null && rbTrue.Checked;
 

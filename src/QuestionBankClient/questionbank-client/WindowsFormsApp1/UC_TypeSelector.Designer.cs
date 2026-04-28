@@ -35,15 +35,11 @@
             this.pnlleft = new System.Windows.Forms.Panel();
             this.pnlCenter = new System.Windows.Forms.Panel();
             this.flpQuestionList = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.pnlright = new System.Windows.Forms.Panel();
             this.lblSetHeader = new System.Windows.Forms.Label();
-            this.pnlbottom = new System.Windows.Forms.Panel();
-            this.btnnewquestion = new System.Windows.Forms.Button();
             this.pnlleft.SuspendLayout();
             this.pnlCenter.SuspendLayout();
             this.pnlright.SuspendLayout();
-            this.pnlbottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTypeHeader
@@ -104,7 +100,7 @@
             this.pnlleft.Location = new System.Drawing.Point(0, 0);
             this.pnlleft.Margin = new System.Windows.Forms.Padding(4);
             this.pnlleft.Name = "pnlleft";
-            this.pnlleft.Size = new System.Drawing.Size(268, 938);
+            this.pnlleft.Size = new System.Drawing.Size(352, 938);
             this.pnlleft.TabIndex = 0;
             // 
             // pnlCenter
@@ -113,10 +109,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCenter.Controls.Add(this.flpQuestionList);
-            this.pnlCenter.Location = new System.Drawing.Point(276, 0);
+            this.pnlCenter.Location = new System.Drawing.Point(356, 0);
             this.pnlCenter.Margin = new System.Windows.Forms.Padding(4);
             this.pnlCenter.Name = "pnlCenter";
-            this.pnlCenter.Size = new System.Drawing.Size(439, 788);
+            this.pnlCenter.Size = new System.Drawing.Size(473, 937);
             this.pnlCenter.TabIndex = 1;
             // 
             // flpQuestionList
@@ -126,36 +122,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flpQuestionList.AutoScroll = true;
             this.flpQuestionList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpQuestionList.Location = new System.Drawing.Point(11, 17);
+            this.flpQuestionList.Location = new System.Drawing.Point(3, 17);
             this.flpQuestionList.Name = "flpQuestionList";
-            this.flpQuestionList.Size = new System.Drawing.Size(428, 736);
+            this.flpQuestionList.Size = new System.Drawing.Size(470, 917);
             this.flpQuestionList.TabIndex = 0;
             this.flpQuestionList.WrapContents = false;
             this.flpQuestionList.Paint += new System.Windows.Forms.PaintEventHandler(this.flpQuestionList_Paint);
             this.flpQuestionList.Resize += new System.EventHandler(this.flpQuestionList_Resize);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdd.Location = new System.Drawing.Point(68, 25);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(4);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(148, 99);
-            this.btnAdd.TabIndex = 0;
-            this.btnAdd.Text = "Kérdés hozzáadása";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click_1);
             // 
             // pnlright
             // 
             this.pnlright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlright.Controls.Add(this.lblSetHeader);
-            this.pnlright.Location = new System.Drawing.Point(718, 0);
+            this.pnlright.Location = new System.Drawing.Point(835, 0);
             this.pnlright.Margin = new System.Windows.Forms.Padding(4);
             this.pnlright.Name = "pnlright";
-            this.pnlright.Size = new System.Drawing.Size(849, 937);
+            this.pnlright.Size = new System.Drawing.Size(732, 937);
             this.pnlright.TabIndex = 2;
             this.pnlright.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlright_Paint);
             // 
@@ -172,35 +155,10 @@
             this.lblSetHeader.TabIndex = 0;
             this.lblSetHeader.Text = "Kérdés beállítása";
             // 
-            // pnlbottom
-            // 
-            this.pnlbottom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlbottom.Controls.Add(this.btnnewquestion);
-            this.pnlbottom.Controls.Add(this.btnAdd);
-            this.pnlbottom.Location = new System.Drawing.Point(276, 795);
-            this.pnlbottom.Name = "pnlbottom";
-            this.pnlbottom.Size = new System.Drawing.Size(439, 142);
-            this.pnlbottom.TabIndex = 3;
-            // 
-            // btnnewquestion
-            // 
-            this.btnnewquestion.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnnewquestion.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnnewquestion.Location = new System.Drawing.Point(212, 25);
-            this.btnnewquestion.Margin = new System.Windows.Forms.Padding(4);
-            this.btnnewquestion.Name = "btnnewquestion";
-            this.btnnewquestion.Size = new System.Drawing.Size(148, 99);
-            this.btnnewquestion.TabIndex = 1;
-            this.btnnewquestion.Text = "Új Kérdés hozzáadása";
-            this.btnnewquestion.UseVisualStyleBackColor = true;
-            this.btnnewquestion.Click += new System.EventHandler(this.btnnewquestion_Click);
-            // 
             // UC_TypeSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.pnlbottom);
             this.Controls.Add(this.pnlright);
             this.Controls.Add(this.pnlCenter);
             this.Controls.Add(this.pnlleft);
@@ -213,7 +171,6 @@
             this.pnlCenter.ResumeLayout(false);
             this.pnlright.ResumeLayout(false);
             this.pnlright.PerformLayout();
-            this.pnlbottom.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -226,11 +183,8 @@
         private System.Windows.Forms.Button btnShort;
         private System.Windows.Forms.Panel pnlleft;
         private System.Windows.Forms.Panel pnlCenter;
-        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Label lblSetHeader;
         public System.Windows.Forms.Panel pnlright;
-        private System.Windows.Forms.Panel pnlbottom;
-        private System.Windows.Forms.Button btnnewquestion;
         private System.Windows.Forms.FlowLayoutPanel flpQuestionList;
     }
 }

@@ -46,9 +46,9 @@ namespace QuestionBankClient
 
                     // 2. Kérdések adatai (Összekötve a kapcsolótáblával)
                     string sqlQuestions = @"SELECT q.QuestionId, q.QuestionText, q.Points, q.QuestionTypeId 
-                                  FROM dbo.lm_questions q
-                                  JOIN dbo.lm_test_questions tq ON q.QuestionId = tq.QuestionId
-                                  WHERE tq.TestId = @id ORDER BY tq.QuestionOrder";
+                                          FROM dbo.lm_questions q
+                                          JOIN dbo.lm_test_questions tq ON q.QuestionId = tq.QuestionId
+                                          WHERE tq.TestId = @id ORDER BY tq.QuestionOrder";
 
                     using (SqlCommand cmd = new SqlCommand(sqlQuestions, conn))
                     {
@@ -126,26 +126,49 @@ namespace QuestionBankClient
                             string testName = reader.GetString(1);
                             string desc = reader.IsDBNull(2) ? "" : reader.GetString(2);
 
-                            // Létrehozunk egy szép kártyát minden tesztnek
+                            // --- ÚJ RÉSZ: Egy közös Panel, ami összefogja a Megnyitás és a Törlés gombot ---
+                            Panel pnlRow = new Panel
+                            {
+                                Width = flpQuizzes.Width - 25,
+                                Height = 80,
+                                Margin = new Padding(0, 0, 0, 10) // Pici térköz a sorok között
+                            };
+
+                            // 1. TÖRLÉS GOMB 
+                            Button btnDelete = new Button
+                            {
+                                Text = "Törlés",
+                                Width = 100,
+                                Dock = DockStyle.Right,
+                                BackColor = Color.Crimson,
+                                ForeColor = Color.White,
+                                FlatStyle = FlatStyle.Flat,
+                                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                                Cursor = Cursors.Hand,
+                                Tag = testId
+                            };
+                            btnDelete.FlatAppearance.BorderSize = 0;
+                            btnDelete.Click += (s, e) => {
+                                int id = (int)((Button)s).Tag;
+                                DeleteQuizFromDatabase(id);
+                            };
+
+                            // 2. MEGNYITÁS GOMB 
                             Button btnQuiz = new Button
                             {
                                 Text = $"{testName}\n(ID: {testId}) - {desc}",
-                                Width = flpQuizzes.Width - 25,
-                                Height = 80,
+                                Dock = DockStyle.Fill, // Kitölti a maradék helyet
                                 BackColor = Color.FromArgb(235, 245, 255),
                                 FlatStyle = FlatStyle.Flat,
                                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                                 TextAlign = ContentAlignment.MiddleLeft,
                                 Cursor = Cursors.Hand,
-                                Tag = testId // Eltároljuk az ID-t a gombban, hogy később tudjuk, melyiket akarjuk megnyitni
+                                Tag = testId
                             };
-
                             btnQuiz.FlatAppearance.BorderSize = 0;
-
-                            // Ha rákattintanak egy tesztre
                             btnQuiz.Click += (s, e) => {
                                 int id = (int)((Button)s).Tag;
-                                Quiz loadedQuiz = FetchFullQuiz(id); // Ez a metódus olvassa ki az SQL-ből
+                                Quiz loadedQuiz = FetchFullQuiz(id);
 
                                 if (loadedQuiz != null)
                                 {
@@ -154,7 +177,12 @@ namespace QuestionBankClient
                                 }
                             };
 
-                            flpQuizzes.Controls.Add(btnQuiz);
+                            
+                            pnlRow.Controls.Add(btnDelete);
+                            pnlRow.Controls.Add(btnQuiz);
+
+                            // A kész sort hozzáadjuk a listához
+                            flpQuizzes.Controls.Add(pnlRow);
                         }
                     }
                 }
@@ -169,6 +197,74 @@ namespace QuestionBankClient
             {
                 MessageBox.Show("Hiba a kérdőívek betöltésekor: " + ex.Message, "Adatbázis hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // --- A TE TÖRLŐ METÓDUSOD ---
+        public void DeleteQuizFromDatabase(int testId)
+        {
+            var confirmResult = MessageBox.Show("Biztosan törölni szeretnéd ezt a kérdőívet? Ez a művelet nem visszavonható!",
+                                                "Kérdőív törlése", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (confirmResult != DialogResult.Yes) return;
+
+            try
+            {
+                using (SqlConnection conn = DatabaseService.GetConnection())
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            // 1. Válaszok törlése
+                            string sqlAnswers = @"DELETE a FROM dbo.lm_answers a
+                                                  JOIN dbo.lm_test_questions tq ON a.QuestionId = tq.QuestionId
+                                                  WHERE tq.TestId = @TestId";
+                            using (SqlCommand cmd = new SqlCommand(sqlAnswers, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@TestId", testId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 2. Kapcsolat törlése
+                            string sqlTestQuestions = "DELETE FROM dbo.lm_test_questions WHERE TestId = @TestId";
+                            using (SqlCommand cmd = new SqlCommand(sqlTestQuestions, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@TestId", testId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 3. Kérdőív fejléc törlése
+                            string sqlTest = "DELETE FROM dbo.lm_tests WHERE TestId = @TestId";
+                            using (SqlCommand cmd = new SqlCommand(sqlTest, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@TestId", testId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            trans.Commit();
+                            MessageBox.Show("A kérdőív sikeresen törölve lett az adatbázisból!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Frissítjük a képernyőt, hogy eltűnjön a törölt kártya!
+                            LoadQuizzesFromDatabase();
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new Exception("Hiba a törlési láncban: " + ex.Message);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nem sikerült törölni a kérdőívet:\n" + ex.Message, "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void flpQuizzes_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
