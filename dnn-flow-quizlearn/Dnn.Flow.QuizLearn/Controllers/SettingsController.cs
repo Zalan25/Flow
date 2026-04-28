@@ -33,36 +33,69 @@ namespace Dnn.Flow.QuizLearn.Controllers
         {
             var modeValue = ModuleContext.Configuration.ModuleSettings["QuizLearnMode"] as string;
 
-            QuizLearnMode mode;
-
-            if (!Enum.TryParse(modeValue, out mode))
-            {
-                mode = QuizLearnMode.RecommendationWithLevelAssessment;
-            }
-
             var model = new SettingsViewModel
             {
-                Mode = mode
+                Mode = ParseQuizLearnMode(modeValue)
             };
 
             return View(model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Settings(SettingsViewModel model)
         {
+            var rawMode = Request.Form["Mode"];
+
+            int parsedMode;
+            QuizLearnMode mode;
+
+            if (int.TryParse(rawMode, out parsedMode) &&
+                Enum.IsDefined(typeof(QuizLearnMode), parsedMode))
+            {
+                mode = (QuizLearnMode)parsedMode;
+            }
+            else if (!Enum.TryParse(rawMode, true, out mode))
+            {
+                mode = QuizLearnMode.RecommendationWithLevelAssessment;
+            }
+
             var moduleController = new ModuleController();
 
             moduleController.UpdateModuleSetting(
                 ModuleContext.ModuleId,
                 "QuizLearnMode",
-                ((int)model.Mode).ToString()
+                ((int)mode).ToString()
             );
+
+            DotNetNuke.Common.Utilities.DataCache.ClearModuleCache(ModuleContext.ModuleId);
 
             TempData["SettingsSaved"] = true;
 
             return RedirectToAction("Settings");
+        }
+        private QuizLearnMode ParseQuizLearnMode(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return QuizLearnMode.RecommendationWithLevelAssessment;
+            }
+
+            int parsedMode;
+
+            if (int.TryParse(value, out parsedMode) &&
+                Enum.IsDefined(typeof(QuizLearnMode), parsedMode))
+            {
+                return (QuizLearnMode)parsedMode;
+            }
+
+            QuizLearnMode parsedEnum;
+
+            if (Enum.TryParse(value, true, out parsedEnum))
+            {
+                return parsedEnum;
+            }
+
+            return QuizLearnMode.RecommendationWithLevelAssessment;
         }
         /// <summary>
         /// 
