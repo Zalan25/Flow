@@ -8,12 +8,10 @@ using Dnn.Flow.QuizLearn.Models;
 
 namespace Dnn.Flow.QuizLearn.Unittest
 {
-    // Az osztályt a TestFixture jelöli
     [TestFixture]
     public class AssessmentServiceTestFixture
     {
         // 1. Teszt: A publikus DetermineFinalLevel tesztelése TestCase-ekkel
-        // A Test és a TestCase attribútumok a metódus fölött vannak!
         [Test]
         [TestCase(0, 0, 0, 0, 0, 1)] // Minden 0 -> A1 szint (alapértelmezett)
         [TestCase(0, 3, 0, 0, 0, 2)] // 3 db A2 jó -> A2 szint
@@ -33,7 +31,7 @@ namespace Dnn.Flow.QuizLearn.Unittest
             Assert.AreEqual(expectedLevel, actualResult);
         }
 
-        // 2. Teszt: Eredmény kiszámítása (CalculateResult) - HappyPath (Sikeres lefutás B2 szinttel)
+        // 2. Teszt: Eredmény kiszámítása (CalculateResult)
         [Test]
         public void TestCalculateResult_HappyPath_ReturnsB2()
         {
@@ -50,6 +48,15 @@ namespace Dnn.Flow.QuizLearn.Unittest
                 new AttemptAnswerSummaryInfo { EarnedPoints = 10, QuestionLevelId = 3, IsCorrect = true },
                 new AttemptAnswerSummaryInfo { EarnedPoints = 10, QuestionLevelId = 3, IsCorrect = true }
             };
+
+
+            repositoryMock
+                .Setup(m => m.GetAttemptAnswerSummary(moduleId, sessionId))
+                .Returns(mockAnswers);
+
+            repositoryMock
+                .Setup(m => m.CompleteAssessmentSession(moduleId, sessionId, expectedLevelId))
+                .Returns(1);
 
             repositoryMock
                 .Setup(m => m.AddAssessmentSessionSkill(10, sessionId, 5))
@@ -74,7 +81,7 @@ namespace Dnn.Flow.QuizLearn.Unittest
             repositoryMock.Verify(m => m.CompleteAssessmentSession(moduleId, sessionId, expectedLevelId), Times.Once);
         }
 
-        // 3. Teszt: Session indítása (StartAssessmentSession) - HappyPath több skill mentésével
+        // 3. Teszt: Session indítása (StartAssessmentSession)
         [Test]
         public void TestStartAssessmentSession_HappyPath()
         {
@@ -84,20 +91,20 @@ namespace Dnn.Flow.QuizLearn.Unittest
             var sessionInfo = new AssessmentSessionInfo { ModuleId = 10 };
             var selectedSkillTypeIds = new List<int> { 5, 8 };
 
-            // Itt definiáljuk a változót, amit a Setupokban és az Assertben használunk!
+
             int sessionId = 999;
 
-            // Session hozzáadásának mockolása
+
             repositoryMock
                 .Setup(m => m.AddAssessmentSession(sessionInfo))
                 .Returns(sessionId);
 
-            // 1. Skill hozzáadásának mockolása
+
             repositoryMock
                 .Setup(m => m.AddAssessmentSessionSkill(10, sessionId, 5))
                 .Returns(1);
 
-            // 2. Skill hozzáadásának mockolása
+
             repositoryMock
                 .Setup(m => m.AddAssessmentSessionSkill(10, sessionId, 8))
                 .Returns(1);
@@ -110,7 +117,7 @@ namespace Dnn.Flow.QuizLearn.Unittest
             // Assert
             Assert.AreEqual(sessionId, actualResult);
 
-            // Verifikáljuk, hogy tényleg meghívta-e a megfelelő paraméterekkel
+
             repositoryMock.Verify(m => m.AddAssessmentSession(sessionInfo), Times.Once);
             repositoryMock.Verify(m => m.AddAssessmentSessionSkill(10, sessionId, 5), Times.Once);
             repositoryMock.Verify(m => m.AddAssessmentSessionSkill(10, sessionId, 8), Times.Once);
