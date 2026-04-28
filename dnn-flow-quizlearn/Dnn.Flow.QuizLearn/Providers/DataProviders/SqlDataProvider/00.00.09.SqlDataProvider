@@ -210,38 +210,40 @@ VALUES
 (@ModuleId, @Vocabulary, 3, @Book, 1, 2),
 (@ModuleId, @Vocabulary, 3, @Practice, 1, 3),
 (@ModuleId, @Vocabulary, 3, @Listening, 1, 4);
-GO
+
 /* =====================================================
    READING FÓKUSZ
 ===================================================== */
 
 DECLARE @Reading INT = (
     SELECT SkillTypeId 
-    FROM {databaseOwner}{objectQualifier}lm_skill_types 
+    FROM {databaseOwner}[{objectQualifier}lm_skill_types] 
     WHERE SkillName = 'Reading'
 );
 
 DECLARE @SelfStudy INT = (
     SELECT SkillTypeId 
-    FROM {databaseOwner}{objectQualifier}lm_skill_types 
+    FROM {databaseOwner}[{objectQualifier}lm_skill_types] 
     WHERE SkillName = 'SelfStudy'
 );
 
 /* Pace 1: Kényelmes = 2 termék */
-INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+INSERT INTO {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
 (ModuleId, FocusSkillTypeId, PaceTypeId, ProductSkillTypeId, ProductCount, Priority)
 VALUES
 (@ModuleId, @Reading, 1, @Reading, 1, 1),
 (@ModuleId, @Reading, 1, @Book, 1, 2);
 
 /* Pace 2: Kiegyensúlyozott = 3 termék */
-INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+INSERT INTO {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
+([ModuleId], [FocusSkillTypeId], [PaceTypeId], [ProductSkillTypeId], [ProductCount], [Priority])
 VALUES
 (@ModuleId, @Reading, 2, @Reading, 2, 1),
 (@ModuleId, @Reading, 2, @Book, 1, 2);
 
 /* Pace 3: Intenzív = 5 termék */
-INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+INSERT INTO {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
+([ModuleId], [FocusSkillTypeId], [PaceTypeId], [ProductSkillTypeId], [ProductCount], [Priority])
 VALUES
 (@ModuleId, @Reading, 3, @Reading, 2, 1),
 (@ModuleId, @Reading, 3, @Book, 1, 2),
@@ -254,19 +256,22 @@ VALUES
 ===================================================== */
 
 /* Pace 1: Kényelmes = 2 termék */
-INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+INSERT INTO {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
+([ModuleId], [FocusSkillTypeId], [PaceTypeId], [ProductSkillTypeId], [ProductCount], [Priority])
 VALUES
 (@ModuleId, @SelfStudy, 1, @SelfStudy, 1, 1),
 (@ModuleId, @SelfStudy, 1, @Book, 1, 2);
 
 /* Pace 2: Kiegyensúlyozott = 3 termék */
-INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+INSERT INTO {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
+([ModuleId], [FocusSkillTypeId], [PaceTypeId], [ProductSkillTypeId], [ProductCount], [Priority])
 VALUES
 (@ModuleId, @SelfStudy, 2, @SelfStudy, 2, 1),
 (@ModuleId, @SelfStudy, 2, @Book, 1, 2);
 
 /* Pace 3: Intenzív = 5 termék */
-INSERT INTO {databaseOwner}{objectQualifier}lm_bundle_composition_rules
+INSERT INTO {databaseOwner}[{objectQualifier}lm_bundle_composition_rules]
+([ModuleId], [FocusSkillTypeId], [PaceTypeId], [ProductSkillTypeId], [ProductCount], [Priority])
 VALUES
 (@ModuleId, @SelfStudy, 3, @SelfStudy, 2, 1),
 (@ModuleId, @SelfStudy, 3, @Book, 1, 2),
