@@ -16,71 +16,83 @@
         <dependency type="CoreVersion">09.08.00</dependency>
       </dependencies>
       <components>
-		  <component type="Script">
-			  <scripts>
-				  <basePath>DesktopModules\MVC\Dnn.Flow.QuizLearn\Providers\DataProviders\SqlDataProvider</basePath>
+            <component type="Script">
+              <scripts>
+                <basePath>DesktopModules\MVC\Dnn.Flow.QuizLearn</basePath>
 
-				  <script type="Install">
-					  <name>00.00.01.SqlDataProvider</name>
-					  <version>00.00.01</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.01.SqlDataProvider</name>
+                  <version>00.00.01</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.02.SqlDataProvider</name>
-					  <version>00.00.02</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.02.SqlDataProvider</name>
+                  <version>00.00.02</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.03.SqlDataProvider</name>
-					  <version>00.00.03</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.03.SqlDataProvider</name>
+                  <version>00.00.03</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.04.SqlDataProvider</name>
-					  <version>00.00.04</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.04.SqlDataProvider</name>
+                  <version>00.00.04</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.05.SqlDataProvider</name>
-					  <version>00.00.05</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.05.SqlDataProvider</name>
+                  <version>00.00.05</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.06.SqlDataProvider</name>
-					  <version>00.00.06</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.06.SqlDataProvider</name>
+                  <version>00.00.06</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.07.SqlDataProvider</name>
-					  <version>00.00.07</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.07.SqlDataProvider</name>
+                  <version>00.00.07</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.08.SqlDataProvider</name>
-					  <version>00.00.08</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.08.SqlDataProvider</name>
+                  <version>00.00.08</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.09.SqlDataProvider</name>
-					  <version>00.00.09</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.09.SqlDataProvider</name>
+                  <version>00.00.09</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.10.SqlDataProvider</name>
-					  <version>00.00.10</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.10.SqlDataProvider</name>
+                  <version>00.00.10</version>
+                </script>
 
-				  <script type="Install">
-					  <name>00.00.11.SqlDataProvider</name>
-					  <version>00.00.11</version>
-				  </script>
+                <script type="Install">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>00.00.11.SqlDataProvider</name>
+                  <version>00.00.11</version>
+                </script>
 
-				  <script type="UnInstall">
-					  <name>Uninstall.SqlDataProvider</name>
-					  <version>00.00.11</version>
-				  </script>
-			  </scripts>
-		  </component>
+                <script type="UnInstall">
+                  <path>Providers\DataProviders\SqlDataProvider</path>
+                  <name>Uninstall.SqlDataProvider</name>
+                  <version>00.00.11</version>
+                </script>
+              </scripts>
+            </component>
         <component type="ResourceFile">
           <resourceFiles>
             <basePath>DesktopModules/MVC/Dnn.Flow.QuizLearn</basePath>
