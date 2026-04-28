@@ -129,21 +129,6 @@ namespace QuestionBankClient
 
         private void btnFinalSave_Click(object sender, EventArgs e)
         {
-            var typeSelector = pnlbetamain.Controls.OfType<UC_TypeSelector>().FirstOrDefault();
-
-            if (typeSelector == null)
-            {
-                MessageBox.Show("Még nem adtál hozzá kérdéseket!", "Figyelem", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var flp = typeSelector.Controls.Find("flpQuestionList", true).FirstOrDefault() as FlowLayoutPanel;
-            if (flp == null || !flp.Controls.OfType<UC_QuestionCard>().Any())
-            {
-                MessageBox.Show("A kérdések listája üres!", "Figyelem", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
                 using (SqlConnection conn = DatabaseService.GetConnection())
@@ -153,22 +138,35 @@ namespace QuestionBankClient
                     {
                         try
                         {
+                            // 1. LÉPÉS: Mindenképpen lementjük a kérdőív nevét és leírását (ha üres, ha nem)
                             int testId = SaveQuizHeader(conn, transaction);
-                            int order = 1;
 
-                            foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
+                            // 2. LÉPÉS: Megnézzük, hogy vannak-e egyáltalán kérdések a képernyőn
+                            var typeSelector = pnlbetamain.Controls.OfType<UC_TypeSelector>().FirstOrDefault();
+                            if (typeSelector != null)
                             {
-                                if (card.Data.Points == 0) card.Data.Points = 1;
+                                var flp = typeSelector.Controls.Find("flpQuestionList", true).FirstOrDefault() as FlowLayoutPanel;
 
-                                int questionId = SaveQuestion(card.Data, conn, transaction);
-                                LinkQuestionToTest(testId, questionId, order++, conn, transaction);
-
-                                if (card.Data.Answers.Count > 0)
+                                // Ha megvan a panel és vannak rajta kártyák, akkor elmentjük azokat is!
+                                if (flp != null && flp.Controls.OfType<UC_QuestionCard>().Any())
                                 {
-                                    SaveAnswers(questionId, card.Data.Answers, conn, transaction);
+                                    int order = 1;
+                                    foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
+                                    {
+                                        if (card.Data.Points == 0) card.Data.Points = 1;
+
+                                        int questionId = SaveQuestion(card.Data, conn, transaction);
+                                        LinkQuestionToTest(testId, questionId, order++, conn, transaction);
+
+                                        if (card.Data.Answers.Count > 0)
+                                        {
+                                            SaveAnswers(questionId, card.Data.Answers, conn, transaction);
+                                        }
+                                    }
                                 }
                             }
 
+                            // 3. LÉPÉS: Tranzakció véglegesítése (Commit)
                             transaction.Commit();
                             MessageBox.Show("A kérdőív sikeresen elmentve az adatbázisba!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -262,6 +260,11 @@ namespace QuestionBankClient
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        private void pnlHeader_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
