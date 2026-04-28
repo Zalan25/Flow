@@ -43,40 +43,30 @@ namespace QuestionBankClient
             newCard.UpdateDisplay(qCounter++, defaultText);
 
             newCard.Click += (s, ev) => SelectCard(newCard);
-            foreach (Control child in newCard.Controls)
-            {
-                child.Click += (s, ev) => SelectCard(newCard);
-            }
+            AssignClickToAll(newCard, newCard);
+            SelectCard(newCard);
 
             SelectCard(newCard);
         }
 
         private void SelectCard(UC_QuestionCard card)
         {
-            ActiveCard = card; // Megjegyezzük, hogy őt szerkesztjük
-            pnlright.Controls.Clear(); // Kiürítjük a jobb oldalt
+            ActiveCard = card;
+            selectedIndex = card; // A biztonság kedvéért a régi változót is frissítjük
 
-            // Megnézzük, milyen típusú a kártya, és betöltjük a megfelelő panelt az ADATOKKAL EGYÜTT
-            if (card.Data.UI_TypeKey == "tf")
+            // Meghívjuk a te eredeti, jó betöltő metódusodat!
+            LoadRightSettings(card.Data.UI_TypeKey);
+        }
+
+        private void AssignClickToAll(Control ctrl, UC_QuestionCard card)
+        {
+            // Rárakjuk a kattintást az aktuális elemre
+            ctrl.Click += (s, e) => SelectCard(card);
+
+            // Majd megkeressük a benne lévő összes többi elemet is, és azokra is rárakjuk
+            foreach (Control child in ctrl.Controls)
             {
-                var tf = new UC_TF_settings { Dock = DockStyle.Fill };
-                tf.QuestionText = card.Data.QuestionText;
-                tf.Points = card.Data.Points.ToString();
-                pnlright.Controls.Add(tf);
-            }
-            else if (card.Data.UI_TypeKey == "Short")
-            {
-                var shortAns = new UC_Shortans_settings { Dock = DockStyle.Fill };
-                shortAns.QuestionText = card.Data.QuestionText;
-                shortAns.Points = card.Data.Points.ToString();
-                pnlright.Controls.Add(shortAns);
-            }
-            else if (card.Data.UI_TypeKey == "Multi")
-            {
-                var multi = new UC_Multi_settings { Dock = DockStyle.Fill };
-                multi.QuestionText = card.Data.QuestionText;
-                multi.Points = card.Data.Points.ToString();
-                pnlright.Controls.Add(multi);
+                AssignClickToAll(child, card);
             }
         }
 
@@ -88,11 +78,14 @@ namespace QuestionBankClient
             {
                 UC_Shortans_settings settings = new UC_Shortans_settings { Dock = DockStyle.Fill };
 
+                // JAVÍTÁS: Kérdés szövege és pontszám betöltése!
+                settings.QuestionText = selectedIndex.Data.QuestionText;
+                settings.Points = selectedIndex.Data.Points.ToString();
+
                 // 1. Betöltjük a validációs adatokat
                 settings.MaxCharacters = selectedIndex.Data.MaxCharacters.ToString();
-                // Itt a cmbTextType-ot is beállíthatod, ha elmentetted
 
-                // 2. Visszatöltjük az ÖSSZES alternatív választ (nem csak az elsőt!)
+                // 2. Visszatöltjük az ÖSSZES alternatív választ
                 var flp = settings.Controls.Find("flpAnswers", true).FirstOrDefault() as FlowLayoutPanel;
                 if (flp != null)
                 {
@@ -113,13 +106,15 @@ namespace QuestionBankClient
             else if (type == "tf")
             {
                 UC_TF_settings settings = new UC_TF_settings { Dock = DockStyle.Fill };
-                settings.QuestionText = selectedIndex.Data.QuestionText;
 
-                // Visszaállítjuk a RadioButton állapotát (melyik volt a helyes?)
+                // JAVÍTÁS: Kérdés és pont betöltése!
+                settings.QuestionText = selectedIndex.Data.QuestionText;
+                settings.Points = selectedIndex.Data.Points.ToString();
+
+                // Visszaállítjuk a RadioButton állapotát
                 var correctAnswer = selectedIndex.Data.Answers.FirstOrDefault(a => a.IsCorrect);
                 if (correctAnswer != null)
                 {
-                    // Ha az "Igaz" volt a helyes, bepipáljuk az rbTrue-t
                     var rbTrue = settings.Controls.Find("rbTrue", true).FirstOrDefault() as RadioButton;
                     if (rbTrue != null) rbTrue.Checked = (correctAnswer.AnswerText == "Igaz");
                 }
@@ -129,7 +124,10 @@ namespace QuestionBankClient
             else if (type == "Multi")
             {
                 UC_Multi_settings settings = new UC_Multi_settings { Dock = DockStyle.Fill };
+
+                // JAVÍTÁS: Kérdés és pont betöltése!
                 settings.QuestionText = selectedIndex.Data.QuestionText;
+                settings.Points = selectedIndex.Data.Points.ToString();
 
                 // Visszatöltjük a korábban felvett feleletválasztós opciókat
                 var flp = settings.Controls.Find("flpOptions", true).FirstOrDefault() as FlowLayoutPanel;
@@ -217,8 +215,7 @@ namespace QuestionBankClient
                 card.UpdateDisplay(qCounter++, summary);
 
                 // Bekötjük az eseményeket, hogy újra lehessen kattintani a szerkesztéshez
-                card.Click += (s, ev) => SelectCard(card);
-                foreach (Control child in card.Controls) child.Click += (s, ev) => SelectCard(card);
+                AssignClickToAll(card, card);
             }
         }
 

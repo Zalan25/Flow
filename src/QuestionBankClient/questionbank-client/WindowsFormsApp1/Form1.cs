@@ -129,7 +129,7 @@ namespace QuestionBankClient
 
         private void btnFinalSave_Click(object sender, EventArgs e)
         {
-            var typeSelector = pnlmain.Controls.OfType<UC_TypeSelector>().FirstOrDefault();
+            var typeSelector = pnlbetamain.Controls.OfType<UC_TypeSelector>().FirstOrDefault();
 
             if (typeSelector == null)
             {

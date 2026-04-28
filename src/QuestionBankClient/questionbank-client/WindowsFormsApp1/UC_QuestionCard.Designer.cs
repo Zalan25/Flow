@@ -46,7 +46,7 @@
             this.pnlquestioncard.Location = new System.Drawing.Point(3, 0);
             this.pnlquestioncard.Name = "pnlquestioncard";
             this.pnlquestioncard.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlquestioncard.Size = new System.Drawing.Size(795, 394);
+            this.pnlquestioncard.Size = new System.Drawing.Size(854, 455);
             this.pnlquestioncard.TabIndex = 0;
             this.pnlquestioncard.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlquestioncard_Paint);
             // 
@@ -78,7 +78,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pnlquestioncard);
             this.Name = "UC_QuestionCard";
-            this.Size = new System.Drawing.Size(795, 394);
+            this.Size = new System.Drawing.Size(854, 455);
             this.pnlquestioncard.ResumeLayout(false);
             this.pnlquestioncard.PerformLayout();
             this.ResumeLayout(false);

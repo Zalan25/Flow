@@ -37,7 +37,14 @@ namespace QuestionBankClient
 
         private void pnlquestioncard_Paint(object sender, PaintEventArgs e)
         {
-            // Ide jöhet majd esetleg egy egyedi keret rajzolása, ha szeretnéd
+            Control paintControl = sender as Control;
+            if (paintControl == null) return;
+
+            // Szép, sötétkék keret rajzolása (a 2 a vonalvastagságot jelenti)
+            using (Pen pen = new Pen(Color.Navy, 2))
+            {
+                e.Graphics.DrawRectangle(pen, 1, 1, paintControl.Width - 3, paintControl.Height - 3);
+            }
         }
     }
 }
