@@ -492,4 +492,36 @@ INNER JOIN {databaseOwner}[{objectQualifier}lm_pace_types] pt
 WHERE l.[IsActive] = 1;
 GO
 
-/* Expected result: 306 source rows x active pace count. With 3 paces, this creates 918 EXACT rows. */
+/************************************************************/
+/*****        QuizLearn test header seed fix            *****/
+/************************************************************/
+
+DECLARE @ModuleId INT = 0;
+
+INSERT INTO {databaseOwner}[{objectQualifier}lm_tests]
+(
+    [ModuleId],
+    [TestName],
+    [Characterization],
+    [LanguageId],
+    [TotalPoints],
+    [IsRandom],
+    [IsActive]
+)
+SELECT
+    @ModuleId,
+    l.[Name] + N' szintfelmérő',
+    N'Automatikusan generált szintfelmérő.',
+    l.[LanguageId],
+    0,
+    1,
+    1
+FROM {databaseOwner}[{objectQualifier}lm_languages] l
+WHERE l.[IsActive] = 1
+  AND NOT EXISTS (
+      SELECT 1
+      FROM {databaseOwner}[{objectQualifier}lm_tests] t
+      WHERE t.[ModuleId] = @ModuleId
+        AND t.[LanguageId] = l.[LanguageId]
+  );
+GO

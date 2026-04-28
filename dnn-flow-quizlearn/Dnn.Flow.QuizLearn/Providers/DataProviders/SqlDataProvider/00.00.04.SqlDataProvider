@@ -75,7 +75,6 @@ IF EXISTS (
 GO
 
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessions_GetById]
-    @ModuleId INT,
     @AssessmentSessionId INT
 AS
 BEGIN
@@ -97,12 +96,9 @@ BEGIN
         [CreatedOn],
         [CompletedOn]
     FROM {databaseOwner}[{objectQualifier}lm_assessment_sessions]
-    WHERE [AssessmentSessionId] = @AssessmentSessionId
-      AND [ModuleId] = @ModuleId;
+    WHERE [AssessmentSessionId] = @AssessmentSessionId;
 END
 GO
-
-
 /* ---------------------------------------------
    lm_Questions_GetForAssessment
    --------------------------------------------- */
@@ -332,5 +328,38 @@ BEGIN
     ORDER BY
         q.[QuestionLevelId],
         q.[QuestionId];
+END
+GO
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Get]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Get]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionQuestions_Get]
+    @AssessmentSessionId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        q.[QuestionId],
+        q.[QuestionText],
+        q.[LanguageId],
+        q.[QuestionLevelId],
+        q.[QuestionTypeId],
+        q.[SkillTypeId],
+        q.[Points],
+        sq.[QuestionOrder]
+    FROM {databaseOwner}[{objectQualifier}lm_assessment_session_questions] sq
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_questions] q
+        ON q.[QuestionId] = sq.[QuestionId]
+    WHERE sq.[AssessmentSessionId] = @AssessmentSessionId
+      AND q.[IsActive] = 1
+    ORDER BY sq.[QuestionOrder];
 END
 GO
