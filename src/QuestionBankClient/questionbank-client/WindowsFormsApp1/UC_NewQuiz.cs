@@ -18,22 +18,18 @@ namespace QuestionBankClient
 
         private void btnAddQuestions_Click(object sender, EventArgs e)
         {
-            Form1 mainForm = (Form1)this.ParentForm;
+            var main = this.ParentForm as Form1;
+            if (main != null)
+            {
+                // ELMENTJÜK A CÍMET ÉS A LEÍRÁST A MEMÓRIÁBA
+                main.ActiveQuiz.Title = txtTestName.Text;
+                main.ActiveQuiz.Description = txtDescription.Text;
 
-            // Panelek kezelése a váltáshoz
-            mainForm.pnlchoose.Controls.Clear();
-            mainForm.pnlchoose.SendToBack();
-
-            mainForm.pnlbetamain.Controls.Clear();
-            mainForm.pnlbetamain.SendToBack();
-
-            mainForm.pnlmain.BringToFront();
-            mainForm.pnlmain.Controls.Clear();
-
-            // Típusválasztó betöltése
-            UC_TypeSelector typeSelector = new UC_TypeSelector();
-            typeSelector.Dock = DockStyle.Fill;
-            mainForm.pnlmain.Controls.Add(typeSelector);
+                // Utána jöhet a váltás a TypeSelector-ra
+                main.pnlbetamain.Controls.Clear();
+                UC_TypeSelector selector = new UC_TypeSelector { Dock = DockStyle.Fill };
+                main.pnlbetamain.Controls.Add(selector);
+            }
         }
 
         private void btnBack_Click(object sender, EventArgs e)

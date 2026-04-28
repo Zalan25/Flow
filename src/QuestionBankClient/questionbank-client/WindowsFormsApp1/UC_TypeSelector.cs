@@ -301,27 +301,40 @@ namespace QuestionBankClient
         }
 
         // Ez a metódus fogja átmenteni az adatokat a panelről a kártyára
+        // Ez a metódus fogja átmenteni az adatokat a panelről a kártyára
         public void SaveCurrentCard()
         {
             if (ActiveCard == null) return;
 
             var currentPanel = pnlright.Controls.OfType<UserControl>().FirstOrDefault();
 
+            // 1. Töröljük a kártya régi válaszait a memóriából, hogy a módosításkor ne duplikálódjanak!
+            ActiveCard.Data.Answers.Clear();
+
             if (currentPanel is UC_TF_settings tf)
             {
                 ActiveCard.Data.QuestionText = tf.QuestionText;
                 ActiveCard.Data.Points = int.TryParse(tf.Points, out int p) ? p : 1;
-                // Ha van Answer lista, azt is itt adhatod át: ActiveCard.Data.Answers = tf.GetAnswers();
+
+                // Igaz/Hamis válaszok generálása és mentése
+                ActiveCard.Data.Answers.Add(new Answer { AnswerText = "Igaz", IsCorrect = tf.IsTrueSelected, AnswerOrder = 1 });
+                ActiveCard.Data.Answers.Add(new Answer { AnswerText = "Hamis", IsCorrect = !tf.IsTrueSelected, AnswerOrder = 2 });
             }
             else if (currentPanel is UC_Shortans_settings shortAns)
             {
                 ActiveCard.Data.QuestionText = shortAns.QuestionText;
                 ActiveCard.Data.Points = int.TryParse(shortAns.Points, out int p) ? p : 1;
+
+                // Rövid válaszok lekérése a panelről és mentése
+                ActiveCard.Data.Answers.AddRange(shortAns.GetAnswers());
             }
             else if (currentPanel is UC_Multi_settings multi)
             {
                 ActiveCard.Data.QuestionText = multi.QuestionText;
                 ActiveCard.Data.Points = int.TryParse(multi.Points, out int p) ? p : 1;
+
+                // Feleletválasztós opciók lekérése a panelről és mentése
+                ActiveCard.Data.Answers.AddRange(multi.GetAnswers());
             }
 
             // Frissítjük a kártya szövegét a listában, hogy azonnal látszódjon a változás

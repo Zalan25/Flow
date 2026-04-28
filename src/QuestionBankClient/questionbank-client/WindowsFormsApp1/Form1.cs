@@ -107,16 +107,22 @@ namespace QuestionBankClient
 
         public void btnBack_Click_1(object sender, EventArgs e)
         {
+            // Mindent kitakarítunk
             pnlmain.Controls.Clear();
-            pnlmain.Controls.Add(pnlchoose);
-            pnlmain.Controls.Add(pnlbetamain);
             pnlbetamain.Controls.Clear();
 
+            // Visszatesszük az eredeti két panelt
+            pnlmain.Controls.Add(pnlchoose);
+            pnlmain.Controls.Add(pnlbetamain);
+
+            // Alaphelyzetbe állítjuk a feliratokat és gombokat
             lblMainTitle.Text = "Saját kérdőív összeállítása";
             btnBack.Visible = false;
-
-            // FŐMENÜBEN ELREJTJÜK A MENTÉS GOMBOT (hiszen itt még nincs mit menteni)
             if (btnFinalSave != null) btnFinalSave.Visible = false;
+
+            // ELENGEDHETETLEN: Újra lefuttatjuk az elrendezést, hogy ne legyen üres a kép
+            Form1_Resize(null, null);
+            this.Refresh(); // Frissítjük a teljes ablakot, hogy ne "haljon meg"
         }
 
         // --- VÉGLEGES MENTÉS (SQL) ---
@@ -164,13 +170,15 @@ namespace QuestionBankClient
                             }
 
                             transaction.Commit();
-                            MessageBox.Show("A kérdőív elmentve!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            btnBack_Click_1(null, null);
+                            MessageBox.Show("A kérdőív sikeresen elmentve az adatbázisba!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Kényszerített visszatérés a főoldalra
+                            this.btnBack_Click_1(null, null);
                         }
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            throw new Exception("Hiba a mentés közben: " + ex.Message);
+                            MessageBox.Show("Hiba a mentés során: " + ex.Message);
                         }
                     }
                 }
