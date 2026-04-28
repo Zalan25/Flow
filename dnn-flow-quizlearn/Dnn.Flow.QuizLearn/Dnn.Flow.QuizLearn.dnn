@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Dnn.Flow.QuizLearn" type="Module" version="00.00.12">
+    <package name="Dnn.Flow.QuizLearn" type="Module" version="01.00.00">
       <friendlyName>Dnn.Flow.QuizLearn</friendlyName>
       <description>Dnn.Flow.QuizLearn</description>
       <iconFile>~/Icons/Sigma/Software_32X32_Standard.png</iconFile>
