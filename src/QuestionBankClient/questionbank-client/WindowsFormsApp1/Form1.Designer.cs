@@ -35,7 +35,6 @@
             this.btnexisting = new System.Windows.Forms.Button();
             this.lbledit = new System.Windows.Forms.Label();
             this.pnlHeader = new System.Windows.Forms.Panel();
-            this.btnedit = new System.Windows.Forms.Button();
             this.btnBack = new System.Windows.Forms.Button();
             this.btnFinalSave = new System.Windows.Forms.Button();
             this.lblMainTitle = new System.Windows.Forms.Label();
@@ -137,7 +136,6 @@
             this.pnlHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlHeader.AutoScroll = true;
-            this.pnlHeader.Controls.Add(this.btnedit);
             this.pnlHeader.Controls.Add(this.btnBack);
             this.pnlHeader.Controls.Add(this.btnFinalSave);
             this.pnlHeader.Controls.Add(this.lblMainTitle);
@@ -147,22 +145,6 @@
             this.pnlHeader.Size = new System.Drawing.Size(1288, 302);
             this.pnlHeader.TabIndex = 3;
             this.pnlHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlHeader_Paint);
-            // 
-            // btnedit
-            // 
-            this.btnedit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnedit.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.btnedit.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnedit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnedit.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnedit.ForeColor = System.Drawing.Color.White;
-            this.btnedit.Location = new System.Drawing.Point(950, 163);
-            this.btnedit.Margin = new System.Windows.Forms.Padding(4);
-            this.btnedit.Name = "btnedit";
-            this.btnedit.Size = new System.Drawing.Size(296, 104);
-            this.btnedit.TabIndex = 2;
-            this.btnedit.Text = "Szerkesztés";
-            this.btnedit.UseVisualStyleBackColor = false;
             // 
             // btnBack
             // 
@@ -231,7 +213,6 @@
         public System.Windows.Forms.Button btnBack;
         private System.Windows.Forms.Button btnFinalSave;
         private System.Windows.Forms.Label lblMainTitle;
-        private System.Windows.Forms.Button btnedit;
         private System.Windows.Forms.Button btnnew;
         private System.Windows.Forms.Button btnexisting;
         private System.Windows.Forms.Label lbledit;

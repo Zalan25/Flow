@@ -26,7 +26,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.rbTrue = new System.Windows.Forms.RadioButton();
             this.rbFalse = new System.Windows.Forms.RadioButton();
-            this.btnAddOption = new System.Windows.Forms.Button();
             this.lblrate = new System.Windows.Forms.Label();
             this.txtPoints = new System.Windows.Forms.TextBox();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -45,7 +44,6 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.rbTrue);
             this.panel1.Controls.Add(this.rbFalse);
-            this.panel1.Controls.Add(this.btnAddOption);
             this.panel1.Controls.Add(this.lblrate);
             this.panel1.Controls.Add(this.txtPoints);
             this.panel1.Controls.Add(this.btnDelete);
@@ -153,20 +151,6 @@
             this.rbFalse.Text = "Hamis";
             this.rbFalse.UseVisualStyleBackColor = false;
             // 
-            // btnAddOption
-            // 
-            this.btnAddOption.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnAddOption.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddOption.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnAddOption.ForeColor = System.Drawing.Color.White;
-            this.btnAddOption.Location = new System.Drawing.Point(200, 846);
-            this.btnAddOption.Margin = new System.Windows.Forms.Padding(6);
-            this.btnAddOption.Name = "btnAddOption";
-            this.btnAddOption.Size = new System.Drawing.Size(600, 87);
-            this.btnAddOption.TabIndex = 9;
-            this.btnAddOption.Text = "+ Opció hozzáadása";
-            this.btnAddOption.UseVisualStyleBackColor = false;
-            // 
             // lblrate
             // 
             this.lblrate.AutoSize = true;
@@ -226,7 +210,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RadioButton rbTrue;
         private System.Windows.Forms.RadioButton rbFalse;
-        private System.Windows.Forms.Button btnAddOption;
         private System.Windows.Forms.Label lblrate;
         private System.Windows.Forms.TextBox txtPoints;
         private System.Windows.Forms.Button btnDelete;

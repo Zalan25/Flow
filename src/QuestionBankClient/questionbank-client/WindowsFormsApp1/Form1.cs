@@ -59,8 +59,7 @@ namespace QuestionBankClient
             if (btnFinalSave != null)
                 btnFinalSave.Left = pnlHeader.Width - btnFinalSave.Width - marginRight;
 
-            if (btnedit != null)
-                btnedit.Left = pnlHeader.Width - btnedit.Width - marginRight;
+            
 
             // 6. ÚJ: Bal oldali gombok egymás alá rendezése, hogy kicsi ablakban se tűnjenek el!
             if (lbledit != null && btnexisting != null && btnnew != null)
@@ -308,5 +307,7 @@ namespace QuestionBankClient
         {
 
         }
+
+        
     }
 }
