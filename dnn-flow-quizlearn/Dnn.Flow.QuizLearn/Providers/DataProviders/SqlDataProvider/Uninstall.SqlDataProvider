@@ -118,5 +118,11 @@ IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_assessment_modes]', 'U') IS NO
    KÉSZ
 ========================================= */
 
-PRINT 'QuizLearn uninstall completed successfully.'
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_TestAttempts_Complete]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttempts_Complete]
 GO

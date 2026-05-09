@@ -243,6 +243,18 @@ namespace Dnn.Flow.QuizLearn.Services
 
             _repository.CompleteAssessmentSession(moduleId, sessionId, finalLevelId);
 
+            _repository.CompleteTestAttempt(
+                moduleId,
+                sessionId,
+                totalScore,
+                a1Correct,
+                a2Correct,
+                b1Correct,
+                b2Correct,
+                c1Correct,
+                finalLevelId
+            );
+
             return new ResultViewModel
             {
                 SessionId = sessionId,

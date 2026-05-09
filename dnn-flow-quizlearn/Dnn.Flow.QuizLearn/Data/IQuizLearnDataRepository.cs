@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using Dnn.Flow.QuizLearn.Models;
+﻿using Dnn.Flow.QuizLearn.Models;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Dnn.Flow.QuizLearn.Data
 {
@@ -63,6 +64,8 @@ namespace Dnn.Flow.QuizLearn.Data
 
         void GenerateSessionQuestions(int moduleId, int sessionId, int languageId);
         IEnumerable<QuestionInfo> GetSessionQuestions(int sessionId);
+
+        int CompleteTestAttempt(int moduleId, int assessmentSessionId, int totalScore, int a1Correct, int a2Correct, int b1Correct, int b2Correct, int c1Correct, int finalLevelId);
 
     }
 }

@@ -91,11 +91,17 @@
 					  <name>00.00.12.SqlDataProvider</name>
 					  <version>00.00.12</version>
 				  </script>
+
+				  <script type="Install">
+					  <path>Providers\DataProviders\SqlDataProvider</path>
+					  <name>00.00.13.SqlDataProvider</name>
+					  <version>00.00.13</version>
+				  </script>
 				  
                 <script type="UnInstall">
                   <path>Providers\DataProviders\SqlDataProvider</path>
                   <name>Uninstall.SqlDataProvider</name>
-                  <version>00.00.12</version>
+                  <version>00.00.13</version>
                 </script>
               </scripts>
             </component>

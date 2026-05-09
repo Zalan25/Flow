@@ -674,6 +674,34 @@ namespace Dnn.Flow.QuizLearn.Data
 
             return rules;
         }
+
+        public int CompleteTestAttempt(
+        int moduleId,
+        int assessmentSessionId,
+        int totalScore,
+        int a1Correct,
+        int a2Correct,
+        int b1Correct,
+        int b2Correct,
+        int c1Correct,
+        int finalLevelId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("TestAttempts_Complete"),
+                new System.Data.SqlClient.SqlParameter("@ModuleId", moduleId),
+                new System.Data.SqlClient.SqlParameter("@AssessmentSessionId", assessmentSessionId),
+                new System.Data.SqlClient.SqlParameter("@TotalScore", totalScore),
+                new System.Data.SqlClient.SqlParameter("@A1CorrectCount", a1Correct),
+                new System.Data.SqlClient.SqlParameter("@A2CorrectCount", a2Correct),
+                new System.Data.SqlClient.SqlParameter("@B1CorrectCount", b1Correct),
+                new System.Data.SqlClient.SqlParameter("@B2CorrectCount", b2Correct),
+                new System.Data.SqlClient.SqlParameter("@C1CorrectCount", c1Correct),
+                new System.Data.SqlClient.SqlParameter("@ResultLevelId", finalLevelId));
+
+            return Convert.ToInt32(result);
+        }
     }
 }
 
