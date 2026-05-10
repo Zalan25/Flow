@@ -575,17 +575,7 @@ namespace Dnn.Flow.QuizLearn.Data
 
 
         // Randomizált kérdések generálása egy sessionhöz
-        public void GenerateSessionQuestions(int moduleId, int sessionId, int languageId)
-        {
-            SqlHelper.ExecuteNonQuery(
-                _connectionString,
-                CommandType.StoredProcedure,
-                GetFullyQualifiedName("AssessmentSessionQuestions_Generate"),
-                new SqlParameter("@ModuleId", moduleId),
-                new SqlParameter("@AssessmentSessionId", sessionId),
-                new SqlParameter("@LanguageId", languageId)
-            );
-        }
+
         public IEnumerable<QuestionInfo> GetSessionQuestions(int assessmentSessionId)
         {
             var questions = new List<QuestionInfo>();

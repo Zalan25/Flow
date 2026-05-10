@@ -165,3 +165,49 @@ BEGIN
     SELECT @TestId AS [TestId];
 END
 GO
+
+
+
+/* =====================================================
+   TRiGGER: lm_ValidateActiveTests
+===================================================== */
+
+IF EXISTS (
+    SELECT 1
+    FROM sys.triggers
+    WHERE name = 'lm_ValidateActiveTests'
+)
+    DROP TRIGGER dbo.lm_ValidateActiveTests
+GO
+
+CREATE TRIGGER dbo.lm_ValidateActiveTests
+ON dbo.lm_tests
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        WHERE i.IsActive = 1
+          AND NOT EXISTS
+          (
+              SELECT 1
+              FROM dbo.lm_test_questions tq
+              WHERE tq.TestId = i.TestId
+          )
+    )
+    BEGIN
+        RAISERROR(
+            'Nem lehet aktív teszt kérdések nélkül.',
+            16,
+            1
+        );
+
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+END
+GO

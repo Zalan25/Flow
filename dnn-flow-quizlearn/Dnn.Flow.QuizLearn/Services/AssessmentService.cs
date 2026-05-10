@@ -148,11 +148,6 @@ namespace Dnn.Flow.QuizLearn.Services
             _repository.GradeMultipleChoiceAnswer(moduleId, testAttemptAnswerId);
         }
 
-        //random generálás
-        public void GenerateSessionQuestions(int moduleId, int sessionId, int languageId)
-        {
-            _repository.GenerateSessionQuestions(moduleId, sessionId, languageId);
-        }
 
         //public void SaveTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer)
         //{

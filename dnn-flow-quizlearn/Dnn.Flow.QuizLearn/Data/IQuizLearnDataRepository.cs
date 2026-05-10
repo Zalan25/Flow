@@ -62,7 +62,6 @@ namespace Dnn.Flow.QuizLearn.Data
         int AddMultipleChoiceAnswerOption(int moduleId, int testAttemptAnswerId, int answerId);
         int GradeMultipleChoiceAnswer(int moduleId, int testAttemptAnswerId);
 
-        void GenerateSessionQuestions(int moduleId, int sessionId, int languageId);
         IEnumerable<QuestionInfo> GetSessionQuestions(int sessionId);
 
         int CompleteTestAttempt(int moduleId, int assessmentSessionId, int totalScore, int a1Correct, int a2Correct, int b1Correct, int b2Correct, int c1Correct, int finalLevelId);

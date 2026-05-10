@@ -151,3 +151,11 @@ IF EXISTS (
 )
     DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttempts_Complete]
     GO
+
+IF EXISTS (
+    SELECT 1
+    FROM sys.triggers
+    WHERE name = 'lm_ValidateActiveTests'
+)
+    DROP TRIGGER dbo.lm_ValidateActiveTests
+GO
