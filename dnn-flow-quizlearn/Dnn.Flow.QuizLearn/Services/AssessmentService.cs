@@ -134,28 +134,30 @@ namespace Dnn.Flow.QuizLearn.Services
 
         //Eredmény kiszámítása a szintfelmérő teszt után
 
-        public int GetRequiredCorrectCount(string levelName, int questionCount)
+        public bool PassedLevel(string levelName, int correctCount, int totalCount)
         {
-            if (questionCount <= 0)
+            if (totalCount <= 0)
             {
-                return int.MaxValue;
+                return false;
             }
+
+            double ratio = (double)correctCount / totalCount;
 
             switch (levelName)
             {
                 case "A1":
                 case "A2":
                 case "B1":
-                    return Math.Max(1, questionCount - 2);
+                    return ratio >= 0.60;
 
                 case "B2":
-                    return Math.Max(1, questionCount - 1);
+                    return ratio >= 0.70;
 
                 case "C1":
-                    return Math.Max(1, (int)Math.Ceiling(questionCount / 2.0));
+                    return ratio >= 0.80;
 
                 default:
-                    return int.MaxValue;
+                    return false;
             }
         }
         public int DetermineFinalLevel(
@@ -170,11 +172,11 @@ namespace Dnn.Flow.QuizLearn.Services
             int c1Correct,
             int c1Count)
         {
-            bool passedA1 = a1Correct >= GetRequiredCorrectCount("A1", a1Count);
-            bool passedA2 = a2Correct >= GetRequiredCorrectCount("A2", a2Count);
-            bool passedB1 = b1Correct >= GetRequiredCorrectCount("B1", b1Count);
-            bool passedB2 = b2Correct >= GetRequiredCorrectCount("B2", b2Count);
-            bool passedC1 = c1Correct >= GetRequiredCorrectCount("C1", c1Count);
+            bool passedA1 = PassedLevel("A1", a1Correct, a1Count);
+            bool passedA2 = PassedLevel("A2", a2Correct, a2Count);
+            bool passedB1 = PassedLevel("B1", b1Correct, b1Count);
+            bool passedB2 = PassedLevel("B2", b2Correct, b2Count);
+            bool passedC1 = PassedLevel("C1", c1Correct, c1Count);
 
             if (passedA1 && passedA2 && passedB1 && passedB2 && passedC1)
             {
@@ -230,6 +232,12 @@ namespace Dnn.Flow.QuizLearn.Services
             int b2Total = sessionQuestions.Count(x => x.QuestionLevelId == 4);
             int c1Total = sessionQuestions.Count(x => x.QuestionLevelId == 5);
 
+            if (a1Total == 0 || a2Total == 0 || b1Total == 0 || b2Total == 0 || c1Total == 0)
+            {
+                throw new InvalidOperationException(
+                    "A szintfelmérő teszt nem értékelhető, mert nem tartalmaz minden szintből kérdést."
+                );
+            }
 
             if (!answers.Any())
             {

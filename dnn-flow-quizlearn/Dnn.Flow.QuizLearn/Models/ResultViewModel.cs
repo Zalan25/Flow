@@ -11,7 +11,7 @@ namespace Dnn.Flow.QuizLearn.Models
 
         public int TotalScore { get; set; }
 
-        public int Percentage { get; set; } 
+        public int Percentage { get; set; }
         public int MaxScore { get; set; }
         public int FinalLevelId { get; set; }
 

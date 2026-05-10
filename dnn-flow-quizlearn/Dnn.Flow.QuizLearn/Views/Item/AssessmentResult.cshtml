@@ -1,7 +1,7 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.ResultViewModel>
 <link rel="stylesheet" href="/DesktopModules/MVC/Dnn.Flow.QuizLearn/css/quizlearn.css?v=13" />
 @{
-    var percent = Model.TotalScore * 100 / 50;
+    var percent = Model.Percentage;
 
     var levelClass = "level-a1";
     if (Model.FinalLevelName == "A2") { levelClass = "level-a2"; }
@@ -26,7 +26,7 @@
         <div class="quizlearn-score-circle @levelClass" style="@circleStyle">
             <div class="quizlearn-score-inner">
                 <div class="quizlearn-score-value">@Model.TotalScore</div>
-                <div class="quizlearn-score-max">/ 50</div>
+                <div class="quizlearn-score-max">/ @Model.MaxScore</div>
             </div>
         </div>
 
@@ -67,23 +67,23 @@
 
             <div class="quizlearn-row">
                 <span>A1 helyes válaszok</span>
-                <strong>@Model.A1Correct</strong>
+                <strong>@Model.A1Correct / @Model.A1Total</strong>
             </div>
             <div class="quizlearn-row">
                 <span>A2 helyes válaszok</span>
-                <strong>@Model.A2Correct</strong>
+                <strong>@Model.A2Correct / @Model.A2Total</strong>
             </div>
             <div class="quizlearn-row">
                 <span>B1 helyes válaszok</span>
-                <strong>@Model.B1Correct</strong>
+                <strong>@Model.B1Correct / @Model.B1Total</strong>
             </div>
             <div class="quizlearn-row">
                 <span>B2 helyes válaszok</span>
-                <strong>@Model.B2Correct</strong>
+                <strong>@Model.B2Correct / @Model.B2Total</strong>
             </div>
             <div class="quizlearn-row">
                 <span>C1 helyes válaszok</span>
-                <strong>@Model.C1Correct</strong>
+                <strong>@Model.C1Correct / @Model.C1Total</strong>
             </div>
         </div>
 

@@ -9,7 +9,7 @@ namespace Dnn.Flow.QuizLearn.Services.Interfaces
         int StartAssessmentSession(AssessmentSessionInfo sessionInfo, IEnumerable<int> selectedSkillTypeIds);
 
         int CompleteAssessmentSession(int moduleId, int assessmentSessionId, int? finalLevelId);
-        int GetRequiredCorrectCount(string levelName, int questionCount);
+        bool PassedLevel(string levelName, int correctCount, int totalCount);
 
         int DetermineFinalLevel(int a1Correct, int a1Count, int a2Correct, int a2Count, int b1Correct, int b1Count, int b2Correct, int b2Count, int c1Correct, int c1Count);
         void SaveAnswer(int moduleId,int sessionId, int questionId, int answerId);
