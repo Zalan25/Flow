@@ -1,6 +1,7 @@
 ﻿using Dnn.Flow.QuizLearn.Data;
 using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services.Interfaces;
+using DotNetNuke.Services.GeneratedImage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,30 +37,6 @@ namespace Dnn.Flow.QuizLearn.Services
             return _repository.CompleteAssessmentSession(moduleId, assessmentSessionId, finalLevelId);
         }
 
-        public int? DetermineFinalLevel(int a1CorrectCount, int a2CorrectCount, int b1CorrectCount, int b2CorrectCount, int c1CorrectCount)
-        {
-            if (c1CorrectCount >= 3 && b2CorrectCount >= 3 && b1CorrectCount >= 3)
-            {
-                return 5; // C1
-            }
-
-            if (b2CorrectCount >= 3 && b1CorrectCount >= 3)
-            {
-                return 4; // B2
-            }
-            
-            if (b1CorrectCount >= 3)
-            {
-                return 3; // B1
-            }
-
-            if (a2CorrectCount >= 3)
-            {
-                return 2; // A2
-            }
-
-            return 1; // A1
-        }
 
         public QuestionViewModel GetQuestionForAssessment(int sessionId, int questionNumber)
         {
@@ -157,7 +134,7 @@ namespace Dnn.Flow.QuizLearn.Services
 
         //Eredmény kiszámítása a szintfelmérő teszt után
 
-        private int GetRequiredCorrectCount(string levelName, int questionCount)
+        public int GetRequiredCorrectCount(string levelName, int questionCount)
         {
             if (questionCount <= 0)
             {
@@ -181,7 +158,7 @@ namespace Dnn.Flow.QuizLearn.Services
                     return int.MaxValue;
             }
         }
-        private int DetermineFinalLevel(
+        public int DetermineFinalLevel(
             int a1Correct,
             int a1Count,
             int a2Correct,
@@ -264,12 +241,16 @@ namespace Dnn.Flow.QuizLearn.Services
             var c1Correct = answers.Count(x => x.QuestionLevelId == 5 && x.IsCorrect);
 
             var finalLevelId = DetermineFinalLevel(
-                totalScore,
-                a1Correct,
-                a2Correct,
-                b1Correct,
-                b2Correct,
-                c1Correct
+            a1Correct,
+            answers.Count(x => x.QuestionLevelId == 1),
+            a2Correct,
+            answers.Count(x => x.QuestionLevelId == 2),
+            b1Correct,
+            answers.Count(x => x.QuestionLevelId == 3)      ,
+            b2Correct,
+            answers.Count(x => x.QuestionLevelId == 4),
+            c1Correct,
+            answers.Count(x => x.QuestionLevelId == 5)
             );
 
             _repository.CompleteAssessmentSession(moduleId, sessionId, finalLevelId);

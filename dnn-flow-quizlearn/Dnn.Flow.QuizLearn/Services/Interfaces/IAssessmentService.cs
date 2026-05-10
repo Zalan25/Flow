@@ -11,7 +11,7 @@ namespace Dnn.Flow.QuizLearn.Services.Interfaces
         int CompleteAssessmentSession(int moduleId, int assessmentSessionId, int? finalLevelId);
         int GetRequiredCorrectCount(string levelName, int questionCount);
 
-        int? DetermineFinalLevel(int a1CorrectCount, int a2CorrectCount, int b1CorrectCount, int b2CorrectCount, int c1CorrectCount);
+        int DetermineFinalLevel(int a1Correct, int a1Count, int a2Correct, int a2Count, int b1Correct, int b1Count, int b2Correct, int b2Count, int c1Correct, int c1Count);
         void SaveAnswer(int moduleId,int sessionId, int questionId, int answerId);
         ResultViewModel CalculateResult(int moduleId, int sessionId);
         AssessmentSessionInfo GetAssessmentSessionById(int sessionId);
