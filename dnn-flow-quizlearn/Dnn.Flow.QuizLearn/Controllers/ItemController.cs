@@ -49,6 +49,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return View("StartAssessment", BuildStartViewModel(mode));
                 }
 
+
                 return HandleStartPost(mode);
             }
 
