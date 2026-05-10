@@ -114,10 +114,6 @@ IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_assessment_modes]', 'U') IS NO
     DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_modes]
 
 
-/* =========================================
-   KÉSZ
-========================================= */
-
 IF EXISTS (
     SELECT *
     FROM sysobjects
@@ -126,3 +122,32 @@ IF EXISTS (
 )
     DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttempts_Complete]
 GO
+
+
+
+IF EXISTS (
+    SELECT 1
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessionTest_Prepare]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionTest_Prepare]
+GO
+
+IF EXISTS (
+    SELECT 1
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_Tests_GetRandomActiveByLanguage]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_Tests_GetRandomActiveByLanguage]
+    GO
+
+IF EXISTS (
+    SELECT 1
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_TestAttempts_Complete]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttempts_Complete]
+    GO
