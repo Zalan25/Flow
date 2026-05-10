@@ -67,5 +67,8 @@ namespace Dnn.Flow.QuizLearn.Data
 
         int CompleteTestAttempt(int moduleId, int assessmentSessionId, int totalScore, int a1Correct, int a2Correct, int b1Correct, int b2Correct, int c1Correct, int finalLevelId);
 
+        int GetRandomActiveTestId(int moduleId, int languageId);
+        int PrepareAssessmentSessionTest(int moduleId, int assessmentSessionId, int languageId);
+
     }
 }

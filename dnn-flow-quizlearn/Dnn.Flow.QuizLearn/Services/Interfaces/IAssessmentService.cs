@@ -17,6 +17,7 @@ namespace Dnn.Flow.QuizLearn.Services.Interfaces
         void SaveSingleChoiceAnswer(int moduleId, int sessionId, int questionId, int answerId);
         void SaveMultipleChoiceAnswer(int moduleId, int sessionId, int questionId, IEnumerable<int> answerIds);
         void SaveTextAnswer(int moduleId, int sessionId, int questionId, string textAnswer);
+        int PrepareAssessmentSessionTest(int moduleId, int sessionId, int languageId);  
 
 
     }

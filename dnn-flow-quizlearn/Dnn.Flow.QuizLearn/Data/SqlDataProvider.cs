@@ -702,6 +702,31 @@ namespace Dnn.Flow.QuizLearn.Data
 
             return Convert.ToInt32(result);
         }
+
+        public int GetRandomActiveTestId(int moduleId, int languageId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("Tests_GetRandomActiveByLanguage"),
+                new SqlParameter("@ModuleId", moduleId),
+                new SqlParameter("@LanguageId", languageId));
+
+            return result == null || result == DBNull.Value ? 0 : Convert.ToInt32(result);
+        }
+
+        public int PrepareAssessmentSessionTest(int moduleId, int assessmentSessionId, int languageId)
+        {
+            object result = SqlHelper.ExecuteScalar(
+                _connectionString,
+                CommandType.StoredProcedure,
+                GetFullyQualifiedName("AssessmentSessionTest_Prepare"),
+                new SqlParameter("@ModuleId", moduleId),
+                new SqlParameter("@AssessmentSessionId", assessmentSessionId),
+                new SqlParameter("@LanguageId", languageId));
+
+            return result == null || result == DBNull.Value ? 0 : Convert.ToInt32(result);
+        }
     }
 }
 

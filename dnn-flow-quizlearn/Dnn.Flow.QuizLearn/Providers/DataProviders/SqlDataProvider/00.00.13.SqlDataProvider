@@ -37,3 +37,116 @@ BEGIN
       AND [IsCompleted]         = 0;
 END
 GO
+
+
+/* ---------------------------------------------
+   lm_Tests_GetRandomActiveByLanguage
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_Tests_GetRandomActiveByLanguage]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_Tests_GetRandomActiveByLanguage]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_Tests_GetRandomActiveByLanguage]
+    @ModuleId INT,
+    @LanguageId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 1
+        t.[TestId]
+    FROM {databaseOwner}[{objectQualifier}lm_tests] t
+    WHERE (t.[ModuleId] = @ModuleId OR t.[ModuleId] = 0)
+      AND t.[LanguageId] = @LanguageId
+      AND t.[IsActive] = 1
+      AND EXISTS
+      (
+          SELECT 1
+          FROM {databaseOwner}[{objectQualifier}lm_test_questions] tq
+          WHERE tq.[TestId] = t.[TestId]
+      )
+    ORDER BY
+        CASE WHEN t.[ModuleId] = @ModuleId THEN 0 ELSE 1 END,
+        NEWID();
+END
+GO
+
+
+/* ---------------------------------------------
+   lm_AssessmentSessionTest_Prepare
+   --------------------------------------------- */
+
+IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_AssessmentSessionTest_Prepare]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionTest_Prepare]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}lm_AssessmentSessionTest_Prepare]
+    @ModuleId INT,
+    @AssessmentSessionId INT,
+    @LanguageId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TestId INT;
+
+    SELECT TOP 1
+        @TestId = t.[TestId]
+    FROM {databaseOwner}[{objectQualifier}lm_tests] t
+    WHERE (t.[ModuleId] = @ModuleId OR t.[ModuleId] = 0)
+      AND t.[LanguageId] = @LanguageId
+      AND t.[IsActive] = 1
+      AND EXISTS
+      (
+          SELECT 1
+          FROM {databaseOwner}[{objectQualifier}lm_test_questions] tq
+          WHERE tq.[TestId] = t.[TestId]
+      )
+    ORDER BY
+        CASE WHEN t.[ModuleId] = @ModuleId THEN 0 ELSE 1 END,
+        NEWID();
+
+    IF @TestId IS NULL
+    BEGIN
+        SELECT 0 AS [TestId];
+        RETURN;
+    END;
+
+    DELETE FROM {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    WHERE [AssessmentSessionId] = @AssessmentSessionId;
+
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_assessment_session_questions]
+    (
+        [ModuleId],
+        [AssessmentSessionId],
+        [QuestionId],
+        [QuestionOrder]
+    )
+    SELECT
+        @ModuleId,
+        @AssessmentSessionId,
+        tq.[QuestionId],
+        tq.[QuestionOrder]
+    FROM {databaseOwner}[{objectQualifier}lm_test_questions] tq
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_questions] q
+        ON q.[QuestionId] = tq.[QuestionId]
+    WHERE tq.[TestId] = @TestId
+      AND (tq.[ModuleId] = @ModuleId OR tq.[ModuleId] = 0)
+      AND q.[LanguageId] = @LanguageId
+      AND q.[IsActive] = 1
+    ORDER BY tq.[QuestionOrder];
+
+    SELECT @TestId AS [TestId];
+END
+GO

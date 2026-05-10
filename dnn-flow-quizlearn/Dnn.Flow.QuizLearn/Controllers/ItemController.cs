@@ -96,11 +96,25 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     new List<int>()
                 );
 
-                _assessmentService.GenerateSessionQuestions(
+                var testId = _assessmentService.PrepareAssessmentSessionTest(
                     ModuleContext.ModuleId,
                     sessionId,
                     languageId.Value
                 );
+
+                if (testId <= 0)
+                {
+                    var fresh = BuildStartViewModel(GetModuleMode());
+                    ModelState.AddModelError("", "Nincs aktív teszt a kiválasztott nyelvhez.");
+                    return View("StartAssessment", fresh);
+                }
+
+                _assessmentService.StartTestAttempt(
+                    ModuleContext.ModuleId,
+                    sessionId,
+                    testId
+                );
+
 
                 return Redirect(
                     "/szintfelmero/moduleId/" + ModuleContext.ModuleId +
@@ -221,17 +235,25 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return View("Start", fresh);
                 }
 
-                _assessmentService.GenerateSessionQuestions(
+                var testId = _assessmentService.PrepareAssessmentSessionTest(
                     ModuleContext.ModuleId,
                     sessionId,
                     model.LanguageId
                 );
 
+                if (testId <= 0)
+                {
+                    var fresh = BuildStartViewModel(moduleMode);
+                    ModelState.AddModelError("", "Nincs aktív teszt a kiválasztott nyelvhez.");
+                    return View("Start", fresh);
+                }
+
                 _assessmentService.StartTestAttempt(
                     ModuleContext.ModuleId,
                     sessionId,
-                    1
+                    testId
                 );
+
 
                 var firstQuestion = _assessmentService.GetQuestionForAssessment(sessionId, 1);
 
@@ -401,10 +423,23 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 }
                 else
                 {
+                    var selectedTestId = _assessmentService.PrepareAssessmentSessionTest(
+                        ModuleContext.ModuleId,
+                        sessionId,
+                        existingSession.LanguageId
+                    );
+
+                    if (selectedTestId <= 0)
+                    {
+                        var fresh = BuildStartViewModel(GetModuleMode());
+                        ModelState.AddModelError("", "Nincs aktív teszt a kiválasztott nyelvhez.");
+                        return View("StartAssessment", fresh);
+                    }
+
                     _assessmentService.StartTestAttempt(
                         ModuleContext.ModuleId,
                         sessionId,
-                        1
+                        selectedTestId
                     );
 
                     return Redirect(Url.Action("Question", "Item")
@@ -439,11 +474,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 sessionInfo,
                 new List<int>()
             );
-            _assessmentService.GenerateSessionQuestions(
-                ModuleContext.ModuleId,
-                sessionId,
-                languageId
-                );
 
             if (sessionId <= 0)
             {
@@ -452,11 +482,23 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return View("StartAssessment", fresh);
             }
 
+            var testId = _assessmentService.PrepareAssessmentSessionTest(
+                ModuleContext.ModuleId,
+                sessionId,
+                languageId
+            );
+
+            if (testId <= 0)
+            {
+                var fresh = BuildStartViewModel(GetModuleMode());
+                ModelState.AddModelError("", "Nincs aktív teszt a kiválasztott nyelvhez.");
+                return View("StartAssessment", fresh);
+            }
 
             _assessmentService.StartTestAttempt(
                 ModuleContext.ModuleId,
                 sessionId,
-                1
+                testId
             );
 
             return Redirect(Url.Action("Question", "Item")

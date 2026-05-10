@@ -268,5 +268,10 @@ namespace Dnn.Flow.QuizLearn.Services
                 C1Correct = c1Correct
             };
         }
+
+        public int PrepareAssessmentSessionTest(int moduleId, int sessionId, int languageId)
+        {
+            return _repository.PrepareAssessmentSessionTest(moduleId, sessionId, languageId);
+        }
     }
 }
