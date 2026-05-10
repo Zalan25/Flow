@@ -220,6 +220,16 @@ namespace Dnn.Flow.QuizLearn.Services
         public ResultViewModel CalculateResult(int moduleId, int sessionId)
         {
             var answers = _repository.GetAttemptAnswerSummary(moduleId, sessionId).ToList();
+            var sessionQuestions = _repository.GetSessionQuestions(sessionId).ToList();
+
+            int maxScore = sessionQuestions.Sum(x => x.Points);
+
+            int a1Total = sessionQuestions.Count(x => x.QuestionLevelId == 1);
+            int a2Total = sessionQuestions.Count(x => x.QuestionLevelId == 2);
+            int b1Total = sessionQuestions.Count(x => x.QuestionLevelId == 3);
+            int b2Total = sessionQuestions.Count(x => x.QuestionLevelId == 4);
+            int c1Total = sessionQuestions.Count(x => x.QuestionLevelId == 5);
+
 
             if (!answers.Any())
             {
@@ -227,8 +237,23 @@ namespace Dnn.Flow.QuizLearn.Services
                 {
                     SessionId = sessionId,
                     TotalScore = 0,
+                    MaxScore = maxScore,
+                    Percentage = 0,
+
                     FinalLevelId = 1,
-                    FinalLevelName = "A1"
+                    FinalLevelName = "A1",
+
+                    A1Correct = 0,
+                    A2Correct = 0,
+                    B1Correct = 0,
+                    B2Correct = 0,
+                    C1Correct = 0,
+
+                    A1Total = a1Total,
+                    A2Total = a2Total,
+                    B1Total = b1Total,
+                    B2Total = b2Total,
+                    C1Total = c1Total
                 };
             }
 
@@ -240,19 +265,21 @@ namespace Dnn.Flow.QuizLearn.Services
             var b2Correct = answers.Count(x => x.QuestionLevelId == 4 && x.IsCorrect);
             var c1Correct = answers.Count(x => x.QuestionLevelId == 5 && x.IsCorrect);
 
-            var finalLevelId = DetermineFinalLevel(
-            a1Correct,
-            answers.Count(x => x.QuestionLevelId == 1),
-            a2Correct,
-            answers.Count(x => x.QuestionLevelId == 2),
-            b1Correct,
-            answers.Count(x => x.QuestionLevelId == 3)      ,
-            b2Correct,
-            answers.Count(x => x.QuestionLevelId == 4),
-            c1Correct,
-            answers.Count(x => x.QuestionLevelId == 5)
+            int finalLevelId = DetermineFinalLevel(
+                a1Correct,
+                a1Total,
+                a2Correct,
+                a2Total,
+                b1Correct,
+                b1Total,
+                b2Correct,
+                b2Total,
+                c1Correct,
+                c1Total
             );
-
+            int percentage = maxScore > 0
+                ? (int)Math.Round((double)totalScore / maxScore * 100.0)
+                : 0;
             _repository.CompleteAssessmentSession(moduleId, sessionId, finalLevelId);
 
             _repository.CompleteTestAttempt(
@@ -267,17 +294,29 @@ namespace Dnn.Flow.QuizLearn.Services
                 finalLevelId
             );
 
+
             return new ResultViewModel
             {
                 SessionId = sessionId,
+
                 TotalScore = totalScore,
+                MaxScore = maxScore,
+                Percentage = percentage,
+
                 FinalLevelId = finalLevelId,
                 FinalLevelName = GetLevelName(finalLevelId),
+
                 A1Correct = a1Correct,
                 A2Correct = a2Correct,
                 B1Correct = b1Correct,
                 B2Correct = b2Correct,
-                C1Correct = c1Correct
+                C1Correct = c1Correct,
+
+                A1Total = a1Total,
+                A2Total = a2Total,
+                B1Total = b1Total,
+                B2Total = b2Total,
+                C1Total = c1Total
             };
         }
 
