@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Dnn.Flow.QuizLearn.Data;
+﻿using Dnn.Flow.QuizLearn.Data;
 using Dnn.Flow.QuizLearn.Models;
 using Dnn.Flow.QuizLearn.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Dnn.Flow.QuizLearn.Services
 {
@@ -155,30 +156,65 @@ namespace Dnn.Flow.QuizLearn.Services
         //}
 
         //Eredmény kiszámítása a szintfelmérő teszt után
-        private int DetermineFinalLevel(
-            int totalScore,
-            int a1Correct,
-            int a2Correct,
-            int b1Correct,
-            int b2Correct,
-            int c1Correct)
+
+        private int GetRequiredCorrectCount(string levelName, int questionCount)
         {
-            if (totalScore >= 43 && totalScore <= 50 && b2Correct >= 2 && c1Correct >= 1)
+            if (questionCount <= 0)
             {
-                return 5; // C1 közeli
+                return int.MaxValue;
             }
 
-            if (totalScore >= 33 && totalScore <= 42 && b1Correct >= 3)
+            switch (levelName)
+            {
+                case "A1":
+                case "A2":
+                case "B1":
+                    return Math.Max(1, questionCount - 2);
+
+                case "B2":
+                    return Math.Max(1, questionCount - 1);
+
+                case "C1":
+                    return Math.Max(1, (int)Math.Ceiling(questionCount / 2.0));
+
+                default:
+                    return int.MaxValue;
+            }
+        }
+        private int DetermineFinalLevel(
+            int a1Correct,
+            int a1Count,
+            int a2Correct,
+            int a2Count,
+            int b1Correct,
+            int b1Count,
+            int b2Correct,
+            int b2Count,
+            int c1Correct,
+            int c1Count)
+        {
+            bool passedA1 = a1Correct >= GetRequiredCorrectCount("A1", a1Count);
+            bool passedA2 = a2Correct >= GetRequiredCorrectCount("A2", a2Count);
+            bool passedB1 = b1Correct >= GetRequiredCorrectCount("B1", b1Count);
+            bool passedB2 = b2Correct >= GetRequiredCorrectCount("B2", b2Count);
+            bool passedC1 = c1Correct >= GetRequiredCorrectCount("C1", c1Count);
+
+            if (passedA1 && passedA2 && passedB1 && passedB2 && passedC1)
+            {
+                return 5; // C1
+            }
+
+            if (passedA1 && passedA2 && passedB1 && passedB2)
             {
                 return 4; // B2
             }
 
-            if (totalScore >= 21 && totalScore <= 32 && a2Correct >= 3)
+            if (passedA1 && passedA2 && passedB1)
             {
                 return 3; // B1
             }
 
-            if (totalScore >= 11 && totalScore <= 20 && a1Correct >= 3)
+            if (passedA1 && passedA2)
             {
                 return 2; // A2
             }
