@@ -1,4 +1,5 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
+@using System.Web
 <link rel="stylesheet" href="/DesktopModules/MVC/Dnn.Flow.QuizLearn/css/quizlearn.css?v=13" />
 <script>
     (function () {
@@ -14,6 +15,19 @@
         }
     })();
 </script>
+
+@if (ViewBag.LoginRequired == true)
+{
+    <div class="quizlearn-error">
+        Jelentkezz be a teszt kitöltéséhez.
+    </div>
+
+    <a class="quizlearn-btn" href="/login?returnurl=@HttpUtility.UrlEncode(Request.RawUrl)">
+        Bejelentkezés
+    </a>
+
+    return;
+}
 
 <div class="quizlearn-wrapper">
     <div class="quizlearn-card">

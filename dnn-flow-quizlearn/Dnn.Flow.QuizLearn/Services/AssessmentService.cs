@@ -154,7 +154,7 @@ namespace Dnn.Flow.QuizLearn.Services
                     return ratio >= 0.70;
 
                 case "C1":
-                    return ratio >= 0.80;
+                    return ratio >= 0.50;
 
                 default:
                     return false;

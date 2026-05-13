@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using DotNetNuke.Security;
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
@@ -24,6 +25,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             _recommendationService = new RecommendationService();
         }
 
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public ActionResult Index()
         {
 
@@ -73,8 +75,14 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return View("Start", BuildStartViewModel(mode));
         }
 
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public ActionResult StartAssessment(int? autoStart, int? languageId)
         {
+            if (!IsLoggedIn())
+            {
+                ViewBag.LoginRequired = true;
+                return View("StartAssessment");
+            }
             var levelTestMode = _lookupService.GetAssessmentMode("LevelTest");
 
             if (autoStart == 1 && languageId.HasValue && languageId.Value > 0)
@@ -134,6 +142,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
         }
         private ActionResult HandleStartPost(QuizLearnMode moduleMode)
         {
+            if (!IsLoggedIn())
+            {
+                ViewBag.LoginRequired = true;
+                return View("StartAssessment");
+            }
             var model = new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
@@ -217,7 +230,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 SecondaryLanguageId = model.SecondaryLanguageId,
                 SelectedLevelId = model.SelectedLevelId ?? 1,
                 PaceTypeId = model.PaceTypeId ?? 1,
-                UserId = null,
+                UserId = User.UserID,
                 NeedLevelTest = needLevelTest,
                 Status = "Started"
             };
@@ -466,7 +479,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 SecondaryLanguageId = null,
                 SelectedLevelId = null,
                 PaceTypeId = 1,
-                UserId = null,
+                UserId = User.UserID,
                 NeedLevelTest = true,
                 Status = "Started"
             };
@@ -507,10 +520,15 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 + "&questionNumber=1");
         }
 
-        
-        
-            public ActionResult Question(int? sessionId, int? questionNumber)
+
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public ActionResult Question(int? sessionId, int? questionNumber)
         {
+                if (!IsLoggedIn())
+    {
+        ViewBag.LoginRequired = true;
+        return View("StartAssessment");
+    }
             if (Request.HttpMethod == "POST")
             {
                 var assessmentAction = Request.Form["AssessmentAction"];
@@ -651,15 +669,23 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 return Redirect(Url.Action("AssessmentResult", "Item") + "?sessionId=" + sessionId);
             }
 
-            return View("Question", nextModel);
+            return Redirect(Url.Action("Question", "Item")
+                + "?sessionId=" + sessionId
+                + "&questionNumber=" + nextQuestionNumber);
         }
 
         // eredmények
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public ActionResult AssessmentResult(int sessionId)
         {
             var model = _assessmentService.CalculateResult(ModuleContext.ModuleId, sessionId);
 
             return View("AssessmentResult", model);
+        }
+
+        private bool IsLoggedIn()
+        {
+            return User != null && User.UserID > 0;
         }
     }
 }

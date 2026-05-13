@@ -153,6 +153,15 @@ IF EXISTS (
     GO
 
 IF EXISTS (
+    SELECT *
+    FROM sysobjects
+    WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}lm_TestAttempts_Start]')
+      AND type = 'P'
+)
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}lm_TestAttempts_Start]
+GO
+
+IF EXISTS (
     SELECT 1
     FROM sys.triggers
     WHERE name = 'lm_ValidateActiveTests'
