@@ -30,6 +30,12 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE @AttemptNumber INT;
+    DECLARE @UserId INT;
+
+    SELECT @UserId = [UserId]
+    FROM {databaseOwner}[{objectQualifier}lm_assessment_sessions]
+    WHERE [AssessmentSessionId] = @AssessmentSessionId
+      AND [ModuleId] = @ModuleId;
 
     SELECT @AttemptNumber = ISNULL(MAX([AttemptNumber]), 0) + 1
     FROM {databaseOwner}[{objectQualifier}lm_test_attempts]
@@ -40,6 +46,7 @@ BEGIN
         [ModuleId],
         [AssessmentSessionId],
         [TestId],
+        [UserId],
         [StartedOn],
         [IsCompleted],
         [TotalScore],
@@ -50,6 +57,7 @@ BEGIN
         @ModuleId,
         @AssessmentSessionId,
         @TestId,
+        @UserId,
         SYSUTCDATETIME(),
         0,
         0,
