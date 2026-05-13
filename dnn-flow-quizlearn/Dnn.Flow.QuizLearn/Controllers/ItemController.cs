@@ -78,11 +78,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public ActionResult StartAssessment(int? autoStart, int? languageId)
         {
-            if (!IsLoggedIn())
-            {
-                ViewBag.LoginRequired = true;
-                return View("StartAssessment");
-            }
             var levelTestMode = _lookupService.GetAssessmentMode("LevelTest");
 
             if (autoStart == 1 && languageId.HasValue && languageId.Value > 0)
@@ -142,11 +137,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
         }
         private ActionResult HandleStartPost(QuizLearnMode moduleMode)
         {
-            if (!IsLoggedIn())
-            {
-                ViewBag.LoginRequired = true;
-                return View("StartAssessment");
-            }
             var model = new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
@@ -524,11 +514,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public ActionResult Question(int? sessionId, int? questionNumber)
         {
-                if (!IsLoggedIn())
-    {
-        ViewBag.LoginRequired = true;
-        return View("StartAssessment");
-    }
             if (Request.HttpMethod == "POST")
             {
                 var assessmentAction = Request.Form["AssessmentAction"];
@@ -683,9 +668,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return View("AssessmentResult", model);
         }
 
-        private bool IsLoggedIn()
-        {
-            return User != null && User.UserID > 0;
-        }
+        //private bool IsLoggedIn()
+        //{
+        //    return User != null && User.UserID > 0;
+        //}
     }
 }
