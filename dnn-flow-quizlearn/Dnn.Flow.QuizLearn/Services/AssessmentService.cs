@@ -161,44 +161,83 @@ namespace Dnn.Flow.QuizLearn.Services
             }
         }
         public int DetermineFinalLevel(
-            int a1Correct,
-            int a1Count,
-            int a2Correct,
-            int a2Count,
-            int b1Correct,
-            int b1Count,
-            int b2Correct,
-            int b2Count,
-            int c1Correct,
-            int c1Count)
+     int a1Correct, int a1Count,
+     int a2Correct, int a2Count,
+     int b1Correct, int b1Count,
+     int b2Correct, int b2Count,
+     int c1Correct, int c1Count)
         {
-            bool passedA1 = PassedLevel("A1", a1Correct, a1Count);
-            bool passedA2 = PassedLevel("A2", a2Correct, a2Count);
-            bool passedB1 = PassedLevel("B1", b1Correct, b1Count);
-            bool passedB2 = PassedLevel("B2", b2Correct, b2Count);
-            bool passedC1 = PassedLevel("C1", c1Correct, c1Count);
+            double a1 = GetRatio(a1Correct, a1Count);
+            double a2 = GetRatio(a2Correct, a2Count);
+            double b1 = GetRatio(b1Correct, b1Count);
+            double b2 = GetRatio(b2Correct, b2Count);
+            double c1 = GetRatio(c1Correct, c1Count);
 
-            if (passedC1)
+            // Progresszív súlyozás
+            // A magasabb szintek fontosabbak
+            double totalWeight = 1 + 2 + 3 + 4 + 5;
+
+            double weightedScore =
+                (a1 * 1) +
+                (a2 * 2) +
+                (b1 * 3) +
+                (b2 * 4) +
+                (c1 * 5);
+
+            double finalScore = weightedScore / totalWeight;
+
+            // Extra védelem:
+            // ne lehessen magas szint teljes alap bukással
+            double foundationScore = (a1 + a2) / 2.0;
+
+            // C1
+            if (
+                finalScore >= 0.75 &&
+                c1 >= 0.50 &&
+                foundationScore >= 0.40
+            )
             {
-                return 5; // C1
+                return 5;
             }
 
-            if (passedB2)
+            // B2
+            if (
+                finalScore >= 0.60 &&
+                b2 >= 0.40 &&
+                foundationScore >= 0.35
+            )
             {
-                return 4; // B2
+                return 4;
             }
 
-            if (passedB1)
+            // B1
+            if (
+                finalScore >= 0.45 &&
+                b1 >= 0.40
+            )
             {
-                return 3; // B1
+                return 3;
             }
 
-            if (passedA2)
+            // A2
+            if (
+                finalScore >= 0.30 &&
+                a2 >= 0.30
+            )
             {
-                return 2; // A2
+                return 2;
             }
 
-            return 1; // A1
+            return 1;
+        }
+        private double GetRatio(int correct, int total)
+        {
+            if (total <= 0)
+            {
+                return 0;
+            }
+
+            return (double)correct / total;
         }
         private string GetLevelName(int levelId)
         {
