@@ -64,13 +64,25 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 ((int)model.Mode).ToString()
             );
 
-            var activeLanguageIds = Request.Form["ActiveAssessmentLanguageIds"] ?? string.Empty;
+            var activeLanguageIds = Request.Form["ActiveAssessmentLanguageIds"];
 
-            moduleController.UpdateModuleSetting(
-                ModuleContext.ModuleId,
-                "ActiveAssessmentLanguageIds",
-                activeLanguageIds
-            );
+            if (string.IsNullOrWhiteSpace(activeLanguageIds))
+            {
+                moduleController.DeleteModuleSetting(
+                    ModuleContext.ModuleId,
+                    "ActiveAssessmentLanguageIds"
+                );
+            }
+            else
+            {
+                moduleController.UpdateModuleSetting(
+                    ModuleContext.ModuleId,
+                    "ActiveAssessmentLanguageIds",
+                    activeLanguageIds
+                );
+            }
+
+            ModuleContext.Configuration.ModuleSettings.Clear();
 
             TempData["SettingsSaved"] = true;
 
