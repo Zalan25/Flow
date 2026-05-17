@@ -705,6 +705,29 @@
     margin-top: 2px;
 }
 
+.quizlearn-login-required {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: #fff8e1;
+    border: 1px solid #f0c36d;
+    color: #7a5a00;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+    .quizlearn-login-required a {
+        display: inline-block;
+        margin-top: 8px;
+        font-weight: 600;
+        color: #d97706;
+        text-decoration: none;
+    }
+
+        .quizlearn-login-required a:hover {
+            text-decoration: underline;
+        }
+
 /* Responsive */
 
 @media (max-width: 720px) {

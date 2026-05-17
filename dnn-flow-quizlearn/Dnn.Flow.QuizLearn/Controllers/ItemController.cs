@@ -417,6 +417,15 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
         private ActionResult HandleStartLevelTestPost()
         {
+            if (!IsLoggedIn())
+            {
+                var fresh = BuildStartViewModel(GetModuleMode());
+
+                ViewBag.LoginRequired = true;
+                ViewBag.LoginUrl = "/login?returnurl=" + Server.UrlEncode(Request.RawUrl);
+
+                return View("StartAssessment", fresh);
+            }
             int sessionId = 0;
 
             if (int.TryParse(Request.Form["SessionId"], out sessionId) && sessionId > 0)
@@ -677,10 +686,10 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return View("AssessmentResult", model);
         }
 
-        //private bool IsLoggedIn()
-        //{
-        //    return User != null && User.UserID > 0;
-        //}
+        private bool IsLoggedIn()
+        {
+            return User != null && User.UserID > 0;
+        }
 
         private List<int> GetActiveAssessmentLanguageIds()
         {
