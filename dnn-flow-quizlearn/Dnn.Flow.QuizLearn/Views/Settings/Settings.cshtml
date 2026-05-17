@@ -1,72 +1,98 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.SettingsViewModel>
+<link rel="stylesheet" href="/DesktopModules/MVC/Dnn.Flow.QuizLearn/css/settings.css?v=1" />
 
-<div class="form-group">
-    <label for="Mode">Modul működési módja</label>
+<div class="quizlearn-settings-wrapper">
+    <div class="quizlearn-settings-card">
 
-    <select id="Mode" name="Mode" class="form-control">
-        @foreach (var item in Model.AvailableModes)
-        {
-        <option value="@item.Value" @(item.Value == ((int)Model.Mode).ToString() ? "selected" : "")>
-            @item.Text
-        </option>
-        }
-    </select>
-</div>
+        <h2 class="quizlearn-settings-title">QuizLearn beállítások</h2>
 
-<div class="alert alert-info">
-    Válaszd ki a működési módot, majd alul kattints a DNN Update gombra.
-</div>
+        <p class="quizlearn-settings-description">
+            Itt állíthatod be a modul működési módját és a szintfelmérőben használható nyelveket.
+        </p>
 
+        <div class="quizlearn-settings-section">
+            <h3 class="quizlearn-settings-section-title">Működési mód</h3>
 
-<div class="form-group">
-    <label>Aktív szintfelmérő nyelvek</label>
+            <p class="quizlearn-settings-help">
+                Válaszd ki, hogy a modul milyen funkcióval jelenjen meg az oldalon.
+            </p>
 
-    <input type="hidden"
-           id="ActiveAssessmentLanguageIds"
-           name="ActiveAssessmentLanguageIds"
-           value="@string.Join(",", Model.ActiveAssessmentLanguageIds)" />
+            <div class="quizlearn-settings-field">
+                <label for="Mode" class="quizlearn-settings-label">
+                    Modul működési módja
+                </label>
 
-    @foreach (var language in Model.AvailableLanguages)
-    {
-        var languageId = int.Parse(language.Value);
-
-        <div class="checkbox">
-            <label>
-                <input type="checkbox"
-                       class="active-language-checkbox"
-                       value="@language.Value"
-                       @(Model.ActiveAssessmentLanguageIds.Contains(languageId) ? "checked" : "") />
-
-                @language.Text
-            </label>
+                <select id="Mode" name="Mode" class="quizlearn-settings-select">
+                    @foreach (var item in Model.AvailableModes)
+                    {
+                        <option value="@item.Value" @(item.Value == ((int)Model.Mode).ToString() ? "selected" : "")>
+                            @item.Text
+                        </option>
+                    }
+                </select>
+            </div>
         </div>
-    }
 
-    <script>(function () {
-        function updateActiveLanguages() {
-            var values = [];
+        <div class="quizlearn-settings-section">
+            <h3 class="quizlearn-settings-section-title">Aktív szintfelmérő nyelvek</h3>
 
-            var checkboxes = document.querySelectorAll('.active-language-checkbox');
+            <p class="quizlearn-settings-help">
+                Csak a kijelölt nyelvek jelennek meg a szintfelmérő indításakor.
+            </p>
 
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked) {
-                    values.push(checkboxes[i].value);
+            <input type="hidden"
+                   id="ActiveAssessmentLanguageIds"
+                   name="ActiveAssessmentLanguageIds"
+                   value="@string.Join(",", Model.ActiveAssessmentLanguageIds)" />
+
+            <div class="quizlearn-settings-language-grid">
+                @foreach (var language in Model.AvailableLanguages)
+                {
+                    var languageId = int.Parse(language.Value);
+
+                    <label class="quizlearn-settings-language-option">
+                        <input type="checkbox"
+                               class="active-language-checkbox"
+                               value="@language.Value"
+                               @(Model.ActiveAssessmentLanguageIds.Contains(languageId) ? "checked" : "") />
+
+                        <span>@language.Text</span>
+                    </label>
                 }
-            }
+            </div>
+        </div>
 
-            document.getElementById('ActiveAssessmentLanguageIds').value = values.join(',');
-        }
+        <div class="quizlearn-settings-section">
+            <div class="quizlearn-settings-success">
+                A módosítások mentéséhez kattints lent a DNN Frissítés gombjára.
+            </div>
+        </div>
 
-        var checkboxes = document.querySelectorAll('.active-language-checkbox');
+        <script>
+            (function () {
+                function updateActiveLanguages() {
+                    var values = [];
 
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].addEventListener('change', updateActiveLanguages);
-        }
+                    var checkboxes = document.querySelectorAll('.active-language-checkbox');
 
-        updateActiveLanguages();
-    })();</script>
-</div>
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i].checked) {
+                            values.push(checkboxes[i].value);
+                        }
+                    }
 
-<div class="alert alert-info">
-    Csak a kijelölt nyelvek jelennek meg a szintfelmérő indításakor.
+                    document.getElementById('ActiveAssessmentLanguageIds').value = values.join(',');
+                }
+
+                var checkboxes = document.querySelectorAll('.active-language-checkbox');
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].addEventListener('change', updateActiveLanguages);
+                }
+
+                updateActiveLanguages();
+            })();
+        </script>
+
+    </div>
 </div>

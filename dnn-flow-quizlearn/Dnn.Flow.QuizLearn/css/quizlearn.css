@@ -704,14 +704,14 @@
 .quizlearn-button {
     margin-top: 2px;
 }
-
+/*Login*/
 .quizlearn-login-required {
     margin-bottom: 20px;
     padding: 14px 16px;
     border-radius: 10px;
     background: #fff8e1;
-    border: 1px solid #f0c36d;
-    color: #7a5a00;
+    border: 1px solid #ead7a0;
+    color: #7f1d1d;
     font-size: 14px;
     line-height: 1.5;
 }

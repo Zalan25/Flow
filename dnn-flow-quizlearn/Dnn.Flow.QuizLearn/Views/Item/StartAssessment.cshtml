@@ -1,6 +1,6 @@
 ﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Dnn.Flow.QuizLearn.Models.AssessmentStartViewModel>
 @using System.Web
-<link rel="stylesheet" href="/DesktopModules/MVC/Dnn.Flow.QuizLearn/css/quizlearn.css?v=14" />
+<link rel="stylesheet" href="/DesktopModules/MVC/Dnn.Flow.QuizLearn/css/quizlearn.css?v=15" />
 <script>
     (function () {
         var params = new URLSearchParams(window.location.search);
@@ -34,10 +34,10 @@
         @if (ViewBag.LoginRequired == true)
         {
             <div class="quizlearn-login-required">
-                A szintfelmérő kitöltéséhez be kell jelentkezned.
+                A szintfelmérő elindításához jelentkezz be a fiókodba, vagy hozz létre egy újat.
                 <br />
                 <a href="@ViewBag.LoginUrl">
-                    Bejelentkezés vagy regisztráció
+                    Jelentkezz be vagy regisztrálj
                 </a>
             </div>
         }
