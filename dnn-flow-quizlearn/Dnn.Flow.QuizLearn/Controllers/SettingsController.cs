@@ -1,27 +1,14 @@
-﻿/*
-' Copyright (c) 2026 Flow
-'  All rights reserved.
-' 
-' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-' TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-' THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-' CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-' DEALINGS IN THE SOFTWARE.
-' 
-*/
-
-using DotNetNuke.Collections;
-using DotNetNuke.Security;
+﻿using DotNetNuke.Security;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
-using System.Web.Mvc;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using Dnn.Flow.QuizLearn.Models;
+using Dnn.Flow.QuizLearn.Services;
 using DotNetNuke.Entities.Modules;
 using ValidateAntiForgeryTokenAttribute = DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryTokenAttribute;
-
 
 namespace Dnn.Flow.QuizLearn.Controllers
 {
@@ -29,21 +16,41 @@ namespace Dnn.Flow.QuizLearn.Controllers
     [DnnHandleError]
     public class SettingsController : DnnController
     {
+        private readonly LookupService _lookupService;
+
+        public SettingsController()
+        {
+            _lookupService = new LookupService();
+        }
 
         public ActionResult Settings()
         {
             var modeValue = ModuleContext.Configuration.ModuleSettings["QuizLearnMode"] as string;
 
             QuizLearnMode mode;
-
             if (!Enum.TryParse(modeValue, out mode))
             {
                 mode = QuizLearnMode.RecommendationWithLevelAssessment;
             }
 
+            var languages = _lookupService.GetLanguages().ToList();
+
+            var activeLanguageIds = GetActiveAssessmentLanguageIds();
+
+            if (!activeLanguageIds.Any())
+            {
+                activeLanguageIds = languages.Select(x => x.LanguageId).ToList();
+            }
+
             var model = new SettingsViewModel
             {
-                Mode = mode
+                Mode = mode,
+                ActiveAssessmentLanguageIds = activeLanguageIds,
+                AvailableLanguages = languages.Select(x => new SelectListItem
+                {
+                    Value = x.LanguageId.ToString(),
+                    Text = x.Name
+                })
             };
 
             return View(model);
@@ -61,13 +68,38 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 ((int)model.Mode).ToString()
             );
 
+            var activeLanguageIds = model.ActiveAssessmentLanguageIds ?? new List<int>();
+
+            moduleController.UpdateModuleSetting(
+                ModuleContext.ModuleId,
+                "ActiveAssessmentLanguageIds",
+                string.Join(",", activeLanguageIds.Distinct())
+            );
+
             TempData["SettingsSaved"] = true;
 
             return RedirectToAction("Index", "Item");
-
-
         }
 
+        private List<int> GetActiveAssessmentLanguageIds()
+        {
+            var value = ModuleContext.Configuration.ModuleSettings["ActiveAssessmentLanguageIds"] as string;
 
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new List<int>();
+            }
+
+            return value
+                .Split(',')
+                .Select(x =>
+                {
+                    int id;
+                    return int.TryParse(x, out id) ? id : 0;
+                })
+                .Where(x => x > 0)
+                .Distinct()
+                .ToList();
+        }
     }
 }

@@ -385,7 +385,9 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
-                Languages = _lookupService.GetLanguages(),
+                Languages = mode == QuizLearnMode.LevelAssessment
+                    ? GetActiveAssessmentLanguages()
+                    : _lookupService.GetLanguages(),
                 Levels = _lookupService.GetLevels(),
                 Skills = _lookupService.GetSkills(),
                 PaceTypes = _lookupService.GetPaceTypes(),
@@ -458,6 +460,13 @@ namespace Dnn.Flow.QuizLearn.Controllers
             {
                 var fresh = BuildStartViewModel(GetModuleMode());
                 ModelState.AddModelError("", "A nyelv kiválasztása kötelező.");
+                return View("StartAssessment", fresh);
+            }
+
+            if (!IsAssessmentLanguageAllowed(languageId))
+            {
+                var fresh = BuildStartViewModel(GetModuleMode());
+                ModelState.AddModelError("", "A kiválasztott nyelvhez jelenleg nincs engedélyezett szintfelmérő.");
                 return View("StartAssessment", fresh);
             }
 
@@ -672,5 +681,53 @@ namespace Dnn.Flow.QuizLearn.Controllers
         //{
         //    return User != null && User.UserID > 0;
         //}
+
+        private List<int> GetActiveAssessmentLanguageIds()
+        {
+            var value = ModuleContext.Configuration.ModuleSettings["ActiveAssessmentLanguageIds"] as string;
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new List<int>();
+            }
+
+            return value
+                .Split(',')
+                .Select(x =>
+                {
+                    int id;
+                    return int.TryParse(x, out id) ? id : 0;
+                })
+                .Where(x => x > 0)
+                .Distinct()
+                .ToList();
+        }
+
+        private IEnumerable<LanguageInfo> GetActiveAssessmentLanguages()
+        {
+            var allLanguages = _lookupService.GetLanguages().ToList();
+            var activeLanguageIds = GetActiveAssessmentLanguageIds();
+
+            if (!activeLanguageIds.Any())
+            {
+                return allLanguages;
+            }
+
+            return allLanguages
+                .Where(x => activeLanguageIds.Contains(x.LanguageId))
+                .ToList();
+        }
+
+        private bool IsAssessmentLanguageAllowed(int languageId)
+        {
+            var activeLanguageIds = GetActiveAssessmentLanguageIds();
+
+            if (!activeLanguageIds.Any())
+            {
+                return true;
+            }
+
+            return activeLanguageIds.Contains(languageId);
+        }
     }
 }
