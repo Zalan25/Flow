@@ -12,6 +12,10 @@ namespace Dnn.Flow.QuizLearn.Models
     {
         public QuizLearnMode Mode { get; set; }
 
+        public List<int> ActiveAssessmentLanguageIds { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableLanguages { get; set; }
+
         public IEnumerable<SelectListItem> AvailableModes
         {
             get
