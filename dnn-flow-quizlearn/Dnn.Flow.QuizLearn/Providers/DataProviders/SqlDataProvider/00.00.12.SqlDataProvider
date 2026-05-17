@@ -493,35 +493,550 @@ WHERE l.[IsActive] = 1;
 GO
 
 /************************************************************/
-/*****        QuizLearn test header seed fix            *****/
+/*****  QuizLearn - 5 kérdéses fix szintfelmérők seed       *****/
+/*****  Csak TestCode = 05: 8 nyelv x 5 kérdés              *****/
+/*****  Provider-kompatibilis: {databaseOwner}/{objectQualifier} *****/
 /************************************************************/
+
+SET NOCOUNT ON;
 
 DECLARE @ModuleId INT = 0;
 
-INSERT INTO {databaseOwner}[{objectQualifier}lm_tests]
+/* Alap törzsadatok - csak akkor szúrja be, ha hiányoznak */
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'en') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Angol', N'en', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'el') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Görög', N'el', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'zh') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Kínai', N'zh', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'ru') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Orosz', N'ru', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'ja') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Japán', N'ja', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'tr') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Török', N'tr', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'hr') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Horvát', N'hr', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_languages] WHERE [Code] = N'pt') INSERT INTO {databaseOwner}[{objectQualifier}lm_languages] ([Name], [Code], [IsActive]) VALUES (N'Portugál', N'pt', 1);
+
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A1') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder]) VALUES (N'A1', 1);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'A2') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder]) VALUES (N'A2', 2);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B1') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder]) VALUES (N'B1', 3);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'B2') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder]) VALUES (N'B2', 4);
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_levels] WHERE [LevelName] = N'C1') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_levels] ([LevelName], [LevelOrder]) VALUES (N'C1', 5);
+
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'SingleChoice') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName]) VALUES (N'SingleChoice');
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'MultipleChoice') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName]) VALUES (N'MultipleChoice');
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'TrueFalse') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName]) VALUES (N'TrueFalse');
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_question_types] WHERE [TypeName] = N'Translation') INSERT INTO {databaseOwner}[{objectQualifier}lm_question_types] ([TypeName]) VALUES (N'Translation');
+
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Vocabulary') INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName]) VALUES (N'Vocabulary');
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Reading') INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName]) VALUES (N'Reading');
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Listening') INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName]) VALUES (N'Listening');
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'Practice') INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName]) VALUES (N'Practice');
+IF NOT EXISTS (SELECT 1 FROM {databaseOwner}[{objectQualifier}lm_skill_types] WHERE [SkillName] = N'SelfStudy') INSERT INTO {databaseOwner}[{objectQualifier}lm_skill_types] ([SkillName]) VALUES (N'SelfStudy');
+
+IF OBJECT_ID('tempdb..#QuestionSeed') IS NOT NULL DROP TABLE #QuestionSeed;
+IF OBJECT_ID('tempdb..#AnswerSeed') IS NOT NULL DROP TABLE #AnswerSeed;
+IF OBJECT_ID('tempdb..#QuestionMap') IS NOT NULL DROP TABLE #QuestionMap;
+IF OBJECT_ID('tempdb..#TestMap') IS NOT NULL DROP TABLE #TestMap;
+
+CREATE TABLE #QuestionSeed
 (
-    [ModuleId],
-    [TestName],
-    [Characterization],
-    [LanguageId],
-    [TotalPoints],
-    [IsRandom],
-    [IsActive]
+    SeedId INT IDENTITY(1,1) PRIMARY KEY,
+    LangCode NVARCHAR(10) NOT NULL,
+    TestCode NVARCHAR(10) NOT NULL,
+    QuestionOrder INT NOT NULL,
+    LevelName NVARCHAR(20) NOT NULL,
+    TypeName NVARCHAR(50) NOT NULL,
+    SkillName NVARCHAR(50) NOT NULL,
+    Points INT NOT NULL,
+    QuestionText NVARCHAR(1000) NOT NULL
+);
+
+CREATE TABLE #AnswerSeed
+(
+    SeedId INT NOT NULL,
+    AnswerOrder INT NOT NULL,
+    AnswerText NVARCHAR(500) NOT NULL,
+    IsCorrect BIT NOT NULL
+);
+
+CREATE TABLE #QuestionMap
+(
+    SeedId INT PRIMARY KEY,
+    QuestionId INT NOT NULL
+);
+
+CREATE TABLE #TestMap
+(
+    TestCode NVARCHAR(10) NOT NULL,
+    LangCode NVARCHAR(10) NOT NULL,
+    TestId INT NOT NULL,
+    PRIMARY KEY (TestCode, LangCode)
+);
+
+DECLARE @LastSeedId INT;
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'en',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'Choose the correct answer: My friend and I ___ movies on Friday.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'watch',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'watches',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'watching',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'watched',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'en',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'True or false: "I have two classes today" talks about school.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'True',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'False',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'en',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'Select all correct answers: Which words can describe a film review?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'exciting',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'predictable',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'tennis',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'homework',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'en',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'Choose the correct answer: Yesterday we ___ a comedy series.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'watched',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'watch',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'watches',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'watching',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'en',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'Choose the correct answer: Which sentence sounds the most natural in a formal review?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'The episode succeeds because it combines humor with emotional depth.',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'The episode is mega good and stuff.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'Episode combines funny with cry deep.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'I like it because yes.',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'el',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'Διάλεξε τη σωστή απάντηση: Ο φίλος μου κι εγώ ___ ταινίες την Παρασκευή.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'βλέπουμε',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'βλέπει',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'βλέπω',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'είδαμε',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'el',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'Σωστό ή λάθος: Η πρόταση «Έχω δύο μαθήματα σήμερα» μιλά για το σχολείο.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Σωστό',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Λάθος',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'el',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'Επίλεξε όλες τις σωστές απαντήσεις: Ποιες λέξεις μπορούν να περιγράψουν κριτική ταινίας;');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'συναρπαστική',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'προβλέψιμη',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'τένις',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'εργασία',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'el',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'Διάλεξε τη σωστή απάντηση: Χθες ___ μια κωμική σειρά.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'είδαμε',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'βλέπουμε',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'βλέπει',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'βλέποντας',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'el',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'Διάλεξε τη σωστή απάντηση: Ποια πρόταση ακούγεται πιο φυσική σε επίσημη κριτική;');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Το επεισόδιο πετυχαίνει επειδή συνδυάζει χιούμορ με συναισθηματικό βάθος.',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Το επεισόδιο είναι σούπερ καλό και τέτοια.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'Επεισόδιο συνδυάζει αστείο με κλάμα βαθύ.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'Μου αρέσει γιατί ναι.',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'zh',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'选择正确答案：我和我的朋友星期五___电影。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'看',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'看了的',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'看的',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'看着去',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'zh',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'判断正误：“我今天有两节课”说的是学校。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'对',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'错',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'zh',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'选择所有正确答案：哪些词可以描述影评？');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'精彩',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'可预测',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'网球',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'作业',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'zh',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'选择正确答案：昨天我们___一部喜剧。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'看了',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'看',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'看着',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'会看',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'zh',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'选择正确答案：哪句话最适合正式影评？');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'这一集成功地把幽默和情感深度结合在一起。',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'这一集超级好之类的。',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'集数搞笑加哭很深。',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'我喜欢，因为是的。',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ru',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'Выберите правильный ответ: Мой друг и я ___ фильмы по пятницам.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'смотрим',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'смотрит',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'смотреть',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'смотрели',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ru',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'Верно или неверно: Фраза «У меня сегодня два урока» относится к школе.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Верно',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Неверно',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ru',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'Выберите все правильные ответы: Какие слова подходят для описания рецензии на фильм?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'захватывающий',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'предсказуемый',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'теннис',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'домашнее задание',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ru',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'Выберите правильный ответ: Вчера мы ___ комедийный сериал.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'смотрели',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'смотрим',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'смотрит',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'смотреть',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ru',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'Выберите правильный ответ: Какое предложение звучит естественнее в официальной рецензии?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Эпизод удачен, потому что сочетает юмор с эмоциональной глубиной.',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Эпизод мега хороший и всё такое.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'Эпизод смешное с плакать глубоко.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'Мне нравится потому что да.',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ja',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'正しい答えを選びなさい：友達と私は金曜日に映画を___。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'見ます',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'見ますた',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'見るます',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'見てです',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ja',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'正しいか間違いか：「今日は授業が二つあります」は学校について話している。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'正しい',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'間違い',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ja',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'正しい答えをすべて選びなさい：映画レビューを表す言葉はどれですか。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'わくわくする',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'予想しやすい',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'テニス',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'宿題',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ja',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'正しい答えを選びなさい：昨日、私たちはコメディーシリーズを___。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'見ました',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'見ます',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'見ています',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'見るでしょう',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'ja',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'正しい答えを選びなさい：正式なレビューに最も自然な文はどれですか。');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'このエピソードは、ユーモアと感情的な深みをうまく結び付けています。',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'この回は超よくてそんな感じです。',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'回は面白いと泣く深いを混ぜます。',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'好きです、はいだから。',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'tr',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'Doğru cevabı seç: Arkadaşım ve ben cuma günü film ___.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'izleriz',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'izler',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'izlemek',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'izledik',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'tr',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'Doğru mu yanlış mı: “Bugün iki dersim var” cümlesi okulla ilgilidir.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Doğru',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Yanlış',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'tr',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'Tüm doğru cevapları seç: Hangi kelimeler bir film eleştirisini anlatabilir?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'heyecan verici',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'tahmin edilebilir',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'tenis',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'ödev',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'tr',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'Doğru cevabı seç: Dün bir komedi dizisi ___.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'izledik',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'izleriz',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'izliyor',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'izlemek',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'tr',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'Doğru cevabı seç: Resmî bir eleştiri için en doğal cümle hangisidir?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Bölüm, mizahı duygusal derinlikle birleştirdiği için başarılıdır.',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Bölüm aşırı iyi falan.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'Bölüm komik ile ağlama derin yapar.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'Sevdim çünkü evet.',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'hr',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'Odaberi točan odgovor: Moj prijatelj i ja petkom ___ filmove.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'gledamo',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'gleda',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'gledati',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'gledali smo',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'hr',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'Točno ili netočno: Rečenica „Danas imam dva sata” govori o školi.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Točno',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Netočno',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'hr',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'Odaberi sve točne odgovore: Koje riječi mogu opisati filmsku recenziju?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'uzbudljiv',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'predvidljiv',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'tenis',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'zadaća',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'hr',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'Odaberi točan odgovor: Jučer smo ___ humorističnu seriju.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'gledali',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'gledamo',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'gleda',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'gledati',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'hr',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'Odaberi točan odgovor: Koja rečenica zvuči najprirodnije u službenoj recenziji?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Epizoda uspijeva jer spaja humor s emocionalnom dubinom.',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Epizoda je mega dobra i to.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'Epizoda smiješno s plakati duboko.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'Sviđa mi se jer da.',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'pt',N'05',1,N'A1',N'SingleChoice',N'Practice',1,N'Escolhe a resposta correta: O meu amigo e eu ___ filmes à sexta-feira.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'vemos',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'vê',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'ver',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'vimos ontem',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'pt',N'05',2,N'B1',N'TrueFalse',N'SelfStudy',3,N'Verdadeiro ou falso: A frase “Tenho duas aulas hoje” fala sobre a escola.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'Verdadeiro',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'Falso',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'pt',N'05',3,N'B2',N'MultipleChoice',N'Vocabulary',4,N'Seleciona todas as respostas corretas: Que palavras podem descrever uma crítica de cinema?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'entusiasmante',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'previsível',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'ténis',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'trabalho de casa',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'pt',N'05',4,N'A2',N'SingleChoice',N'Reading',2,N'Escolhe a resposta correta: Ontem nós ___ uma série de comédia.');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'vimos',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'vemos',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'vê',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'ver',0);
+INSERT INTO #QuestionSeed(LangCode,TestCode,QuestionOrder,LevelName,TypeName,SkillName,Points,QuestionText) VALUES (N'pt',N'05',5,N'C1',N'SingleChoice',N'Listening',5,N'Escolhe a resposta correta: Qual frase soa mais natural numa crítica formal?');
+SET @LastSeedId = SCOPE_IDENTITY();
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,1,N'O episódio resulta porque combina humor com profundidade emocional.',1);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,2,N'O episódio é mega bom e cenas.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,3,N'Episódio mistura engraçado com chorar fundo.',0);
+INSERT INTO #AnswerSeed(SeedId,AnswerOrder,AnswerText,IsCorrect) VALUES (@LastSeedId,4,N'Gosto porque sim.',0);
+
+/* Kérdések és válaszok beszúrása/frissítése */
+DECLARE
+    @SeedId INT,
+    @LangCode NVARCHAR(10),
+    @LevelName NVARCHAR(20),
+    @TypeName NVARCHAR(50),
+    @SkillName NVARCHAR(50),
+    @Points INT,
+    @QuestionText NVARCHAR(1000),
+    @QuestionId INT;
+
+DECLARE qcur CURSOR LOCAL FAST_FORWARD FOR
+SELECT SeedId, LangCode, LevelName, TypeName, SkillName, Points, QuestionText
+FROM #QuestionSeed
+ORDER BY SeedId;
+
+OPEN qcur;
+FETCH NEXT FROM qcur INTO @SeedId, @LangCode, @LevelName, @TypeName, @SkillName, @Points, @QuestionText;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    SELECT @QuestionId = q.QuestionId
+    FROM {databaseOwner}[{objectQualifier}lm_questions] q
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_languages] l
+        ON l.LanguageId = q.LanguageId
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_question_levels] ql
+        ON ql.QuestionLevelId = q.QuestionLevelId
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_question_types] qt
+        ON qt.QuestionTypeId = q.QuestionTypeId
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_skill_types] st
+        ON st.SkillTypeId = q.SkillTypeId
+    WHERE q.ModuleId = @ModuleId
+      AND l.Code = @LangCode
+      AND ql.LevelName = @LevelName
+      AND qt.TypeName = @TypeName
+      AND st.SkillName = @SkillName
+      AND q.QuestionText = @QuestionText;
+
+    IF @QuestionId IS NULL
+    BEGIN
+        INSERT INTO {databaseOwner}[{objectQualifier}lm_questions]
+        (
+            ModuleId,
+            QuestionText,
+            LanguageId,
+            QuestionLevelId,
+            QuestionTypeId,
+            SkillTypeId,
+            Points,
+            IsActive
+        )
+        SELECT
+            @ModuleId,
+            @QuestionText,
+            l.LanguageId,
+            ql.QuestionLevelId,
+            qt.QuestionTypeId,
+            st.SkillTypeId,
+            @Points,
+            1
+        FROM {databaseOwner}[{objectQualifier}lm_languages] l
+        CROSS JOIN {databaseOwner}[{objectQualifier}lm_question_levels] ql
+        CROSS JOIN {databaseOwner}[{objectQualifier}lm_question_types] qt
+        CROSS JOIN {databaseOwner}[{objectQualifier}lm_skill_types] st
+        WHERE l.Code = @LangCode
+          AND ql.LevelName = @LevelName
+          AND qt.TypeName = @TypeName
+          AND st.SkillName = @SkillName;
+
+        SET @QuestionId = SCOPE_IDENTITY();
+    END
+    ELSE
+    BEGIN
+        UPDATE {databaseOwner}[{objectQualifier}lm_questions]
+        SET Points = @Points,
+            IsActive = 1
+        WHERE QuestionId = @QuestionId;
+
+        DELETE FROM {databaseOwner}[{objectQualifier}lm_answers]
+        WHERE QuestionId = @QuestionId;
+    END
+
+    INSERT INTO #QuestionMap (SeedId, QuestionId)
+    VALUES (@SeedId, @QuestionId);
+
+    INSERT INTO {databaseOwner}[{objectQualifier}lm_answers]
+    (
+        ModuleId,
+        QuestionId,
+        AnswerText,
+        IsCorrect,
+        AnswerOrder
+    )
+    SELECT
+        @ModuleId,
+        @QuestionId,
+        AnswerText,
+        IsCorrect,
+        AnswerOrder
+    FROM #AnswerSeed
+    WHERE SeedId = @SeedId
+    ORDER BY AnswerOrder;
+
+    SET @QuestionId = NULL;
+
+    FETCH NEXT FROM qcur INTO @SeedId, @LangCode, @LevelName, @TypeName, @SkillName, @Points, @QuestionText;
+END
+
+CLOSE qcur;
+DEALLOCATE qcur;
+
+/* Csak az 5 kérdéses tesztek létrehozása/frissítése */
+DECLARE
+    @Code NVARCHAR(10),
+    @LanguageId INT,
+    @LangName NVARCHAR(100),
+    @TestId INT,
+    @TestName NVARCHAR(150),
+    @TotalPoints INT;
+
+DECLARE lcur CURSOR LOCAL FAST_FORWARD FOR
+SELECT DISTINCT LangCode
+FROM #QuestionSeed
+WHERE TestCode = N'05'
+ORDER BY LangCode;
+
+OPEN lcur;
+FETCH NEXT FROM lcur INTO @Code;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    SELECT
+        @LanguageId = LanguageId,
+        @LangName = [Name]
+    FROM {databaseOwner}[{objectQualifier}lm_languages]
+    WHERE Code = @Code;
+
+    SET @TestName = @LangName + N' fix szintfelmérő - 5 kérdés';
+
+    SELECT @TotalPoints = SUM(Points)
+    FROM #QuestionSeed
+    WHERE LangCode = @Code
+      AND TestCode = N'05';
+
+    SELECT @TestId = TestId
+    FROM {databaseOwner}[{objectQualifier}lm_tests]
+    WHERE ModuleId = @ModuleId
+      AND LanguageId = @LanguageId
+      AND TestName = @TestName;
+
+    IF @TestId IS NULL
+    BEGIN
+        INSERT INTO {databaseOwner}[{objectQualifier}lm_tests]
+        (
+            ModuleId,
+            TestName,
+            Characterization,
+            LanguageId,
+            TotalPoints,
+            IsRandom,
+            IsActive
+        )
+        VALUES
+        (
+            @ModuleId,
+            @TestName,
+            N'5 kérdéses fix szintfelmérő: A1, A2, B1, B2 és C1 szintből 1-1 kérdés.',
+            @LanguageId,
+            @TotalPoints,
+            0,
+            1
+        );
+
+        SET @TestId = SCOPE_IDENTITY();
+    END
+    ELSE
+    BEGIN
+        UPDATE {databaseOwner}[{objectQualifier}lm_tests]
+        SET Characterization = N'5 kérdéses fix szintfelmérő: A1, A2, B1, B2 és C1 szintből 1-1 kérdés.',
+            TotalPoints = @TotalPoints,
+            IsRandom = 0,
+            IsActive = 1
+        WHERE TestId = @TestId;
+
+        DELETE FROM {databaseOwner}[{objectQualifier}lm_test_questions]
+        WHERE TestId = @TestId;
+    END
+
+    INSERT INTO #TestMap (TestCode, LangCode, TestId)
+    VALUES (N'05', @Code, @TestId);
+
+    SET @LanguageId = NULL;
+    SET @LangName = NULL;
+    SET @TestId = NULL;
+    SET @TestName = NULL;
+    SET @TotalPoints = NULL;
+
+    FETCH NEXT FROM lcur INTO @Code;
+END
+
+CLOSE lcur;
+DEALLOCATE lcur;
+
+INSERT INTO {databaseOwner}[{objectQualifier}lm_test_questions]
+(
+    ModuleId,
+    TestId,
+    QuestionId,
+    QuestionOrder
 )
 SELECT
     @ModuleId,
-    l.[Name] + N' szintfelmérő',
-    N'Automatikusan generált szintfelmérő.',
-    l.[LanguageId],
-    0,
-    1,
-    1
-FROM {databaseOwner}[{objectQualifier}lm_languages] l
-WHERE l.[IsActive] = 1
-  AND NOT EXISTS (
-      SELECT 1
-      FROM {databaseOwner}[{objectQualifier}lm_tests] t
-      WHERE t.[ModuleId] = @ModuleId
-        AND t.[LanguageId] = l.[LanguageId]
-  );
+    tm.TestId,
+    qm.QuestionId,
+    qs.QuestionOrder
+FROM #QuestionSeed qs
+INNER JOIN #QuestionMap qm
+    ON qm.SeedId = qs.SeedId
+INNER JOIN #TestMap tm
+    ON tm.LangCode = qs.LangCode
+   AND tm.TestCode = qs.TestCode
+WHERE qs.TestCode = N'05'
+ORDER BY
+    qs.LangCode,
+    qs.QuestionOrder;
+
+/* Ellenőrzés: minden létrehozott teszt pontosan 5 kérdéses legyen */
+IF EXISTS
+(
+    SELECT 1
+    FROM #TestMap tm
+    INNER JOIN {databaseOwner}[{objectQualifier}lm_test_questions] tq
+        ON tq.TestId = tm.TestId
+    GROUP BY tm.TestId
+    HAVING COUNT(*) <> 5
+)
+BEGIN
+    RAISERROR(N'A 5 kérdéses szintfelmérő seed hibás: van olyan teszt, amely nem pontosan 5 kérdésből áll.', 16, 1);
+END
+
+IF OBJECT_ID('tempdb..#QuestionSeed') IS NOT NULL DROP TABLE #QuestionSeed;
+IF OBJECT_ID('tempdb..#AnswerSeed') IS NOT NULL DROP TABLE #AnswerSeed;
+IF OBJECT_ID('tempdb..#QuestionMap') IS NOT NULL DROP TABLE #QuestionMap;
+IF OBJECT_ID('tempdb..#TestMap') IS NOT NULL DROP TABLE #TestMap;
 GO
