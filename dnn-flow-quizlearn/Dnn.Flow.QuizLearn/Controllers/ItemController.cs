@@ -388,9 +388,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             return new AssessmentStartViewModel
             {
                 ModuleId = ModuleContext.ModuleId,
-                Languages = mode == QuizLearnMode.LevelAssessment
-                    ? GetActiveAssessmentLanguages()
-                    : _lookupService.GetLanguages(),
+                Languages = GetActiveAssessmentLanguages(),
                 Levels = _lookupService.GetLevels(),
                 Skills = _lookupService.GetSkills(),
                 PaceTypes = _lookupService.GetPaceTypes(),

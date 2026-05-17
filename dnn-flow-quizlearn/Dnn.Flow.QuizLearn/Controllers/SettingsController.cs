@@ -37,10 +37,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             var activeLanguageIds = GetActiveAssessmentLanguageIds();
 
-            if (!activeLanguageIds.Any())
-            {
-                activeLanguageIds = languages.Select(x => x.LanguageId).ToList();
-            }
 
             var model = new SettingsViewModel
             {
@@ -68,12 +64,24 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 ((int)model.Mode).ToString()
             );
 
-            var activeLanguageIds = model.ActiveAssessmentLanguageIds ?? new List<int>();
+            var postedLanguageIds = Request.Form.GetValues("ActiveAssessmentLanguageIds");
+
+            var activeLanguageIds = postedLanguageIds == null
+                ? new List<int>()
+                : postedLanguageIds
+                    .Select(x =>
+                    {
+                        int id;
+                        return int.TryParse(x, out id) ? id : 0;
+                    })
+                    .Where(x => x > 0)
+                    .Distinct()
+                    .ToList();
 
             moduleController.UpdateModuleSetting(
                 ModuleContext.ModuleId,
                 "ActiveAssessmentLanguageIds",
-                string.Join(",", activeLanguageIds.Distinct())
+                string.Join(",", activeLanguageIds)
             );
 
             TempData["SettingsSaved"] = true;
