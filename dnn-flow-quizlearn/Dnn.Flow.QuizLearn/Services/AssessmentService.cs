@@ -178,22 +178,22 @@ namespace Dnn.Flow.QuizLearn.Services
             bool passedB2 = PassedLevel("B2", b2Correct, b2Count);
             bool passedC1 = PassedLevel("C1", c1Correct, c1Count);
 
-            if (passedA1 && passedA2 && passedB1 && passedB2 && passedC1)
+            if (passedC1)
             {
                 return 5; // C1
             }
 
-            if (passedA1 && passedA2 && passedB1 && passedB2)
+            if (passedB2)
             {
                 return 4; // B2
             }
 
-            if (passedA1 && passedA2 && passedB1)
+            if (passedB1)
             {
                 return 3; // B1
             }
 
-            if (passedA1 && passedA2)
+            if (passedA2)
             {
                 return 2; // A2
             }
