@@ -21,21 +21,50 @@
 <div class="form-group">
     <label>Aktív szintfelmérő nyelvek</label>
 
+    <input type="hidden"
+           id="ActiveAssessmentLanguageIds"
+           name="ActiveAssessmentLanguageIds"
+           value="@string.Join(",", Model.ActiveAssessmentLanguageIds)" />
+
     @foreach (var language in Model.AvailableLanguages)
     {
         var languageId = int.Parse(language.Value);
 
-    <div class="checkbox">
-        <label>
-            <input type="checkbox"
-                   name="ActiveAssessmentLanguageIds"
-                   value="@language.Value"
-                   @(Model.ActiveAssessmentLanguageIds.Contains(languageId) ? "checked" : "") />
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"
+                       class="active-language-checkbox"
+                       value="@language.Value"
+                       @(Model.ActiveAssessmentLanguageIds.Contains(languageId) ? "checked" : "") />
 
-            @language.Text
-        </label>
-    </div>
+                @language.Text
+            </label>
+        </div>
     }
+
+    <script>(function () {
+        function updateActiveLanguages() {
+            var values = [];
+
+            var checkboxes = document.querySelectorAll('.active-language-checkbox');
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    values.push(checkboxes[i].value);
+                }
+            }
+
+            document.getElementById('ActiveAssessmentLanguageIds').value = values.join(',');
+        }
+
+        var checkboxes = document.querySelectorAll('.active-language-checkbox');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('change', updateActiveLanguages);
+        }
+
+        updateActiveLanguages();
+    })();</script>
 </div>
 
 <div class="alert alert-info">

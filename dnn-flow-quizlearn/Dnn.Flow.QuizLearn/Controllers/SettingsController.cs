@@ -64,24 +64,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
                 ((int)model.Mode).ToString()
             );
 
-            var postedLanguageIds = Request.Form.GetValues("ActiveAssessmentLanguageIds");
-
-            var activeLanguageIds = postedLanguageIds == null
-                ? new List<int>()
-                : postedLanguageIds
-                    .Select(x =>
-                    {
-                        int id;
-                        return int.TryParse(x, out id) ? id : 0;
-                    })
-                    .Where(x => x > 0)
-                    .Distinct()
-                    .ToList();
+            var activeLanguageIds = Request.Form["ActiveAssessmentLanguageIds"] ?? string.Empty;
 
             moduleController.UpdateModuleSetting(
                 ModuleContext.ModuleId,
                 "ActiveAssessmentLanguageIds",
-                string.Join(",", activeLanguageIds)
+                activeLanguageIds
             );
 
             TempData["SettingsSaved"] = true;

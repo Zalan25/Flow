@@ -720,7 +720,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (!activeLanguageIds.Any())
             {
-                return allLanguages;
+                return new List<LanguageInfo>();
             }
 
             return allLanguages
@@ -734,7 +734,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (!activeLanguageIds.Any())
             {
-                return true;
+                return false;
             }
 
             return activeLanguageIds.Contains(languageId);
