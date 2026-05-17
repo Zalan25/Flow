@@ -113,6 +113,9 @@ IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_pace_types]', 'U') IS NOT NULL
 IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_assessment_modes]', 'U') IS NOT NULL
     DROP TABLE {databaseOwner}[{objectQualifier}lm_assessment_modes]
 
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}lm_product_mappings]', 'U') IS NOT NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}lm_product_mappings]
+
 
 IF EXISTS (
     SELECT *
