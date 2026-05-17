@@ -31,11 +31,6 @@ namespace Dnn.Flow.QuizLearn.Models
                     {
                         Value = ((int)QuizLearnMode.LevelAssessment).ToString(),
                         Text = "Csak szintfelmérő"
-                    },
-                    new SelectListItem
-                    {
-                        Value = ((int)QuizLearnMode.RecommendationWithLevelAssessment).ToString(),
-                        Text = "Termék ajánló szintfelmérővel"
                     }
                 };
             }

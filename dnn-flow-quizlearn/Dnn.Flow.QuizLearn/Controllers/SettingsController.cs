@@ -30,7 +30,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             QuizLearnMode mode;
             if (!Enum.TryParse(modeValue, out mode))
             {
-                mode = QuizLearnMode.RecommendationWithLevelAssessment;
+                mode = QuizLearnMode.Recommendation;
             }
 
             var languages = _lookupService.GetLanguages().ToList();

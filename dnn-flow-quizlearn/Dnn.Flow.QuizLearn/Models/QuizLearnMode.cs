@@ -6,6 +6,5 @@ namespace Dnn.Flow.QuizLearn.Models
     {
         Recommendation = 1,
         LevelAssessment = 2,
-        RecommendationWithLevelAssessment = 3
     }
 }

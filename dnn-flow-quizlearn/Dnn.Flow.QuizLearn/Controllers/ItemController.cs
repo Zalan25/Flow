@@ -61,7 +61,6 @@ namespace Dnn.Flow.QuizLearn.Controllers
                     return View("StartAssessment", BuildStartViewModel(mode));
 
                 case QuizLearnMode.Recommendation:
-                case QuizLearnMode.RecommendationWithLevelAssessment:
                 default:
                     return View("Start", BuildStartViewModel(mode));
             }
@@ -82,6 +81,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (autoStart == 1 && languageId.HasValue && languageId.Value > 0)
             {
+                if (!IsAssessmentLanguageAllowed(languageId.Value))
+                {
+                    var fresh = BuildStartViewModel(GetModuleMode());
+                    ModelState.AddModelError("", "A kiválasztott nyelvhez jelenleg nincs engedélyezett szintfelmérő.");
+                    return View("StartAssessment", fresh);
+                }
                 var session = new AssessmentSessionInfo
                 {
                     ModuleId = ModuleContext.ModuleId,
@@ -130,7 +135,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
             var model = new AssessmentStartViewModel
             {
                 AssessmentModeId = levelTestMode.AssessmentModeId,
-                Languages = _lookupService.GetLanguages()
+                Languages = GetActiveAssessmentLanguages()
             };
             ViewBag.ModuleMode = GetModuleMode();
             return View(model);
@@ -193,19 +198,17 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             var needLevelTestFromForm =
                 string.Equals(Request.Form["NeedLevelTest"], "true", StringComparison.OrdinalIgnoreCase);
-
             var needLevelTest =
                 moduleMode == QuizLearnMode.LevelAssessment ||
-                needLevelTestFromForm ||
-                (
-                    moduleMode == QuizLearnMode.RecommendationWithLevelAssessment &&
-                    !model.SelectedLevelId.HasValue
-                );
+                needLevelTestFromForm;
 
-            if (moduleMode == QuizLearnMode.Recommendation && !model.SelectedLevelId.HasValue && !needLevelTest)
+            if (moduleMode == QuizLearnMode.Recommendation &&
+                !model.SelectedLevelId.HasValue &&
+                !needLevelTest)
             {
                 var fresh = BuildStartViewModel(moduleMode);
                 ViewBag.ServerValidationStep = 3;
+                ModelState.AddModelError("", "Válaszd ki a jelenlegi szintedet.");
                 return View("Start", fresh);
             }
 
@@ -404,12 +407,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (!int.TryParse(modeValue, out parsedMode))
             {
-                return QuizLearnMode.RecommendationWithLevelAssessment;
+                return QuizLearnMode.Recommendation;
             }
 
             if (!Enum.IsDefined(typeof(QuizLearnMode), parsedMode))
             {
-                return QuizLearnMode.RecommendationWithLevelAssessment;
+                return QuizLearnMode.Recommendation;
             }
 
             return (QuizLearnMode)parsedMode;
