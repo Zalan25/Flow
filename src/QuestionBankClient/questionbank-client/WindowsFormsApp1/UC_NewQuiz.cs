@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
+using System.Net.Http;
+using System.Net.Http.Json; // Új hálózati csomag
 
 namespace QuestionBankClient
 {
@@ -14,24 +15,24 @@ namespace QuestionBankClient
             InitializeComponent();
         }
 
-        // --- NAVIGÁCIÓ (Az eredeti kódod, amit pótoltunk) ---
-
+        // Átlépés a kérdések hozzáadásához
         private void btnAddQuestions_Click(object sender, EventArgs e)
         {
             var main = this.ParentForm as Form1;
             if (main != null)
             {
-                // ELMENTJÜK A CÍMET ÉS A LEÍRÁST A MEMÓRIÁBA
+                // Adatok mentése a memóriába
                 main.ActiveQuiz.Title = txtTestName.Text;
                 main.ActiveQuiz.Description = txtDescription.Text;
 
-                // Utána jöhet a váltás a TypeSelector-ra
+                // Váltás a TypeSelectorra
                 main.pnlbetamain.Controls.Clear();
                 UC_TypeSelector selector = new UC_TypeSelector { Dock = DockStyle.Fill };
                 main.pnlbetamain.Controls.Add(selector);
             }
         }
 
+        // Visszalépés a start kártyára
         private void btnBack_Click(object sender, EventArgs e)
         {
             pnlMainContent.Controls.Clear();
@@ -39,127 +40,66 @@ namespace QuestionBankClient
             pnlMainContent.Controls.Add(pnlStartCard);
         }
 
-        // --- ADATBÁZIS MENTÉS (A funkcionalitás) ---
-
-        private void btnFinalSave_Click(object sender, EventArgs e)
+        // Kérdőív mentése API-n keresztül
+        private async void btnFinalSave_Click(object sender, EventArgs e)
         {
-            // Megkeressük a kérdéseket tároló TypeSelectort
             Form1 mainForm = (Form1)this.ParentForm;
             var typeSelector = mainForm.pnlmain.Controls.OfType<UC_TypeSelector>().FirstOrDefault();
 
-            if (typeSelector == null || string.IsNullOrWhiteSpace(txtTestName.Text))
+            if (string.IsNullOrWhiteSpace(txtTestName.Text))
             {
-                MessageBox.Show("Hiba: Adj meg egy nevet és legalább egy kérdést!");
+                MessageBox.Show("Hiba: Adj meg egy nevet a kérdőívnek!");
                 return;
+            }
+
+            // Objektum frissítése a mezők alapján
+            mainForm.ActiveQuiz.Title = txtTestName.Text;
+            mainForm.ActiveQuiz.Description = txtDescription.Text;
+
+            // Ha nyitva van a kártyalista, összeszedjük a kérdéseket
+            if (typeSelector != null)
+            {
+                var flp = typeSelector.Controls.Find("flpQuestionList", true).FirstOrDefault() as FlowLayoutPanel;
+                if (flp != null)
+                {
+                    mainForm.ActiveQuiz.Questions.Clear();
+                    foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
+                    {
+                        if (card.Data == null) card.Data = new Question();
+                        mainForm.ActiveQuiz.Questions.Add(card.Data);
+                    }
+                }
             }
 
             try
             {
-                using (SqlConnection conn = DatabaseService.GetConnection())
+                // POST kérés az API mentés végpontjára
+                HttpResponseMessage response = await DatabaseService.Client.PostAsJsonAsync("api/quiz/save", mainForm.ActiveQuiz);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    conn.Open();
-                    using (SqlTransaction transaction = conn.BeginTransaction())
-                    {
-                        try
-                        {
-                            // 1. Teszt (lm_tests) mentése
-                            int testId = SaveQuizHeader(conn, transaction);
-
-                            // 2. Kérdések és válaszok mentése
-                            var flp = typeSelector.Controls.Find("flpQuestionList", true).FirstOrDefault() as FlowLayoutPanel;
-                            int order = 1;
-
-                            foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
-                            {
-                                int questionId = SaveQuestion(card.Data, conn, transaction);
-                                LinkQuestionToTest(testId, questionId, order++, conn, transaction);
-                                SaveAnswers(questionId, card.Data.Answers, conn, transaction);
-                            }
-
-                            transaction.Commit();
-                            MessageBox.Show("A kérdőív sikeresen mentve!");
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            throw ex;
-                        }
-                    }
+                    MessageBox.Show("A kérdőív sikeresen mentve!");
+                    mainForm.btnBack_Click_1(null, null); // Vissza a főoldalra
+                }
+                else
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show("Szerver hiba: " + error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hiba történt: " + ex.Message);
+                MessageBox.Show("Hálózati hiba: " + ex.Message);
             }
         }
 
-        // --- SQL SEGÉDMETÓDUSOK ---
-
-        private int SaveQuizHeader(SqlConnection conn, SqlTransaction trans)
-        {
-            string sql = @"INSERT INTO dbo.lm_tests (ModuleId, TestName, Characterization, LanguageId, TotalPoints, IsRandom, IsActive) 
-                           OUTPUT INSERTED.TestId
-                           VALUES (1, @name, @desc, 1, 0, 0, 1)";
-            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-            {
-                cmd.Parameters.AddWithValue("@name", txtTestName.Text);
-                cmd.Parameters.AddWithValue("@desc", txtDescription.Text);
-                return (int)cmd.ExecuteScalar();
-            }
-        }
-
-        private int SaveQuestion(Question data, SqlConnection conn, SqlTransaction trans)
-        {
-            string sql = @"INSERT INTO dbo.lm_questions (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive) 
-                           OUTPUT INSERTED.QuestionId
-                           VALUES (1, @text, 1, 1, 1, 1, @pts, 1)";
-            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-            {
-                cmd.Parameters.AddWithValue("@text", data.QuestionText);
-                cmd.Parameters.AddWithValue("@pts", data.Points);
-                return (int)cmd.ExecuteScalar();
-            }
-        }
-
-        private void LinkQuestionToTest(int testId, int questionId, int order, SqlConnection conn, SqlTransaction trans)
-        {
-            string sql = "INSERT INTO dbo.lm_test_questions (ModuleId, TestId, QuestionId, QuestionOrder) VALUES (1, @tid, @qid, @ord)";
-            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-            {
-                cmd.Parameters.AddWithValue("@tid", testId);
-                cmd.Parameters.AddWithValue("@qid", questionId);
-                cmd.Parameters.AddWithValue("@ord", order);
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        private void SaveAnswers(int questionId, List<Answer> answers, SqlConnection conn, SqlTransaction trans)
-        {
-            foreach (var ans in answers)
-            {
-                string sql = "INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder) VALUES (1, @qid, @txt, @isc, @ord)";
-                using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-                {
-                    cmd.Parameters.AddWithValue("@qid", questionId);
-                    cmd.Parameters.AddWithValue("@txt", ans.AnswerText);
-                    cmd.Parameters.AddWithValue("@isc", ans.IsCorrect);
-                    cmd.Parameters.AddWithValue("@ord", ans.AnswerOrder);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // --- ÜRES DESIGNER METÓDUSOK ---
+        // Designer kompatibilitási üres metódusok
         private void pnlHeader_Paint(object sender, PaintEventArgs e) { }
         private void pnlMainContent_Paint(object sender, PaintEventArgs e) { }
         private void lblDescription_Click(object sender, EventArgs e) { }
         private void txtDescription_TextChanged(object sender, EventArgs e) { }
         private void lblTestName_Click(object sender, EventArgs e) { }
         private void lblMainTitle_Click(object sender, EventArgs e) { }
-
-        private void pnlMainContent_Paint_1(object sender, PaintEventArgs e)
-        {
-
-        }
+        private void pnlMainContent_Paint_1(object sender, PaintEventArgs e) { }
     }
 }

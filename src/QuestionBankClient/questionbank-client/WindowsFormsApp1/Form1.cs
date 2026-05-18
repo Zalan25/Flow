@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -126,150 +128,53 @@ namespace QuestionBankClient
 
         // --- VÉGLEGES MENTÉS (SQL) ---
 
-        private void btnFinalSave_Click(object sender, EventArgs e)
+        // Végleges mentés hálózati API hívással
+        private async void btnFinalSave_Click(object sender, EventArgs e)
         {
+            // 1. Kártyák összeszedése a felületről
+            var flpArray = this.Controls.Find("flpQuestionList", true);
+            if (flpArray.Length > 0)
+            {
+                var flp = flpArray[0] as FlowLayoutPanel;
+                if (flp != null)
+                {
+                    ActiveQuiz.Questions.Clear();
+                    foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
+                    {
+                        if (card.Data == null) card.Data = new Question();
+                        if (card.Data.Points == 0) card.Data.Points = 1;
+                        ActiveQuiz.Questions.Add(card.Data);
+                    }
+                }
+            }
+
             try
             {
-                using (SqlConnection conn = DatabaseService.GetConnection())
+                // 2. HTTP POST kérés küldése az API-nak (JSON formátumban)
+                HttpResponseMessage response = await DatabaseService.Client.PostAsJsonAsync("api/quiz/save", ActiveQuiz);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    conn.Open();
-                    using (SqlTransaction transaction = conn.BeginTransaction())
-                    {
-                        try
-                        {
-                            // 1. KÉRDŐÍV FEJLÉC MENTÉSE (Ezt mindenképp megcsinálja, ha vannak kérdések, ha nincsenek!)
-                            int testId = SaveQuizHeader(conn, transaction);
-
-                            // 2. RÉGI KÉRDÉSEK TÖRLÉSE (Csak frissítésnél takarítunk)
-                            if (ActiveQuiz.TestId > 0)
-                            {
-                                string delSql = "DELETE FROM dbo.lm_test_questions WHERE TestId = @tid";
-                                using (SqlCommand cmdDel = new SqlCommand(delSql, conn, transaction))
-                                {
-                                    cmdDel.Parameters.AddWithValue("@tid", testId);
-                                    cmdDel.ExecuteNonQuery();
-                                }
-                            }
-
-                            // 3. KÉRDÉSEK MEGKERESÉSE ÉS MENTÉSE
-                            // HIBA JAVÍTVA: A "this.Controls.Find" az EGÉSZ ablakban keres, bármelyik panelen is van!
-                            var flpArray = this.Controls.Find("flpQuestionList", true);
-
-                            if (flpArray.Length > 0)
-                            {
-                                var flp = flpArray[0] as FlowLayoutPanel;
-                                if (flp != null && flp.Controls.OfType<UC_QuestionCard>().Any())
-                                {
-                                    int order = 1;
-                                    foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
-                                    {
-                                        // Biztonsági ellenőrzés
-                                        if (card.Data == null) card.Data = new Question();
-                                        if (card.Data.Points == 0) card.Data.Points = 1;
-
-                                        // Kérdés mentése és összekötése
-                                        int questionId = SaveQuestion(card.Data, conn, transaction);
-                                        LinkQuestionToTest(testId, questionId, order++, conn, transaction);
-
-                                        // Válaszok mentése
-                                        if (card.Data.Answers != null && card.Data.Answers.Count > 0)
-                                        {
-                                            SaveAnswers(questionId, card.Data.Answers, conn, transaction);
-                                        }
-                                    }
-                                }
-                            }
-
-                            // 4. MINDEN SIKERES -> MENTÉS VÉGLEGESÍTÉSE
-                            transaction.Commit();
-
-                            // Frissítjük a memóriában lévő azonosítót, ha esetleg új volt
-                            ActiveQuiz.TestId = testId;
-
-                            MessageBox.Show("A kérdőív sikeresen elmentve!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            // Visszatérés a főoldalra
-                            this.btnBack_Click_1(null, null);
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            MessageBox.Show("Hiba a mentés során: " + ex.Message, "Adatbázis hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
+                    MessageBox.Show("A kérdőív sikeresen elmentve!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.btnBack_Click_1(null, null); // Visszatérés a főoldalra
+                }
+                else
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show("Szerver hiba a mentéskor:\n" + error, "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nem sikerült csatlakozni az adatbázishoz:\n" + ex.Message, "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Hálózati hiba (Nem elérhető az API):\n" + ex.Message, "Hálózati hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private int SaveQuizHeader(SqlConnection conn, SqlTransaction trans)
-        {
-            // HA EZ EGY MÁR LÉTEZŐ KÉRDŐÍV (Van azonosítója) -> UPDATE
-            if (ActiveQuiz.TestId > 0)
-            {
-                string sql = @"UPDATE dbo.lm_tests
-                       SET TestName = @name, Characterization = @desc
-                       WHERE TestId = @id";
+        
 
-                using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-                {
-                    cmd.Parameters.AddWithValue("@name", string.IsNullOrWhiteSpace(ActiveQuiz.Title) ? "Névtelen teszt" : ActiveQuiz.Title);
-                    cmd.Parameters.AddWithValue("@desc", ActiveQuiz.Description ?? "");
-                    cmd.Parameters.AddWithValue("@id", ActiveQuiz.TestId);
+        
 
-                    cmd.ExecuteNonQuery(); // Frissítjük a sort
-                }
-                return ActiveQuiz.TestId; // Visszaadjuk a már meglévő ID-t
-            }
-            // HA EZ EGY TELJESEN ÚJ KÉRDŐÍV -> INSERT
-            else
-            {
-                string sql = @"INSERT INTO dbo.lm_tests (ModuleId, TestName, Characterization, LanguageId, TotalPoints, IsRandom, IsActive)
-                       OUTPUT INSERTED.TestId
-                       VALUES (1, @name, @desc, 1, 0, 0, 1)";
-
-                using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-                {
-                    cmd.Parameters.AddWithValue("@name", string.IsNullOrWhiteSpace(ActiveQuiz.Title) ? "Névtelen teszt" : ActiveQuiz.Title);
-                    cmd.Parameters.AddWithValue("@desc", ActiveQuiz.Description ?? "");
-
-                    return (int)cmd.ExecuteScalar(); // Visszaadjuk a frissen generált ID-t
-                }
-            }
-        }
-
-        private int SaveQuestion(Question data, SqlConnection conn, SqlTransaction trans)
-        {
-            int qTypeId = 1;
-            if (data.UI_TypeKey == "tf") qTypeId = 2;
-            else if (data.UI_TypeKey == "Short") qTypeId = 3;
-
-            string sql = @"INSERT INTO dbo.lm_questions (ModuleId, QuestionText, LanguageId, QuestionLevelId, QuestionTypeId, SkillTypeId, Points, IsActive)
-                           OUTPUT INSERTED.QuestionId
-                           VALUES (1, @text, 1, 1, @typeId, 1, @pts, 1)";
-            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-            {
-                cmd.Parameters.AddWithValue("@text", string.IsNullOrWhiteSpace(data.QuestionText) ? "Névtelen kérdés" : data.QuestionText);
-                cmd.Parameters.AddWithValue("@typeId", qTypeId);
-                cmd.Parameters.AddWithValue("@pts", data.Points);
-                return (int)cmd.ExecuteScalar();
-            }
-        }
-
-        private void LinkQuestionToTest(int testId, int questionId, int order, SqlConnection conn, SqlTransaction trans)
-        {
-            string sql = "INSERT INTO dbo.lm_test_questions (ModuleId, TestId, QuestionId, QuestionOrder) VALUES (1, @tid, @qid, @ord)";
-            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-            {
-                cmd.Parameters.AddWithValue("@tid", testId);
-                cmd.Parameters.AddWithValue("@qid", questionId);
-                cmd.Parameters.AddWithValue("@ord", order);
-                cmd.ExecuteNonQuery();
-            }
-        }
+        
         // létező quiz megnyitása a szerkesztéshez
         public void OpenExistingQuiz(Quiz loadedQuiz)
         {
@@ -287,21 +192,7 @@ namespace QuestionBankClient
             btnBack.Visible = true;
             btnFinalSave.Visible = true;
         }
-        private void SaveAnswers(int questionId, List<Answer> answers, SqlConnection conn, SqlTransaction trans)
-        {
-            foreach (var ans in answers)
-            {
-                string sql = "INSERT INTO dbo.lm_answers (ModuleId, QuestionId, AnswerText, IsCorrect, AnswerOrder) VALUES (1, @qid, @txt, @isc, @ord)";
-                using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
-                {
-                    cmd.Parameters.AddWithValue("@qid", questionId);
-                    cmd.Parameters.AddWithValue("@txt", ans.AnswerText);
-                    cmd.Parameters.AddWithValue("@isc", ans.IsCorrect);
-                    cmd.Parameters.AddWithValue("@ord", ans.AnswerOrder);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
+        
 
         private void pnlHeader_Paint(object sender, PaintEventArgs e)
         {

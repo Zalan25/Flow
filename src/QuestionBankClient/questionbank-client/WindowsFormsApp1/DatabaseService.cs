@@ -1,36 +1,27 @@
 ﻿using System;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace QuestionBankClient
 {
     public static class DatabaseService
     {
-        // kapcsolat App.config-ból
-        private static readonly string _connectionString =
-            ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
+        // Ez intézi a hálózati kommunikációt
+        public static readonly HttpClient Client = new HttpClient();
 
-        // kapcsolat
-        public static SqlConnection GetConnection()
+        static DatabaseService()
         {
-            if (string.IsNullOrEmpty(_connectionString))
-            {
-                throw new Exception("Hiba: A 'DefaultConnection' nem található az App.config fájlban!");
-            }
-            return new SqlConnection(_connectionString);
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+            Client.BaseAddress = new Uri("http://68.219.68.210/");
         }
 
-        // teszt metódus
-        public static bool IsConnectionWorking()
+        public static async Task<bool> IsConnectionWorkingAsync()
         {
             try
             {
-                using (var conn = GetConnection())
-                {
-                    conn.Open();
-                    return true;
-                }
+                // Megkérdezzük az API-t, hogy ő látja-e az adatbázist
+                HttpResponseMessage response = await Client.GetAsync("api/quiz/test-connection");
+                return response.IsSuccessStatusCode;
             }
             catch
             {
