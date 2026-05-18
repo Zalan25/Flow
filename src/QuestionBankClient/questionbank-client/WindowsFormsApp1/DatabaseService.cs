@@ -12,7 +12,7 @@ namespace QuestionBankClient
         static DatabaseService()
         {
             System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-            Client.BaseAddress = new Uri("http://68.219.68.210/");
+            Client.BaseAddress = new Uri("https://89b8t8bl-7099.eun1.devtunnels.ms/");
         }
 
         public static async Task<bool> IsConnectionWorkingAsync()
