@@ -27,6 +27,8 @@ namespace QuestionBankClient
             cmbRandomLanguage.DataSource = new BindingSource(DropdownData.GetLanguages(), null);
             cmbRandomLanguage.DisplayMember = "Value";
             cmbRandomLanguage.ValueMember = "Key";
+
+            ApplyDesign();
         }
 
 
@@ -235,14 +237,30 @@ namespace QuestionBankClient
 
         private void ResizeCards()
         {
+            //flpQuestionList.SuspendLayout();
+            //foreach (Control ctrl in flpQuestionList.Controls)
+            //{
+            //    if (ctrl is UC_QuestionCard card)
+            //    {
+            //        card.Width = flpQuestionList.ClientSize.Width - 20;
+            //    }
+            //}
+            //flpQuestionList.ResumeLayout();
+            if (flpQuestionList == null)
+            {
+                return;
+            }
+
             flpQuestionList.SuspendLayout();
+
             foreach (Control ctrl in flpQuestionList.Controls)
             {
                 if (ctrl is UC_QuestionCard card)
                 {
-                    card.Width = flpQuestionList.ClientSize.Width - 20;
+                    card.Width = flpQuestionList.ClientSize.Width - 42;
                 }
             }
+
             flpQuestionList.ResumeLayout();
         }
 
@@ -586,6 +604,146 @@ namespace QuestionBankClient
                     }
                 }
             }
+        }
+
+        //Kinézet
+        private readonly Color DarkBlue = Color.FromArgb(25, 52, 88);
+        private readonly Color TextPurple = Color.FromArgb(48, 45, 91);
+        private readonly Color LightBackground = Color.FromArgb(244, 247, 251);
+        private readonly Color PanelBackground = Color.White;
+        private readonly Color SoftPanelBackground = Color.FromArgb(235, 239, 246);
+        private readonly Color BorderGray = Color.FromArgb(215, 220, 230);
+
+        private void ApplyDesign()
+        {
+            this.BackColor = LightBackground;
+
+            // Fő elrendezés
+            pnlleft.Dock = DockStyle.Left;
+            pnlleft.Width = 330;
+            pnlleft.BackColor = PanelBackground;
+            pnlleft.Padding = new Padding(22, 24, 22, 24);
+
+            pnlright.Dock = DockStyle.Right;
+            pnlright.Width = 430;
+            pnlright.BackColor = SoftPanelBackground;
+            pnlright.Padding = new Padding(20, 22, 20, 20);
+
+            pnlCenter.Dock = DockStyle.Fill;
+            pnlCenter.BackColor = LightBackground;
+            pnlCenter.Padding = new Padding(28, 24, 28, 24);
+
+            // Nagyon fontos: Dock sorrend miatt újrarendezzük a kontrollokat
+            this.Controls.SetChildIndex(pnlleft, 2);
+            this.Controls.SetChildIndex(pnlright, 1);
+            this.Controls.SetChildIndex(pnlCenter, 0);
+
+            // Bal oldali cím
+            lblTypeHeader.Text = "Kérdéstípusok";
+            lblTypeHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            lblTypeHeader.ForeColor = TextPurple;
+            lblTypeHeader.AutoSize = false;
+            lblTypeHeader.Location = new Point(22, 24);
+            lblTypeHeader.Size = new Size(280, 48);
+
+            // Kérdéstípus gombok
+            StyleTypeButton(btnShort, "Rövid válasz", 90);
+            StyleTypeButton(btnMulti, "Több helyes válasz", 155);
+            StyleTypeButton(btnTF, "Igaz / hamis", 220);
+            StyleTypeButton(button1, "Egy helyes válasz", 285);
+            StyleTypeButton(button2, "Esszé / kifejtős", 350);
+
+            // Random kérdés blokk
+            label1.Text = "Random kérdések";
+            label1.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            label1.ForeColor = TextPurple;
+            label1.AutoSize = false;
+            label1.Location = new Point(22, 445);
+            label1.Size = new Size(280, 38);
+
+            label2.Text = "Darabszám";
+            label2.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+            label2.ForeColor = Color.FromArgb(75, 80, 95);
+            label2.AutoSize = false;
+            label2.Location = new Point(22, 495);
+            label2.Size = new Size(260, 24);
+
+            numRandomCount.Location = new Point(22, 522);
+            numRandomCount.Size = new Size(260, 32);
+            numRandomCount.Font = new Font("Segoe UI", 11F);
+
+            label3.Text = "Nyelv";
+            label3.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+            label3.ForeColor = Color.FromArgb(75, 80, 95);
+            label3.AutoSize = false;
+            label3.Location = new Point(22, 565);
+            label3.Size = new Size(260, 24);
+
+            cmbRandomLanguage.Location = new Point(22, 592);
+            cmbRandomLanguage.Size = new Size(260, 32);
+            cmbRandomLanguage.Font = new Font("Segoe UI", 11F);
+
+            StyleSecondaryButton(btnAddRandom, "Random kérdések hozzáadása", 640);
+            StyleSecondaryButton(btnOpenBank, "Kérdésbank megnyitása", 710);
+
+            // Középső kérdéslista
+            flpQuestionList.Dock = DockStyle.Fill;
+            flpQuestionList.BackColor = Color.White;
+            flpQuestionList.FlowDirection = FlowDirection.TopDown;
+            flpQuestionList.WrapContents = false;
+            flpQuestionList.AutoScroll = true;
+            flpQuestionList.Padding = new Padding(18);
+
+            // Jobb oldali alapállapot
+            pnlright.Controls.Clear();
+
+            Label emptySettings = new Label();
+            emptySettings.Text = "Válassz ki egy kérdést a beállítások szerkesztéséhez.";
+            emptySettings.Font = new Font("Segoe UI", 13F, FontStyle.Regular);
+            emptySettings.ForeColor = Color.FromArgb(75, 80, 95);
+            emptySettings.AutoSize = false;
+            emptySettings.TextAlign = ContentAlignment.MiddleCenter;
+            emptySettings.Dock = DockStyle.Fill;
+
+            pnlright.Controls.Add(emptySettings);
+
+            this.Resize += UC_TypeSelector_Resize;
+        }
+
+        //Gombok
+        private void StyleTypeButton(Button button, string text, int top)
+        {
+            button.Text = text;
+            button.Location = new Point(22, top);
+            button.Size = new Size(260, 52);
+            button.BackColor = Color.FromArgb(245, 247, 255);
+            button.ForeColor = TextPurple;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = BorderGray;
+            button.FlatAppearance.BorderSize = 1;
+            button.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            button.TextAlign = ContentAlignment.MiddleLeft;
+            button.Padding = new Padding(16, 0, 0, 0);
+            button.Cursor = Cursors.Hand;
+        }
+
+        private void StyleSecondaryButton(Button button, string text, int top)
+        {
+            button.Text = text;
+            button.Location = new Point(22, top);
+            button.Size = new Size(260, 50);
+            button.BackColor = DarkBlue;
+            button.ForeColor = Color.White;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            button.Cursor = Cursors.Hand;
+        }
+
+        //Méret
+        private void UC_TypeSelector_Resize(object sender, EventArgs e)
+        {
+            ResizeCards();
         }
     }
 }
