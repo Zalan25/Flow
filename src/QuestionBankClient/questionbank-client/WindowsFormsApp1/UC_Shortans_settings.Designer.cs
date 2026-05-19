@@ -18,319 +18,121 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.lblBaseSettings = new System.Windows.Forms.Label();
-            this.pnlSep1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtQuestionText = new System.Windows.Forms.TextBox();
-            this.lblCheck = new System.Windows.Forms.Label();
-            this.pnlSep2 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.flpAnswers = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnAddAns = new System.Windows.Forms.Button();
-            this.lblEval = new System.Windows.Forms.Label();
-            this.pnlSep4 = new System.Windows.Forms.Panel();
-            this.lblrate = new System.Windows.Forms.Label();
-            this.txtPoints = new System.Windows.Forms.TextBox();
-            this.btnDelete = new System.Windows.Forms.Button();
+            
+            // Labels
+            this.label4 = new System.Windows.Forms.Label(); // Nyelv
+            this.label5 = new System.Windows.Forms.Label(); // Szint
+            this.label6 = new System.Windows.Forms.Label(); // Skill
+            this.lblrate = new System.Windows.Forms.Label(); // Pontszám
+            this.label1 = new System.Windows.Forms.Label(); // Kérdés szövege
+            this.label2 = new System.Windows.Forms.Label(); // Helyes válaszok
+            
+            // Inputs
             this.cmbQuestionLanguage = new System.Windows.Forms.ComboBox();
             this.cmbQuestionLevel = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.cmbSkill = new System.Windows.Forms.ComboBox();
+            this.txtPoints = new System.Windows.Forms.TextBox();
+            this.txtQuestionText = new System.Windows.Forms.TextBox();
+            this.flpAnswers = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnAddAns = new System.Windows.Forms.Button();
+            
+            // Buttons
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            
+            // Separators
+            this.pnlSep1 = new System.Windows.Forms.Panel();
+            this.pnlSep2 = new System.Windows.Forms.Panel();
+
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panel1
-            // 
+
+            // --- Panel 1 (Konténer) ---
             this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.cmbQuestionLevel);
-            this.panel1.Controls.Add(this.cmbQuestionLanguage);
-            this.panel1.Controls.Add(this.btnSave);
-            this.panel1.Controls.Add(this.lblBaseSettings);
-            this.panel1.Controls.Add(this.pnlSep1);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.txtQuestionText);
-            this.panel1.Controls.Add(this.lblCheck);
-            this.panel1.Controls.Add(this.pnlSep2);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.flpAnswers);
-            this.panel1.Controls.Add(this.btnAddAns);
-            this.panel1.Controls.Add(this.lblEval);
-            this.panel1.Controls.Add(this.pnlSep4);
-            this.panel1.Controls.Add(this.lblrate);
-            this.panel1.Controls.Add(this.txtPoints);
-            this.panel1.Controls.Add(this.btnDelete);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(947, 1599);
+            this.panel1.Size = new System.Drawing.Size(751, 975);
             this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // btnSave
-            // 
-            this.btnSave.BackColor = System.Drawing.Color.White;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnSave.Location = new System.Drawing.Point(463, 1424);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(300, 87);
-            this.btnSave.TabIndex = 25;
-            this.btnSave.Text = "Mentés";
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // lblBaseSettings
-            // 
-            this.lblBaseSettings.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblBaseSettings.Location = new System.Drawing.Point(40, 38);
-            this.lblBaseSettings.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblBaseSettings.Name = "lblBaseSettings";
-            this.lblBaseSettings.Size = new System.Drawing.Size(400, 58);
-            this.lblBaseSettings.TabIndex = 0;
-            this.lblBaseSettings.Text = "Alapadatok:";
-            // 
-            // pnlSep1
-            // 
-            this.pnlSep1.BackColor = System.Drawing.Color.DarkGray;
-            this.pnlSep1.Location = new System.Drawing.Point(40, 106);
-            this.pnlSep1.Margin = new System.Windows.Forms.Padding(6);
-            this.pnlSep1.Name = "pnlSep1";
-            this.pnlSep1.Size = new System.Drawing.Size(900, 4);
-            this.pnlSep1.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(80, 144);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(400, 48);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Kérdés szövege:";
-            // 
-            // txtQuestionText
-            // 
-            this.txtQuestionText.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtQuestionText.Location = new System.Drawing.Point(90, 202);
-            this.txtQuestionText.Margin = new System.Windows.Forms.Padding(6);
-            this.txtQuestionText.Multiline = true;
-            this.txtQuestionText.Name = "txtQuestionText";
-            this.txtQuestionText.Size = new System.Drawing.Size(816, 65);
-            this.txtQuestionText.TabIndex = 3;
-            // 
-            // lblCheck
-            // 
-            this.lblCheck.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblCheck.Location = new System.Drawing.Point(22, 273);
-            this.lblCheck.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblCheck.Name = "lblCheck";
-            this.lblCheck.Size = new System.Drawing.Size(400, 58);
-            this.lblCheck.TabIndex = 9;
-            this.lblCheck.Text = "Ellenőrzés";
-            // 
-            // pnlSep2
-            // 
-            this.pnlSep2.BackColor = System.Drawing.Color.DarkGray;
-            this.pnlSep2.Location = new System.Drawing.Point(32, 357);
-            this.pnlSep2.Margin = new System.Windows.Forms.Padding(6);
-            this.pnlSep2.Name = "pnlSep2";
-            this.pnlSep2.Size = new System.Drawing.Size(900, 10);
-            this.pnlSep2.TabIndex = 10;
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(31, 384);
-            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(400, 48);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Helyes válasz:";
-            // 
-            // flpAnswers
-            // 
-            this.flpAnswers.AutoScroll = true;
-            this.flpAnswers.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpAnswers.Location = new System.Drawing.Point(41, 442);
-            this.flpAnswers.Margin = new System.Windows.Forms.Padding(6);
-            this.flpAnswers.Name = "flpAnswers";
-            this.flpAnswers.Size = new System.Drawing.Size(820, 231);
-            this.flpAnswers.TabIndex = 12;
-            this.flpAnswers.WrapContents = false;
-            // 
-            // btnAddAns
-            // 
-            this.btnAddAns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnAddAns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddAns.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnAddAns.ForeColor = System.Drawing.Color.White;
-            this.btnAddAns.Location = new System.Drawing.Point(151, 692);
-            this.btnAddAns.Margin = new System.Windows.Forms.Padding(6);
-            this.btnAddAns.Name = "btnAddAns";
-            this.btnAddAns.Size = new System.Drawing.Size(600, 77);
-            this.btnAddAns.TabIndex = 13;
-            this.btnAddAns.Text = "+ Másik válasz";
-            this.btnAddAns.UseVisualStyleBackColor = false;
-            this.btnAddAns.Click += new System.EventHandler(this.btnAddAns_Click_1);
-            // 
-            // lblEval
-            // 
-            this.lblEval.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblEval.Location = new System.Drawing.Point(12, 784);
-            this.lblEval.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblEval.Name = "lblEval";
-            this.lblEval.Size = new System.Drawing.Size(400, 58);
-            this.lblEval.TabIndex = 20;
-            this.lblEval.Text = "Értékelés";
-            // 
-            // pnlSep4
-            // 
-            this.pnlSep4.BackColor = System.Drawing.Color.DarkGray;
-            this.pnlSep4.Location = new System.Drawing.Point(12, 851);
-            this.pnlSep4.Margin = new System.Windows.Forms.Padding(6);
-            this.pnlSep4.Name = "pnlSep4";
-            this.pnlSep4.Size = new System.Drawing.Size(900, 4);
-            this.pnlSep4.TabIndex = 21;
-            // 
-            // lblrate
-            // 
-            this.lblrate.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblrate.Location = new System.Drawing.Point(52, 890);
-            this.lblrate.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblrate.Name = "lblrate";
-            this.lblrate.Size = new System.Drawing.Size(300, 48);
-            this.lblrate.TabIndex = 22;
-            this.lblrate.Text = "Pontszám:";
-            // 
-            // txtPoints
-            // 
-            this.txtPoints.Font = new System.Drawing.Font("Segoe UI", 14F);
-            this.txtPoints.Location = new System.Drawing.Point(372, 880);
-            this.txtPoints.Margin = new System.Windows.Forms.Padding(6);
-            this.txtPoints.Name = "txtPoints";
-            this.txtPoints.Size = new System.Drawing.Size(196, 57);
-            this.txtPoints.TabIndex = 23;
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.BackColor = System.Drawing.Color.White;
-            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnDelete.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnDelete.Location = new System.Drawing.Point(41, 1424);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(6);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(300, 87);
-            this.btnDelete.TabIndex = 24;
-            this.btnDelete.Text = "Törlés";
-            this.btnDelete.UseVisualStyleBackColor = false;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // cmbQuestionLanguage
-            // 
+
+            // --- 1. SOR: NYELV ÉS SZINT ---
+            this.label5.AutoSize = true; this.label5.Location = new System.Drawing.Point(30, 30); this.label5.Text = "Nyelv:";
             this.cmbQuestionLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbQuestionLanguage.FormattingEnabled = true;
-            this.cmbQuestionLanguage.Location = new System.Drawing.Point(68, 1167);
-            this.cmbQuestionLanguage.Name = "cmbQuestionLanguage";
-            this.cmbQuestionLanguage.Size = new System.Drawing.Size(273, 33);
-            this.cmbQuestionLanguage.TabIndex = 26;
-            this.cmbQuestionLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // cmbQuestionLevel
-            // 
+            this.cmbQuestionLanguage.Location = new System.Drawing.Point(30, 60); this.cmbQuestionLanguage.Size = new System.Drawing.Size(300, 33);
+            
+            this.label4.AutoSize = true; this.label4.Location = new System.Drawing.Point(380, 30); this.label4.Text = "Szint:";
             this.cmbQuestionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbQuestionLevel.FormattingEnabled = true;
-            this.cmbQuestionLevel.Location = new System.Drawing.Point(565, 1167);
-            this.cmbQuestionLevel.Name = "cmbQuestionLevel";
-            this.cmbQuestionLevel.Size = new System.Drawing.Size(273, 33);
-            this.cmbQuestionLevel.TabIndex = 28;
-            // 
-            // label3
-            // 
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(12, 1007);
-            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(400, 58);
-            this.label3.TabIndex = 29;
-            this.label3.Text = "Nyelv és szint";
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.DarkGray;
-            this.panel2.Location = new System.Drawing.Point(12, 1074);
-            this.panel2.Margin = new System.Windows.Forms.Padding(6);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(900, 4);
-            this.panel2.TabIndex = 30;
-            // 
-            // label4
-            // 
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(556, 1099);
-            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(300, 48);
-            this.label4.TabIndex = 31;
-            this.label4.Text = "Nyelvi szint:";
-            // 
-            // label5
-            // 
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(59, 1099);
-            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(300, 48);
-            this.label5.TabIndex = 32;
-            this.label5.Text = "Nyelv:";
-            // 
-            // UC_Shortans_settings
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.cmbQuestionLevel.Location = new System.Drawing.Point(380, 60); this.cmbQuestionLevel.Size = new System.Drawing.Size(300, 33);
+
+            // --- 2. SOR: KÉSZSÉG ÉS PONTSZÁM ---
+            this.label6.AutoSize = true; this.label6.Location = new System.Drawing.Point(30, 120); this.label6.Text = "Készség:";
+            this.cmbSkill.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSkill.Location = new System.Drawing.Point(30, 150); this.cmbSkill.Size = new System.Drawing.Size(300, 33);
+
+            this.lblrate.AutoSize = true; this.lblrate.Location = new System.Drawing.Point(380, 120); this.lblrate.Text = "Pontszám:";
+            this.txtPoints.Location = new System.Drawing.Point(380, 150); this.txtPoints.Size = new System.Drawing.Size(120, 31);
+
+            // --- 3. SOR: KÉRDÉS SZÖVEGE ---
+            this.label1.AutoSize = true; this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Bold);
+            this.label1.Location = new System.Drawing.Point(30, 220); this.label1.Text = "Kérdés szövege:";
+            this.txtQuestionText.Location = new System.Drawing.Point(30, 250); this.txtQuestionText.Multiline = true;
+            this.txtQuestionText.Size = new System.Drawing.Size(650, 100);
+
+            // --- 4. SOR: VÁLASZOK ---
+            this.label2.AutoSize = true; this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Bold);
+            this.label2.Location = new System.Drawing.Point(30, 380); this.label2.Text = "Helyes válaszok:";
+            
+            this.btnAddAns.Location = new System.Drawing.Point(530, 375); this.btnAddAns.Size = new System.Drawing.Size(150, 40); this.btnAddAns.Text = "+ Másik válasz";
+            this.btnAddAns.Click += new System.EventHandler(this.btnAddAns_Click_1);
+
+            this.flpAnswers.AutoScroll = true; this.flpAnswers.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpAnswers.Location = new System.Drawing.Point(30, 430); this.flpAnswers.Size = new System.Drawing.Size(650, 350);
+
+            // --- ALSÓ GOMBOK ---
+            this.btnDelete.Location = new System.Drawing.Point(37, 850); this.btnDelete.Size = new System.Drawing.Size(152, 87);
+            this.btnSave.Location = new System.Drawing.Point(503, 850); this.btnSave.Size = new System.Drawing.Size(152, 87);
+
+            // --- ÖSSZESZERELÉS ---
+            this.panel1.Controls.AddRange(new System.Windows.Forms.Control[] {
+                this.cmbSkill, this.label6, this.label5, this.label4, this.cmbQuestionLevel, 
+                this.cmbQuestionLanguage, this.label1, this.txtQuestionText, 
+                this.label2, this.flpAnswers, this.btnAddAns, this.lblrate, 
+                this.txtPoints, this.btnDelete, this.btnSave
+            });
+            
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "UC_Shortans_settings";
-            this.Size = new System.Drawing.Size(947, 1605);
+            this.Size = new System.Drawing.Size(751, 975);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
-
         }
-
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lblBaseSettings;
-        private System.Windows.Forms.Panel pnlSep1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtQuestionText;
-        private System.Windows.Forms.Label lblCheck;
-        private System.Windows.Forms.Panel pnlSep2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.FlowLayoutPanel flpAnswers;
         private System.Windows.Forms.Button btnAddAns;
-        private System.Windows.Forms.Label lblEval;
-        private System.Windows.Forms.Panel pnlSep4;
         private System.Windows.Forms.Label lblrate;
         private System.Windows.Forms.TextBox txtPoints;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.ComboBox cmbQuestionLanguage;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ComboBox cmbQuestionLevel;
+        private System.Windows.Forms.ComboBox cmbQuestionLanguage;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox cmbSkill;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Panel pnlSep1;
+        private System.Windows.Forms.Panel pnlSep2;
+        private System.Windows.Forms.Panel pnlSep4; // Ezeket a változókat megtartottam, ha később még használnád
+        private System.Windows.Forms.Label lblBaseSettings;
+        private System.Windows.Forms.Label lblCheck;
+        private System.Windows.Forms.Label lblEval;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label3;
     }
 }

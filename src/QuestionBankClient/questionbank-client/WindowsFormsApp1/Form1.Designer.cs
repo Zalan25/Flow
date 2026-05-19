@@ -73,7 +73,7 @@
             // 
             this.pnlchoose.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pnlchoose.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pnlchoose.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.pnlchoose.Controls.Add(this.btnnew);
             this.pnlchoose.Controls.Add(this.btnexisting);
             this.pnlchoose.Controls.Add(this.lbledit);
@@ -91,10 +91,10 @@
             this.btnnew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnnew.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnnew.ForeColor = System.Drawing.Color.White;
-            this.btnnew.Location = new System.Drawing.Point(84, 542);
+            this.btnnew.Location = new System.Drawing.Point(75, 489);
             this.btnnew.Margin = new System.Windows.Forms.Padding(4);
             this.btnnew.Name = "btnnew";
-            this.btnnew.Size = new System.Drawing.Size(246, 154);
+            this.btnnew.Size = new System.Drawing.Size(294, 123);
             this.btnnew.TabIndex = 3;
             this.btnnew.Text = "Új Kérdőív";
             this.btnnew.UseVisualStyleBackColor = false;
@@ -108,7 +108,7 @@
             this.btnexisting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnexisting.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnexisting.ForeColor = System.Drawing.Color.White;
-            this.btnexisting.Location = new System.Drawing.Point(68, 326);
+            this.btnexisting.Location = new System.Drawing.Point(75, 273);
             this.btnexisting.Margin = new System.Windows.Forms.Padding(4);
             this.btnexisting.Name = "btnexisting";
             this.btnexisting.Size = new System.Drawing.Size(294, 128);

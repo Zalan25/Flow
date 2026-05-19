@@ -148,9 +148,23 @@ namespace QuestionBankClient
                 }
             }
 
+            // --- ÚJ: NYELVI SZINTEK ELLENŐRZÉSE MENTÉS ELŐTT ---
+            if (!ValidateQuizLevels(ActiveQuiz.Questions, out string missing))
+            {
+                DialogResult result = MessageBox.Show(
+                    $"Figyelem! A kérdőívből hiányoznak a következő nyelvi szintek: {missing}.\n\nBiztosan el szeretnéd menteni így is?",
+                    "Hiányzó nyelvi szintek",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+
+                // Ha a felhasználó a "Nem" gombra kattint, megszakítjuk a mentést!
+                if (result == DialogResult.No) return;
+            }
+
+            // 2. HTTP POST kérés küldése az API-nak (JSON formátumban)
             try
             {
-                // 2. HTTP POST kérés küldése az API-nak (JSON formátumban)
                 HttpResponseMessage response = await DatabaseService.Client.PostAsJsonAsync("api/quiz/save", ActiveQuiz);
 
                 if (response.IsSuccessStatusCode)
@@ -170,11 +184,11 @@ namespace QuestionBankClient
             }
         }
 
-        
 
-        
 
-        
+
+
+
         // létező quiz megnyitása a szerkesztéshez
         public void OpenExistingQuiz(Quiz loadedQuiz)
         {
@@ -192,7 +206,32 @@ namespace QuestionBankClient
             btnBack.Visible = true;
             btnFinalSave.Visible = true;
         }
-        
+
+
+        private bool ValidateQuizLevels(List<Question> questions, out string missingLevels)
+        {
+            // Elvárt szintek ID-jai (1=A1, 2=A2, 3=B1, 4=B2, 5=C1)
+            var requiredLevels = new HashSet<int> { 1, 2, 3, 4, 5 };
+
+            // Összegyűjtjük a kérdőívben aktuálisan szereplő szintek ID-jait
+            var presentLevels = questions.Select(q => q.QuestionLevelId).ToHashSet();
+
+            // Kiszűrjük, mik hiányoznak a mintából
+            var missing = requiredLevels.Except(presentLevels).ToList();
+
+            if (missing.Count > 0)
+            {
+                // Kikeresjük a DropdownData osztályból a szöveges neveket a kiíráshoz
+                var allLevels = DropdownData.GetLevels();
+                var missingNames = missing.Select(id => allLevels.FirstOrDefault(l => l.Key == id).Value ?? $"ID:{id}");
+
+                missingLevels = string.Join(", ", missingNames);
+                return false;
+            }
+
+            missingLevels = "";
+            return true;
+        }
 
         private void pnlHeader_Paint(object sender, PaintEventArgs e)
         {

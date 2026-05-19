@@ -22,6 +22,10 @@ namespace QuestionBankClient
         {
             InitializeComponent();
 
+            cmbSkill.DataSource = new BindingSource(DropdownData.GetSkills(), null);
+            cmbSkill.DisplayMember = "Value";
+            cmbSkill.ValueMember = "Key";
+
             // Nyelvek betöltése a legördülőbe
             cmbQuestionLanguage.DataSource = new BindingSource(DropdownData.GetLanguages(), null);
             cmbQuestionLanguage.DisplayMember = "Value"; // Amit a felhasználó lát (pl. Görög)
@@ -70,6 +74,12 @@ namespace QuestionBankClient
             set { if (cmbQuestionLevel != null) cmbQuestionLevel.SelectedValue = value; }
         }
 
+
+        public int SelectedSkillId
+        {
+            get => cmbSkill.SelectedValue != null ? (int)cmbSkill.SelectedValue : 1;
+            set => cmbSkill.SelectedValue = value;
+        }
 
 
         // --- MŰVELETEK ---

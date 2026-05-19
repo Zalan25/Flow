@@ -74,6 +74,8 @@ namespace QuestionBankClient
             };
             }
 
+                
+
             // Az SQL adatbázis lm_question_levels táblája alapján
             public static List<KeyValuePair<int, string>> GetLevels()
             {
@@ -85,6 +87,19 @@ namespace QuestionBankClient
                 new KeyValuePair<int, string>(5, "C1")
             };
             }
+
+            public static Dictionary<int, string> GetSkills()
+            {
+            return new Dictionary<int, string>
+            {
+            { 1, "Vocabulary" },
+            { 2, "Reading" },
+            { 3, "Listening" },
+            { 4, "Practice" },
+            { 5, "SelfStudy" },
+            { 6, "Book" }
+    };
         }
+    }
     
 }
