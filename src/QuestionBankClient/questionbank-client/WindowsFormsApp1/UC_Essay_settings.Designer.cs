@@ -39,12 +39,11 @@
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
             this.cmbLevel = new System.Windows.Forms.ComboBox();
             this.cmbSkill = new System.Windows.Forms.ComboBox();
-            this.numPoints = new System.Windows.Forms.NumericUpDown();
             this.txtQuestion = new System.Windows.Forms.TextBox();
             this.txtSampleAnswer = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numPoints)).BeginInit();
+            this.numPoints = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -136,19 +135,6 @@
             this.cmbSkill.Size = new System.Drawing.Size(300, 33);
             this.cmbSkill.TabIndex = 5;
             // 
-            // numPoints
-            // 
-            this.numPoints.Location = new System.Drawing.Point(380, 150);
-            this.numPoints.Name = "numPoints";
-            this.numPoints.Size = new System.Drawing.Size(120, 31);
-            this.numPoints.TabIndex = 6;
-            this.numPoints.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numPoints.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // txtQuestion
             // 
             this.txtQuestion.Location = new System.Drawing.Point(30, 250);
@@ -197,10 +183,18 @@
             this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
+            // numPoints
+            // 
+            this.numPoints.Location = new System.Drawing.Point(413, 171);
+            this.numPoints.Name = "numPoints";
+            this.numPoints.Size = new System.Drawing.Size(225, 31);
+            this.numPoints.TabIndex = 29;
+            // 
             // UC_Essay_settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.numPoints);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.lblSampleAnswer);
@@ -208,7 +202,6 @@
             this.Controls.Add(this.lblQuestion);
             this.Controls.Add(this.txtQuestion);
             this.Controls.Add(this.lblPoints);
-            this.Controls.Add(this.numPoints);
             this.Controls.Add(this.lblSkill);
             this.Controls.Add(this.cmbSkill);
             this.Controls.Add(this.lblLevel);
@@ -217,7 +210,6 @@
             this.Controls.Add(this.cmbLanguage);
             this.Name = "UC_Essay_settings";
             this.Size = new System.Drawing.Size(751, 835);
-            ((System.ComponentModel.ISupportInitialize)(this.numPoints)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -238,7 +230,6 @@
         private System.Windows.Forms.ComboBox cmbSkill;
 
         private System.Windows.Forms.Label lblPoints;
-        private System.Windows.Forms.NumericUpDown numPoints;
 
         private System.Windows.Forms.Label lblQuestion;
         private System.Windows.Forms.TextBox txtQuestion;
@@ -247,5 +238,6 @@
         private System.Windows.Forms.TextBox txtSampleAnswer;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.TextBox numPoints;
     }
 }

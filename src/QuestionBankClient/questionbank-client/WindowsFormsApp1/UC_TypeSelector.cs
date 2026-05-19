@@ -138,7 +138,7 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
-                // Válaszbetöltő logika jöhet ide...
+                settings.SetAnswers(selectedIndex.Data.Answers);
 
                 pnlright.Controls.Add(settings);
                 settings.BringToFront(); // Ez garantálja, hogy a fejléc alatt töltse ki a helyet
@@ -151,7 +151,7 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
-                // Válaszbetöltő logika jöhet ide...
+                settings.SetAnswers(selectedIndex.Data.Answers);
 
                 pnlright.Controls.Add(settings);
                 settings.BringToFront();
@@ -164,6 +164,7 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
+                settings.SetAnswers(selectedIndex.Data.Answers);
 
                 pnlright.Controls.Add(settings);
                 settings.BringToFront();
@@ -176,6 +177,7 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
+                settings.SetAnswers(selectedIndex.Data.Answers);
 
                 if (selectedIndex.Data.Answers != null && selectedIndex.Data.Answers.Count > 0)
                 {
@@ -193,6 +195,7 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
+                settings.SetAnswers(selectedIndex.Data.Answers);
 
                 pnlright.Controls.Add(settings);
                 settings.BringToFront();
@@ -420,7 +423,7 @@ namespace QuestionBankClient
                 ActiveCard.Data.SkillTypeId = trans.SelectedSkillId;
 
                 // Ha a régi Shortans panelednek van GetAnswers() metódusa, akkor azt használd itt:
-                // ActiveCard.Data.Answers.AddRange(trans.GetAnswers()); 
+                ActiveCard.Data.Answers.AddRange(trans.GetAnswers()); 
             }
 
             // Biztonságos kártyaszöveg-generálás (a korábbi null-hibák elkerülése végett)

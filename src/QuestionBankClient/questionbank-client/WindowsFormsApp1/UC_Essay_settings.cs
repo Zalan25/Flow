@@ -45,8 +45,12 @@ namespace QuestionBankClient
 
         public string Points
         {
-            get => numPoints.Value.ToString();
-            set { if (decimal.TryParse(value, out decimal p)) numPoints.Value = p; }
+            get => numPoints.Text.ToString();
+            set
+            {
+                if (decimal.TryParse(value, out decimal p))
+                    numPoints.Text = p.ToString();
+            }
         }
 
         public int SelectedLanguageId
@@ -97,10 +101,28 @@ namespace QuestionBankClient
             }
         }
 
+        // --- MINTA VÁLASZ VISSZATÖLTÉSE ---
+        public void SetAnswers(List<Answer> answers)
+        {
+            // Mivel esszénél csak egy minta válasz van, az elsőt vesszük
+            if (answers != null && answers.Count > 0)
+            {
+                txtSampleAnswer.Text = answers[0].AnswerText;
+            }
+            else
+            {
+                txtSampleAnswer.Text = string.Empty;
+            }
+        }
         private void btnDelete_Click(object sender, EventArgs e)
         {
             var parent = this.Parent?.Parent as UC_TypeSelector;
             if (parent != null) parent.DeleteCurrentCard();
+        }
+
+        private void numPoints_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

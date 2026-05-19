@@ -40,11 +40,19 @@ namespace QuestionBankClient
             get => txtQuestion.Text;
             set => txtQuestion.Text = value;
         }
-
+        public string SampleAnswer
+        {
+            get => flpOptions.Text;
+            set => flpOptions.Text = value;
+        }
         public string Points
         {
-            get => numPoints.Value.ToString();
-            set { if (decimal.TryParse(value, out decimal p)) numPoints.Value = p; }
+            get => numPoints.Text.ToString();
+            set
+            {
+                if (decimal.TryParse(value, out decimal p))
+                    numPoints.Text = p.ToString();
+            }
         }
 
         public int SelectedLanguageId
@@ -84,6 +92,29 @@ namespace QuestionBankClient
             };
 
             flpOptions.Controls.Add(item);
+        }
+        public void SetAnswers(List<Answer> answers)
+        {
+            flpOptions.Controls.Clear(); // Tisztítás
+
+            foreach (var ans in answers)
+            {
+                var item = new UC_SingleOption_Item();
+                item.Width = flpOptions.Width - 25;
+                item.OptionText = ans.AnswerText;
+                item.IsCorrect = ans.IsCorrect;
+
+                // Újra be kell kötnünk az eseményt a visszatöltött elemekre is
+                item.OptionSelected += (s, ev) =>
+                {
+                    foreach (UC_SingleOption_Item otherItem in flpOptions.Controls.OfType<UC_SingleOption_Item>())
+                    {
+                        if (otherItem != item) otherItem.IsCorrect = false;
+                    }
+                };
+
+                flpOptions.Controls.Add(item);
+            }
         }
 
         // --- VÁLASZOK KIGYŰJTÉSE MENTÉSKOR ---

@@ -27,7 +27,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
-            this.lblSetHeader = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtQuestionText = new System.Windows.Forms.TextBox();
             this.pnlSeparator = new System.Windows.Forms.Panel();
@@ -53,7 +52,6 @@
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.btnSave);
-            this.panel1.Controls.Add(this.lblSetHeader);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtQuestionText);
             this.panel1.Controls.Add(this.pnlSeparator);
@@ -137,7 +135,7 @@
             this.label3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.label3.Location = new System.Drawing.Point(30, 210);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(200, 37);
+            this.label3.Size = new System.Drawing.Size(202, 37);
             this.label3.TabIndex = 7;
             this.label3.Text = "Kérdés adatok";
             // 
@@ -154,18 +152,6 @@
             this.btnSave.Text = "Mentés";
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // lblSetHeader
-            // 
-            this.lblSetHeader.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblSetHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(80)))));
-            this.lblSetHeader.Location = new System.Drawing.Point(0, 0);
-            this.lblSetHeader.Name = "lblSetHeader";
-            this.lblSetHeader.Size = new System.Drawing.Size(751, 30);
-            this.lblSetHeader.TabIndex = 0;
-            this.lblSetHeader.Text = "Igaz/Hamis Beállítás";
-            this.lblSetHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblSetHeader.Visible = false;
             // 
             // label1
             // 
@@ -201,7 +187,7 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Bold);
             this.label2.Location = new System.Drawing.Point(30, 420);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(161, 25);
+            this.label2.Size = new System.Drawing.Size(166, 25);
             this.label2.TabIndex = 5;
             this.label2.Text = "Helyes válasz:";
             // 
@@ -211,7 +197,7 @@
             this.rbTrue.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.rbTrue.Location = new System.Drawing.Point(90, 460);
             this.rbTrue.Name = "rbTrue";
-            this.rbTrue.Size = new System.Drawing.Size(107, 49);
+            this.rbTrue.Size = new System.Drawing.Size(109, 49);
             this.rbTrue.TabIndex = 7;
             this.rbTrue.TabStop = true;
             this.rbTrue.Text = "Igaz";
@@ -223,7 +209,7 @@
             this.rbFalse.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.rbFalse.Location = new System.Drawing.Point(90, 520);
             this.rbFalse.Name = "rbFalse";
-            this.rbFalse.Size = new System.Drawing.Size(126, 49);
+            this.rbFalse.Size = new System.Drawing.Size(140, 49);
             this.rbFalse.TabIndex = 8;
             this.rbFalse.TabStop = true;
             this.rbFalse.Text = "Hamis";
@@ -275,7 +261,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lblSetHeader;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtQuestionText;
         private System.Windows.Forms.Panel pnlSeparator;

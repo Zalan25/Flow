@@ -170,7 +170,26 @@ namespace QuestionBankClient
                 MessageBox.Show("A kérdés frissítve lett a listában!", "Sikeres mentés", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+        // --- VÁLASZOK VISSZATÖLTÉSE ---
+        public void SetAnswers(List<Answer> answers)
+        {
+            flpAnswers.Controls.Clear(); // Először tisztítjuk a panelt
 
+            if (answers == null) return;
+
+            foreach (var ans in answers)
+            {
+                // Létrehozzuk a sort a meglévő adatból
+                var item = new UC_ShortAnswer_Item();
+                item.Width = flpAnswers.Width - 25;
+
+                // Visszatöltjük a szöveget
+                item.AnswerText = ans.AnswerText;
+
+                // Hozzáadjuk a listához
+                flpAnswers.Controls.Add(item);
+            }
+        }
         private void panel1_Paint_1(object sender, PaintEventArgs e)
         {
 

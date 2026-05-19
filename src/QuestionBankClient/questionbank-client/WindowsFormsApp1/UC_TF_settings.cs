@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -104,6 +106,27 @@ namespace QuestionBankClient
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true; // Ha betű, akkor "lenyeljük", nem jelenik meg!
+            }
+        }
+        // --- VÁLASZOK VISSZATÖLTÉSE ---
+        public void SetAnswers(List<Answer> answers)
+        {
+            if (answers == null || answers.Count == 0) return;
+
+            
+            var igazValasz = answers.FirstOrDefault(a => a.IsCorrect == true);
+
+            if (igazValasz != null)
+            {
+               
+                if (igazValasz.AnswerText == "Igaz")
+                {
+                    rbTrue.Checked = true;
+                }
+                else
+                {
+                    rbFalse.Checked = true;
+                }
             }
         }
 

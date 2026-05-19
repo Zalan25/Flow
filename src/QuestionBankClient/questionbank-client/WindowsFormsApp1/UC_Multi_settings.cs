@@ -132,6 +132,27 @@ namespace QuestionBankClient
                 e.Handled = true; // Ha betű, akkor "lenyeljük", nem jelenik meg!
             }
         }
+        // --- VÁLASZOK VISSZATÖLTÉSE ---
+        public void SetAnswers(List<Answer> answers)
+        {
+            flpOptions.Controls.Clear(); // Először ürítjük a listát
+
+            if (answers == null) return;
+
+            foreach (var ans in answers)
+            {
+                // 1. Létrehozzuk a sort
+                var item = new UC_MultiOption_Item();
+                item.Width = flpOptions.Width - 25;
+
+                // 2. Beállítjuk az adatokat
+                item.OptionText = ans.AnswerText;
+                item.IsCorrect = ans.IsCorrect;
+
+                // 3. Hozzáadjuk a listához
+                flpOptions.Controls.Add(item);
+            }
+        }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
