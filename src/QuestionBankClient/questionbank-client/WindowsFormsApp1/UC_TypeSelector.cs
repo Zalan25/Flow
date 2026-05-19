@@ -116,15 +116,25 @@ namespace QuestionBankClient
 
         private void LoadRightSettings(string type)
         {
+            //pnlright.Controls.Clear();
+
+            //// --- ÚJ FEJLÉC (CÍM) DINAMIKUS LÉTREHOZÁSA ---
+            //Label lblHeader = new Label();
+            //lblHeader.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            //lblHeader.ForeColor = System.Drawing.Color.FromArgb(40, 50, 80);
+            //lblHeader.Dock = DockStyle.Top; // Odaragasztjuk a panel tetejére
+            //lblHeader.Height = 60;
+            //lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             pnlright.Controls.Clear();
 
-            // --- ÚJ FEJLÉC (CÍM) DINAMIKUS LÉTREHOZÁSA ---
             Label lblHeader = new Label();
-            lblHeader.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            lblHeader.ForeColor = System.Drawing.Color.FromArgb(40, 50, 80);
-            lblHeader.Dock = DockStyle.Top; // Odaragasztjuk a panel tetejére
-            lblHeader.Height = 60;
-            lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblHeader.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblHeader.ForeColor = TextPurple;
+            lblHeader.BackColor = SoftPanelBackground;
+            lblHeader.Dock = DockStyle.Top;
+            lblHeader.Height = 72;
+            lblHeader.TextAlign = ContentAlignment.MiddleLeft;
+            lblHeader.Padding = new Padding(12, 0, 0, 0);
 
             // Beállítjuk a szöveget a típus alapján
             if (type == "Single") lblHeader.Text = "Egy helyes válaszos kérdés";
@@ -134,7 +144,14 @@ namespace QuestionBankClient
             else if (type == "Short") lblHeader.Text = "Rövid válasz / Fordítás";
             else lblHeader.Text = "Kérdés beállításai";
 
-            // Először a fejlécet adjuk a panelhez
+            //// Először a fejlécet adjuk a panelhez
+            //pnlright.Controls.Add(lblHeader);
+            Panel settingsHost = new Panel();
+            settingsHost.Dock = DockStyle.Fill;
+            settingsHost.BackColor = SoftPanelBackground;
+            settingsHost.Padding = new Padding(0, 12, 0, 0);
+
+            pnlright.Controls.Add(settingsHost);
             pnlright.Controls.Add(lblHeader);
 
             // --- PANELEK BETÖLTÉSE ---
@@ -148,8 +165,9 @@ namespace QuestionBankClient
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
                 settings.SetAnswers(selectedIndex.Data.Answers);
 
-                pnlright.Controls.Add(settings);
-                settings.BringToFront(); // Ez garantálja, hogy a fejléc alatt töltse ki a helyet
+                //pnlright.Controls.Add(settings);
+                //settings.BringToFront();
+                settingsHost.Controls.Add(settings); // Ez garantálja, hogy a fejléc alatt töltse ki a helyet
             }
             else if (type == "Multi")
             {
@@ -161,8 +179,9 @@ namespace QuestionBankClient
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
                 settings.SetAnswers(selectedIndex.Data.Answers);
 
-                pnlright.Controls.Add(settings);
-                settings.BringToFront();
+                //pnlright.Controls.Add(settings);
+                //settings.BringToFront();
+                settingsHost.Controls.Add(settings); 
             }
             else if (type == "tf")
             {
@@ -174,8 +193,9 @@ namespace QuestionBankClient
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
                 settings.SetAnswers(selectedIndex.Data.Answers);
 
-                pnlright.Controls.Add(settings);
-                settings.BringToFront();
+                //pnlright.Controls.Add(settings);
+                //settings.BringToFront();
+                settingsHost.Controls.Add(settings);
             }
             else if (type == "Essay")
             {
@@ -192,8 +212,9 @@ namespace QuestionBankClient
                     settings.SampleAnswer = selectedIndex.Data.Answers[0].AnswerText;
                 }
 
-                pnlright.Controls.Add(settings);
-                settings.BringToFront();
+                //pnlright.Controls.Add(settings);
+                //settings.BringToFront();
+                settingsHost.Controls.Add(settings);
             }
             else if (type == "Short")
             {
@@ -205,8 +226,9 @@ namespace QuestionBankClient
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
                 settings.SetAnswers(selectedIndex.Data.Answers);
 
-                pnlright.Controls.Add(settings);
-                settings.BringToFront();
+                //pnlright.Controls.Add(settings);
+                //settings.BringToFront();
+                settingsHost.Controls.Add(settings);    
             }
         }
 
@@ -343,7 +365,13 @@ namespace QuestionBankClient
             // 1. Ellenőrizzük, van-e kijelölt kártya
             if (selectedIndex == null || pnlright.Controls.Count == 0) return;
 
-            var currentUC = pnlright.Controls[0];
+            //var currentUC = pnlright.Controls[0];
+            var currentUC = pnlright.Controls.OfType<Panel>().SelectMany(p => p.Controls.OfType<UserControl>()).FirstOrDefault();
+
+            if (currentUC == null)
+            {
+                return;
+            }
 
             // Alaphelyzetbe állítjuk a kártya válaszait
             selectedIndex.Data.Answers.Clear();
@@ -396,7 +424,8 @@ namespace QuestionBankClient
         {
             if (ActiveCard == null) return;
 
-            var currentPanel = pnlright.Controls.OfType<UserControl>().FirstOrDefault();
+            //var currentPanel = pnlright.Controls.OfType<UserControl>().FirstOrDefault();
+            var currentPanel = pnlright.Controls.OfType<Panel>().SelectMany(p => p.Controls.OfType<UserControl>()).FirstOrDefault();
             if (currentPanel == null) return;
 
             ActiveCard.Data.Answers.Clear();
