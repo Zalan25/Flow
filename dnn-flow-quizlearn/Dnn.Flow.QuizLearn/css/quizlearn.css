@@ -728,6 +728,34 @@
             text-decoration: underline;
         }
 
+/* DNN default.css linkszín felülírása QuizLearn gombokra */
+.quizlearn-wrapper a.quizlearn-button,
+.quizlearn-wrapper a.quizlearn-button:link,
+.quizlearn-wrapper a.quizlearn-button:visited,
+.quizlearn-wrapper a.quizlearn-button:active,
+.quizlearn-wrapper a.quizlearn-button:focus,
+.quizlearn-wrapper button.quizlearn-button {
+    background: #142943;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 22px;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+    .quizlearn-wrapper a.quizlearn-button:hover,
+    .quizlearn-wrapper button.quizlearn-button:hover {
+        background: #1d3b60;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
 /* Responsive */
 
 @media (max-width: 720px) {
