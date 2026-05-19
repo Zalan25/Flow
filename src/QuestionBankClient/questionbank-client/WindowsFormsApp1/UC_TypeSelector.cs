@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,11 +22,14 @@ namespace QuestionBankClient
         public UC_TypeSelector()
         {
             InitializeComponent();
+            cmbRandomLanguage.DataSource = new BindingSource(DropdownData.GetLanguages(), null);
+            cmbRandomLanguage.DisplayMember = "Value";
+            cmbRandomLanguage.ValueMember = "Key";
         }
 
-        
 
-        
+
+
 
         // --- KÉRDÉSEK KEZELÉSE (Létrehozás, Kiválasztás, Betöltés) ---
 
@@ -78,13 +82,13 @@ namespace QuestionBankClient
             {
                 UC_Shortans_settings settings = new UC_Shortans_settings { Dock = DockStyle.Fill };
 
-                // JAVÍTÁS: Kérdés szövege és pontszám betöltése!
+                // Kérdés szövege, pontszám, NYELV és SZINT betöltése!
                 settings.QuestionText = selectedIndex.Data.QuestionText;
                 settings.Points = selectedIndex.Data.Points.ToString();
+                settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
+                settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
 
-                
-
-                // 2. Visszatöltjük az ÖSSZES alternatív választ
+                // Visszatöltjük az ÖSSZES alternatív választ
                 var flp = settings.Controls.Find("flpAnswers", true).FirstOrDefault() as FlowLayoutPanel;
                 if (flp != null)
                 {
@@ -99,16 +103,17 @@ namespace QuestionBankClient
                         flp.Controls.Add(item);
                     }
                 }
-
                 pnlright.Controls.Add(settings);
             }
             else if (type == "tf")
             {
                 UC_TF_settings settings = new UC_TF_settings { Dock = DockStyle.Fill };
 
-                // JAVÍTÁS: Kérdés és pont betöltése!
+                // Kérdés szövege, pontszám, NYELV és SZINT betöltése!
                 settings.QuestionText = selectedIndex.Data.QuestionText;
                 settings.Points = selectedIndex.Data.Points.ToString();
+                settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
+                settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
 
                 // Visszaállítjuk a RadioButton állapotát
                 var correctAnswer = selectedIndex.Data.Answers.FirstOrDefault(a => a.IsCorrect);
@@ -117,16 +122,17 @@ namespace QuestionBankClient
                     var rbTrue = settings.Controls.Find("rbTrue", true).FirstOrDefault() as RadioButton;
                     if (rbTrue != null) rbTrue.Checked = (correctAnswer.AnswerText == "Igaz");
                 }
-
                 pnlright.Controls.Add(settings);
             }
             else if (type == "Multi")
             {
                 UC_Multi_settings settings = new UC_Multi_settings { Dock = DockStyle.Fill };
 
-                // JAVÍTÁS: Kérdés és pont betöltése!
+                // Kérdés szövege, pontszám, NYELV és SZINT betöltése!
                 settings.QuestionText = selectedIndex.Data.QuestionText;
                 settings.Points = selectedIndex.Data.Points.ToString();
+                settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
+                settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
 
                 // Visszatöltjük a korábban felvett feleletválasztós opciókat
                 var flp = settings.Controls.Find("flpOptions", true).FirstOrDefault() as FlowLayoutPanel;
@@ -144,7 +150,6 @@ namespace QuestionBankClient
                         flp.Controls.Add(item);
                     }
                 }
-
                 pnlright.Controls.Add(settings);
             }
         }
@@ -304,13 +309,17 @@ namespace QuestionBankClient
 
             var currentPanel = pnlright.Controls.OfType<UserControl>().FirstOrDefault();
 
-            // 1. Töröljük a kártya régi válaszait a memóriából, hogy a módosításkor ne duplikálódjanak!
+            // 1. Töröljük a kártya régi válaszait a memóriából
             ActiveCard.Data.Answers.Clear();
 
             if (currentPanel is UC_TF_settings tf)
             {
                 ActiveCard.Data.QuestionText = tf.QuestionText;
                 ActiveCard.Data.Points = int.TryParse(tf.Points, out int p) ? p : 1;
+
+                // --- ÚJ: Nyelv és Szint mentése ---
+                ActiveCard.Data.LanguageId = tf.SelectedLanguageId;
+                ActiveCard.Data.QuestionLevelId = tf.SelectedLevelId;
 
                 // Igaz/Hamis válaszok generálása és mentése
                 ActiveCard.Data.Answers.Add(new Answer { AnswerText = "Igaz", IsCorrect = tf.IsTrueSelected, AnswerOrder = 1 });
@@ -321,6 +330,10 @@ namespace QuestionBankClient
                 ActiveCard.Data.QuestionText = shortAns.QuestionText;
                 ActiveCard.Data.Points = int.TryParse(shortAns.Points, out int p) ? p : 1;
 
+                // --- ÚJ: Nyelv és Szint mentése ---
+                ActiveCard.Data.LanguageId = shortAns.SelectedLanguageId;
+                ActiveCard.Data.QuestionLevelId = shortAns.SelectedLevelId;
+
                 // Rövid válaszok lekérése a panelről és mentése
                 ActiveCard.Data.Answers.AddRange(shortAns.GetAnswers());
             }
@@ -328,6 +341,10 @@ namespace QuestionBankClient
             {
                 ActiveCard.Data.QuestionText = multi.QuestionText;
                 ActiveCard.Data.Points = int.TryParse(multi.Points, out int p) ? p : 1;
+
+                // --- ÚJ: Nyelv és Szint mentése ---
+                ActiveCard.Data.LanguageId = multi.SelectedLanguageId;
+                ActiveCard.Data.QuestionLevelId = multi.SelectedLevelId;
 
                 // Feleletválasztós opciók lekérése a panelről és mentése
                 ActiveCard.Data.Answers.AddRange(multi.GetAnswers());
@@ -366,6 +383,59 @@ namespace QuestionBankClient
             {
                 string summary = $"[{card.Data.UI_TypeKey.ToUpper()}] ({card.Data.Points} pont)\n{card.Data.QuestionText}";
                 card.UpdateDisplay(order++, summary);
+            }
+        }
+
+        private async void btnAddRandom_Click(object sender, EventArgs e)
+        {
+            // Megnézzük, milyen nyelvet és hány kérdést választott a felhasználó
+            if (cmbRandomLanguage.SelectedValue == null) return;
+
+            int langId = (int)cmbRandomLanguage.SelectedValue;
+            int count = (int)numRandomCount.Value; // Ha nem raktál fel NumericUpDown-t, ide írj fix 20-at.
+
+            try
+            {
+                // Gomb letiltása, amíg tölt (nehogy kétszer nyomják meg)
+                btnAddRandom.Enabled = false;
+                btnAddRandom.Text = "Töltés...";
+
+                // API hívás a random végpontra
+                string url = $"api/quiz/random?langId={langId}&count={count}";
+                var randomQuestions = await DatabaseService.Client.GetFromJsonAsync<List<Question>>(url);
+
+                if (randomQuestions != null && randomQuestions.Count > 0)
+                {
+                    // A visszakapott kérdéseket betöltjük a felületre
+                    // Ehhez szerencsére már van egy tökéletes metódusunk!
+
+                    // 1. Hozzáadjuk őket a memóriában lévő listához (hogy meglegyenek)
+                    var currentQuestions = new List<Question>();
+                    foreach (UC_QuestionCard card in flpQuestionList.Controls.OfType<UC_QuestionCard>())
+                    {
+                        currentQuestions.Add(card.Data);
+                    }
+                    currentQuestions.AddRange(randomQuestions); // Hozzácsapjuk az újakat
+
+                    // 2. Újrarajzoljuk a teljes listát az új kérdésekkel
+                    LoadQuestionsFromModel(currentQuestions);
+
+                    MessageBox.Show($"Sikeresen bedobtunk {randomQuestions.Count} db véletlenszerű kérdést!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Nem találtunk elég kérdést ezen a nyelven az adatbázisban.", "Nincs találat", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hiba a random kérdések betöltésekor:\n" + ex.Message, "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Gomb visszaállítása
+                btnAddRandom.Enabled = true;
+                btnAddRandom.Text = "Random Kérdések Bedobása";
             }
         }
     }

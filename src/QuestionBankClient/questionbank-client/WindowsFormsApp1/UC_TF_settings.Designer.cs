@@ -29,6 +29,12 @@
             this.lblrate = new System.Windows.Forms.Label();
             this.txtPoints = new System.Windows.Forms.TextBox();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cmbQuestionLanguage = new System.Windows.Forms.ComboBox();
+            this.cmbQuestionLevel = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -36,6 +42,12 @@
             // 
             this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.cmbQuestionLevel);
+            this.panel1.Controls.Add(this.cmbQuestionLanguage);
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.btnSave);
             this.panel1.Controls.Add(this.lblSetHeader);
             this.panel1.Controls.Add(this.label1);
@@ -61,7 +73,7 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnSave.Location = new System.Drawing.Point(544, 1192);
+            this.btnSave.Location = new System.Drawing.Point(552, 1421);
             this.btnSave.Margin = new System.Windows.Forms.Padding(6);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(300, 87);
@@ -155,7 +167,7 @@
             // 
             this.lblrate.AutoSize = true;
             this.lblrate.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblrate.Location = new System.Drawing.Point(80, 1019);
+            this.lblrate.Location = new System.Drawing.Point(81, 889);
             this.lblrate.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblrate.Name = "lblrate";
             this.lblrate.Size = new System.Drawing.Size(205, 51);
@@ -165,7 +177,7 @@
             // txtPoints
             // 
             this.txtPoints.Font = new System.Drawing.Font("Segoe UI", 14F);
-            this.txtPoints.Location = new System.Drawing.Point(340, 1013);
+            this.txtPoints.Location = new System.Drawing.Point(316, 889);
             this.txtPoints.Margin = new System.Windows.Forms.Padding(6);
             this.txtPoints.Name = "txtPoints";
             this.txtPoints.Size = new System.Drawing.Size(156, 57);
@@ -177,7 +189,7 @@
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDelete.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(80)))));
-            this.btnDelete.Location = new System.Drawing.Point(90, 1192);
+            this.btnDelete.Location = new System.Drawing.Point(68, 1421);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(6);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(300, 87);
@@ -185,6 +197,66 @@
             this.btnDelete.Text = "Törlés";
             this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.LightGray;
+            this.panel2.Location = new System.Drawing.Point(86, 992);
+            this.panel2.Margin = new System.Windows.Forms.Padding(6);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(820, 2);
+            this.panel2.TabIndex = 7;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.label3.Location = new System.Drawing.Point(76, 1030);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(267, 51);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Helyes válasz:";
+            // 
+            // cmbQuestionLanguage
+            // 
+            this.cmbQuestionLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbQuestionLanguage.FormattingEnabled = true;
+            this.cmbQuestionLanguage.Location = new System.Drawing.Point(90, 1195);
+            this.cmbQuestionLanguage.Name = "cmbQuestionLanguage";
+            this.cmbQuestionLanguage.Size = new System.Drawing.Size(257, 33);
+            this.cmbQuestionLanguage.TabIndex = 27;
+            // 
+            // cmbQuestionLevel
+            // 
+            this.cmbQuestionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbQuestionLevel.FormattingEnabled = true;
+            this.cmbQuestionLevel.Location = new System.Drawing.Point(567, 1195);
+            this.cmbQuestionLevel.Name = "cmbQuestionLevel";
+            this.cmbQuestionLevel.Size = new System.Drawing.Size(257, 33);
+            this.cmbQuestionLevel.TabIndex = 28;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.label4.Location = new System.Drawing.Point(593, 1112);
+            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(240, 51);
+            this.label4.TabIndex = 29;
+            this.label4.Text = "Nyelvi szint:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.label5.Location = new System.Drawing.Point(117, 1112);
+            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(135, 51);
+            this.label5.TabIndex = 30;
+            this.label5.Text = "Nyelv:";
             // 
             // UC_TF_settings
             // 
@@ -214,5 +286,11 @@
         private System.Windows.Forms.TextBox txtPoints;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbQuestionLevel;
+        private System.Windows.Forms.ComboBox cmbQuestionLanguage;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label3;
     }
 }

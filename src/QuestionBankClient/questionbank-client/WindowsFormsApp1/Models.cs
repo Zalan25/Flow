@@ -53,4 +53,38 @@ namespace QuestionBankClient
         public bool IsCorrect { get; set; }
         public int AnswerOrder { get; set; }
     }
+
+    
+    
+        public static class DropdownData
+        {
+            // Az SQL adatbázis lm_languages táblája alapján pontosítva
+            public static List<KeyValuePair<int, string>> GetLanguages()
+            {
+                return new List<KeyValuePair<int, string>>() {
+                new KeyValuePair<int, string>(1, "Angol"),
+                new KeyValuePair<int, string>(2, "Görög"),
+                new KeyValuePair<int, string>(3, "Kínai"),
+                new KeyValuePair<int, string>(4, "Orosz"),
+                new KeyValuePair<int, string>(5, "Japán"),
+                new KeyValuePair<int, string>(6, "Török"),
+                new KeyValuePair<int, string>(7, "Horvát"),
+                new KeyValuePair<int, string>(8, "Portugál"),
+                new KeyValuePair<int, string>(10, "Magyar")
+            };
+            }
+
+            // Az SQL adatbázis lm_question_levels táblája alapján
+            public static List<KeyValuePair<int, string>> GetLevels()
+            {
+                return new List<KeyValuePair<int, string>>() {
+                new KeyValuePair<int, string>(1, "A1"),
+                new KeyValuePair<int, string>(2, "A2"),
+                new KeyValuePair<int, string>(3, "B1"),
+                new KeyValuePair<int, string>(4, "B2"),
+                new KeyValuePair<int, string>(5, "C1")
+            };
+            }
+        }
+    
 }

@@ -22,6 +22,16 @@ namespace QuestionBankClient
         {
             InitializeComponent();
 
+            // Nyelvek betöltése a legördülőbe
+            cmbQuestionLanguage.DataSource = new BindingSource(DropdownData.GetLanguages(), null);
+            cmbQuestionLanguage.DisplayMember = "Value"; // Amit a felhasználó lát (pl. Görög)
+            cmbQuestionLanguage.ValueMember = "Key";     // Az ID, amit a gép lát (pl. 2)
+
+            // Szintek betöltése a legördülőbe
+            cmbQuestionLevel.DataSource = new BindingSource(DropdownData.GetLevels(), null);
+            cmbQuestionLevel.DisplayMember = "Value";
+            cmbQuestionLevel.ValueMember = "Key";
+
             panel1.Dock = DockStyle.Fill;
 
             this.HandleCreated += (s, e) => {
@@ -47,8 +57,20 @@ namespace QuestionBankClient
         }
 
         
+        public int SelectedLanguageId
+        {
+            get => cmbQuestionLanguage.SelectedValue != null ? (int)cmbQuestionLanguage.SelectedValue : 1;
+            set { if (cmbQuestionLanguage != null) cmbQuestionLanguage.SelectedValue = value; }
+        }
 
-       
+        
+        public int SelectedLevelId
+        {
+            get => cmbQuestionLevel.SelectedValue != null ? (int)cmbQuestionLevel.SelectedValue : 1;
+            set { if (cmbQuestionLevel != null) cmbQuestionLevel.SelectedValue = value; }
+        }
+
+
 
         // --- MŰVELETEK ---
 
@@ -114,6 +136,11 @@ namespace QuestionBankClient
                 parent.SaveCurrentCard();
                 MessageBox.Show("A kérdés frissítve lett a listában!", "Sikeres mentés", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

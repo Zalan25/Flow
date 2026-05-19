@@ -37,9 +37,16 @@
             this.flpQuestionList = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlright = new System.Windows.Forms.Panel();
             this.lblSetHeader = new System.Windows.Forms.Label();
+            this.cmbRandomLanguage = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnAddRandom = new System.Windows.Forms.Button();
+            this.numRandomCount = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.pnlleft.SuspendLayout();
             this.pnlCenter.SuspendLayout();
             this.pnlright.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numRandomCount)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTypeHeader
@@ -56,10 +63,10 @@
             // btnTF
             // 
             this.btnTF.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnTF.Location = new System.Drawing.Point(24, 504);
+            this.btnTF.Location = new System.Drawing.Point(21, 365);
             this.btnTF.Margin = new System.Windows.Forms.Padding(4);
             this.btnTF.Name = "btnTF";
-            this.btnTF.Size = new System.Drawing.Size(204, 85);
+            this.btnTF.Size = new System.Drawing.Size(290, 85);
             this.btnTF.TabIndex = 10;
             this.btnTF.Text = "Igaz-Hamis";
             this.btnTF.UseVisualStyleBackColor = true;
@@ -68,10 +75,10 @@
             // btnMulti
             // 
             this.btnMulti.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMulti.Location = new System.Drawing.Point(24, 323);
+            this.btnMulti.Location = new System.Drawing.Point(24, 249);
             this.btnMulti.Margin = new System.Windows.Forms.Padding(4);
             this.btnMulti.Name = "btnMulti";
-            this.btnMulti.Size = new System.Drawing.Size(204, 85);
+            this.btnMulti.Size = new System.Drawing.Size(290, 85);
             this.btnMulti.TabIndex = 8;
             this.btnMulti.Text = "Feleletválasztós";
             this.btnMulti.UseVisualStyleBackColor = true;
@@ -83,7 +90,7 @@
             this.btnShort.Location = new System.Drawing.Point(24, 142);
             this.btnShort.Margin = new System.Windows.Forms.Padding(4);
             this.btnShort.Name = "btnShort";
-            this.btnShort.Size = new System.Drawing.Size(204, 85);
+            this.btnShort.Size = new System.Drawing.Size(290, 85);
             this.btnShort.TabIndex = 6;
             this.btnShort.Text = "Rövid válasz";
             this.btnShort.UseVisualStyleBackColor = true;
@@ -93,6 +100,12 @@
             // 
             this.pnlleft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlleft.Controls.Add(this.label2);
+            this.pnlleft.Controls.Add(this.label3);
+            this.pnlleft.Controls.Add(this.numRandomCount);
+            this.pnlleft.Controls.Add(this.btnAddRandom);
+            this.pnlleft.Controls.Add(this.label1);
+            this.pnlleft.Controls.Add(this.cmbRandomLanguage);
             this.pnlleft.Controls.Add(this.btnShort);
             this.pnlleft.Controls.Add(this.btnMulti);
             this.pnlleft.Controls.Add(this.btnTF);
@@ -155,6 +168,69 @@
             this.lblSetHeader.TabIndex = 0;
             this.lblSetHeader.Text = "Kérdés beállítása";
             // 
+            // cmbRandomLanguage
+            // 
+            this.cmbRandomLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRandomLanguage.FormattingEnabled = true;
+            this.cmbRandomLanguage.Location = new System.Drawing.Point(39, 720);
+            this.cmbRandomLanguage.Name = "cmbRandomLanguage";
+            this.cmbRandomLanguage.Size = new System.Drawing.Size(245, 33);
+            this.cmbRandomLanguage.TabIndex = 11;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(25, 480);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(289, 45);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Random kérdések";
+            // 
+            // btnAddRandom
+            // 
+            this.btnAddRandom.Location = new System.Drawing.Point(42, 812);
+            this.btnAddRandom.Name = "btnAddRandom";
+            this.btnAddRandom.Size = new System.Drawing.Size(242, 94);
+            this.btnAddRandom.TabIndex = 13;
+            this.btnAddRandom.Text = "Kérdések hozzáadása";
+            this.btnAddRandom.UseVisualStyleBackColor = true;
+            this.btnAddRandom.Click += new System.EventHandler(this.btnAddRandom_Click);
+            // 
+            // numRandomCount
+            // 
+            this.numRandomCount.Location = new System.Drawing.Point(47, 600);
+            this.numRandomCount.Name = "numRandomCount";
+            this.numRandomCount.Size = new System.Drawing.Size(237, 31);
+            this.numRandomCount.TabIndex = 14;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.label2.Location = new System.Drawing.Point(45, 664);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(88, 31);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Nyelv";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.label3.Location = new System.Drawing.Point(41, 539);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(154, 31);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Mennyiség";
+            // 
             // UC_TypeSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -171,6 +247,7 @@
             this.pnlCenter.ResumeLayout(false);
             this.pnlright.ResumeLayout(false);
             this.pnlright.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numRandomCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -186,5 +263,11 @@
         private System.Windows.Forms.Label lblSetHeader;
         public System.Windows.Forms.Panel pnlright;
         private System.Windows.Forms.FlowLayoutPanel flpQuestionList;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numRandomCount;
+        private System.Windows.Forms.Button btnAddRandom;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cmbRandomLanguage;
     }
 }
