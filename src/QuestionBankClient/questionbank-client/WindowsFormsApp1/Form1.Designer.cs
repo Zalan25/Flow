@@ -199,7 +199,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.Resize += new System.EventHandler(this.Form1_Resize);
+            //this.Resize += new System.EventHandler(this.Form1_Resize);
             this.pnlmain.ResumeLayout(false);
             this.pnlchoose.ResumeLayout(false);
             this.pnlHeader.ResumeLayout(false);

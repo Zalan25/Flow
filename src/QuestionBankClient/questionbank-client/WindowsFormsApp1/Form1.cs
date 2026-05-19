@@ -24,7 +24,7 @@ namespace QuestionBankClient
             InitializeComponent();
 
             // Ez garantálja, hogy induláskor azonnal a helyére kerüljön minden
-            this.Load += (s, e) => Form1_Resize(null, null);
+            //this.Load += (s, e) => Form1_Resize(null, null);
             //Kinézet
             this.BackColor = LightBackground;
             this.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
@@ -129,7 +129,7 @@ namespace QuestionBankClient
             if (btnFinalSave != null) btnFinalSave.Visible = false;
 
             // ELENGEDHETETLEN: Újra lefuttatjuk az elrendezést, hogy ne legyen üres a kép
-            Form1_Resize(null, null);
+            //Form1_Resize(null, null);
             this.Refresh(); // Frissítjük a teljes ablakot, hogy ne "haljon meg"
         }
 
@@ -346,19 +346,19 @@ namespace QuestionBankClient
         {
             ClearContent();
             SetActiveMenu(btnMenuQuizList);
-
-            var quizList = new UC_QuizList(this);
+            // var quizList = new UC_QuizList(this);
+            var quizList = new UC_QuizList();
             quizList.Dock = DockStyle.Fill;
 
             pnlContent.Controls.Add(quizList);
         }
 
-        private void ShowNewQuiz()
+        public void ShowNewQuiz()
         {
             ClearContent();
             SetActiveMenu(btnMenuNewQuiz);
-
-            var newQuiz = new UC_NewQuiz(this);
+            //var newQuiz = new UC_NewQuiz(this);
+            var newQuiz = new UC_NewQuiz();
             newQuiz.Dock = DockStyle.Fill;
 
             pnlContent.Controls.Add(newQuiz);
