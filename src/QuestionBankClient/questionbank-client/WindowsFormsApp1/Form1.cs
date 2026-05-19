@@ -363,5 +363,15 @@ namespace QuestionBankClient
 
             pnlContent.Controls.Add(newQuiz);
         }
+
+        public void OpenTypeSelector()
+        {
+            ClearContent();
+
+            UC_TypeSelector selector = new UC_TypeSelector();
+            selector.Dock = DockStyle.Fill;
+
+            pnlContent.Controls.Add(selector);
+        }
     }
 }
