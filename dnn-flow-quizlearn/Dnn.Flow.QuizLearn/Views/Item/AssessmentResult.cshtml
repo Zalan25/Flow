@@ -87,11 +87,20 @@
             </div>
         </div>
 
+        @{
+            var homeUrl = DotNetNuke.Common.Globals.NavigateURL(
+                DotNetNuke.Entities.Portals.PortalSettings.Current.HomeTabId
+            );
+        }
+
         <div class="quizlearn-actions">
             <a href="@Url.Action("Index", "Item")" class="quizlearn-button">
                 Új teszt indítása
             </a>
-        </div>
 
+            <a href="@homeUrl" class="quizlearn-button quizlearn-button-secondary">
+                Vissza a kezdőlapra
+            </a>
+        </div>
     </div>
 </div>

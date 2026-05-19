@@ -756,6 +756,59 @@
         text-decoration: none;
     }
 
+/* Eredmény oldal gombjai */
+.quizlearn-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+/* DNN default.css linkstílus felülírása */
+.quizlearn-wrapper a.quizlearn-button,
+.quizlearn-wrapper a.quizlearn-button:link,
+.quizlearn-wrapper a.quizlearn-button:visited,
+.quizlearn-wrapper a.quizlearn-button:active,
+.quizlearn-wrapper a.quizlearn-button:focus {
+    background: #142943;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 22px;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+    .quizlearn-wrapper a.quizlearn-button:hover {
+        background: #1d3b60;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+/* Másodlagos gomb: Vissza a kezdőlapra */
+.quizlearn-wrapper a.quizlearn-button-secondary,
+.quizlearn-wrapper a.quizlearn-button-secondary:link,
+.quizlearn-wrapper a.quizlearn-button-secondary:visited,
+.quizlearn-wrapper a.quizlearn-button-secondary:active,
+.quizlearn-wrapper a.quizlearn-button-secondary:focus {
+    background: #ffffff;
+    color: #142943;
+    border: 2px solid #142943;
+    text-decoration: none;
+}
+
+    .quizlearn-wrapper a.quizlearn-button-secondary:hover {
+        background: #eef3f8;
+        color: #142943;
+        text-decoration: none;
+    }
 /* Responsive */
 
 @media (max-width: 720px) {
