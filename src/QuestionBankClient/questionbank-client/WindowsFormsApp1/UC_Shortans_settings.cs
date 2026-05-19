@@ -129,10 +129,10 @@ namespace QuestionBankClient
         // Ez a metódus figyeli, hogy mit gépel a felhasználó
         private void TxtPoints_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Csak számokat (0-9) és a Backspace-t (törlés) engedjük át
+            
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                e.Handled = true; // Ha betű, akkor "lenyeljük", nem jelenik meg!
+                e.Handled = true; 
             }
         }
 
@@ -173,7 +173,7 @@ namespace QuestionBankClient
         // --- VÁLASZOK VISSZATÖLTÉSE ---
         public void SetAnswers(List<Answer> answers)
         {
-            flpAnswers.Controls.Clear(); // Először tisztítjuk a panelt
+            flpAnswers.Controls.Clear(); 
 
             if (answers == null) return;
 

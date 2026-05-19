@@ -22,8 +22,8 @@ namespace QuestionBankClient
 
             // Nyelvek betöltése a legördülőbe
             cmbQuestionLanguage.DataSource = new BindingSource(DropdownData.GetLanguages(), null);
-            cmbQuestionLanguage.DisplayMember = "Value"; // Amit a felhasználó lát (pl. Görög)
-            cmbQuestionLanguage.ValueMember = "Key";     // Az ID, amit a gép lát (pl. 2)
+            cmbQuestionLanguage.DisplayMember = "Value"; 
+            cmbQuestionLanguage.ValueMember = "Key";     
 
             // Szintek betöltése a legördülőbe
             cmbQuestionLevel.DataSource = new BindingSource(DropdownData.GetLevels(), null);
@@ -89,7 +89,7 @@ namespace QuestionBankClient
             if (parent != null) parent.DeleteCurrentCard();
         }
 
-        // Ha a későbbiekben az "Opció hozzáadása" gombnak szeretnél funkciót adni, itt teheted meg:
+        
         private void btnAddOption_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Igaz-Hamis kérdésnél alapból csak két opció lehetséges.");
@@ -102,10 +102,10 @@ namespace QuestionBankClient
         // Ez a metódus figyeli, hogy mit gépel a felhasználó
         private void TxtPoints_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Csak számokat (0-9) és a Backspace-t (törlés) engedjük át
+           
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                e.Handled = true; // Ha betű, akkor "lenyeljük", nem jelenik meg!
+                e.Handled = true; 
             }
         }
         // --- VÁLASZOK VISSZATÖLTÉSE ---
@@ -136,7 +136,7 @@ namespace QuestionBankClient
             var parent = this.Parent?.Parent as UC_TypeSelector;
             if (parent != null)
             {
-                // Rászólunk, hogy mentse el a kártyát!
+                
                 parent.SaveCurrentCard();
                 MessageBox.Show("A kérdés frissítve lett a listában!", "Sikeres mentés", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
