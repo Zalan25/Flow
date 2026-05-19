@@ -37,7 +37,12 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             var activeLanguageIds = GetActiveAssessmentLanguageIds();
 
-
+            if (mode == QuizLearnMode.Recommendation && !activeLanguageIds.Any())
+            {
+                activeLanguageIds = languages
+                    .Select(x => x.LanguageId)
+                    .ToList();
+            }
             var model = new SettingsViewModel
             {
                 Mode = mode,

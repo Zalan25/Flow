@@ -720,6 +720,11 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (!activeLanguageIds.Any())
             {
+                if (GetModuleMode() == QuizLearnMode.Recommendation)
+                {
+                    return allLanguages;
+                }
+
                 return new List<LanguageInfo>();
             }
 
@@ -734,7 +739,7 @@ namespace Dnn.Flow.QuizLearn.Controllers
 
             if (!activeLanguageIds.Any())
             {
-                return false;
+                return GetModuleMode() == QuizLearnMode.Recommendation;
             }
 
             return activeLanguageIds.Contains(languageId);
