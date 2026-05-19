@@ -15,6 +15,7 @@ namespace QuestionBankClient
     public partial class UC_TypeSelector : UserControl
     {
         public UC_QuestionCard ActiveCard { get; set; }
+
         // --- ADATTAGOK / VÁLTOZÓK ---
         private int qCounter = 1;
         private UC_QuestionCard selectedIndex = null; // Az éppen szerkesztett kártya
@@ -29,47 +30,77 @@ namespace QuestionBankClient
         }
 
 
-
-
-
         // --- KÉRDÉSEK KEZELÉSE (Létrehozás, Kiválasztás, Betöltés) ---
 
         private void CreateNewQuestionCard(string type, string defaultText)
         {
             UC_QuestionCard newCard = new UC_QuestionCard();
 
-            // Itt javítottuk: QuestionType helyett Data.UI_TypeKey
+            // Biztonsági ellenőrzés: ha a Data null lenne, létrehozzuk
+            if (newCard.Data == null)
+            {
+                newCard.Data = new Question();
+            }
+
+            // Típus kulcs és alapértékek beállítása
             newCard.Data.UI_TypeKey = type;
             newCard.Data.QuestionText = defaultText;
+            newCard.Data.Points = 1;
+
+            // --- JAVÍTVA: Az adatbázis (SQL) Típus ID-k beállítása a szöveges kulcs alapján ---
+            if (type == "Single") newCard.Data.QuestionTypeId = 1;
+            else if (type == "Multi") newCard.Data.QuestionTypeId = 2;
+            else if (type == "tf") newCard.Data.QuestionTypeId = 3;
+            else if (type == "Essay") newCard.Data.QuestionTypeId = 4;
+            else if (type == "Short") newCard.Data.QuestionTypeId = 5;
 
             flpQuestionList.Controls.Add(newCard);
             newCard.Width = flpQuestionList.ClientSize.Width - 10;
 
             newCard.UpdateDisplay(qCounter++, defaultText);
 
-            newCard.Click += (s, ev) => SelectCard(newCard);
+            // JAVÍTVA: Csak EGYSZER kötjük be a kattintást, a központi rekurzív metódussal!
             AssignClickToAll(newCard, newCard);
-            SelectCard(newCard);
 
+            // JAVÍTVA: Csak EGYSZER hívjuk meg a kijelölést!
             SelectCard(newCard);
         }
 
         private void SelectCard(UC_QuestionCard card)
         {
-            ActiveCard = card;
-            selectedIndex = card; // A biztonság kedvéért a régi változót is frissítjük
+            if (card == null || card.Data == null) return;
 
-            // Meghívjuk a te eredeti, jó betöltő metódusodat!
+            // Beállítjuk aktívnak a kártyát
+            this.ActiveCard = card;
+            this.selectedIndex = card;
+
+            // Vizuális visszajelzés (Színek frissítése)
+            foreach (UC_QuestionCard c in flpQuestionList.Controls.OfType<UC_QuestionCard>())
+            {
+                c.BackColor = System.Drawing.SystemColors.Control; // Eredeti szín
+            }
+            card.BackColor = System.Drawing.Color.LightBlue; // Kijelölt szín
+
+            // Hibakereső üzenet (Ha betölt, de mégsem nyílik le a panel, ez megmondja miért)
+            if (string.IsNullOrEmpty(card.Data.UI_TypeKey))
+            {
+                MessageBox.Show("Hiba: Ennek a kérdésnek nincs típusa beállítva!");
+                return;
+            }
+
+            // Jobb oldali panel betöltése
             LoadRightSettings(card.Data.UI_TypeKey);
         }
 
-        private void AssignClickToAll(Control ctrl, UC_QuestionCard card)
+        private void AssignClickToAll(Control parent, UC_QuestionCard card)
         {
-            // Rárakjuk a kattintást az aktuális elemre
-            ctrl.Click += (s, e) => SelectCard(card);
+            // Rákötjük a kattintást az aktuális elemre
+            parent.Click += (s, e) => {
+                SelectCard(card);
+            };
 
-            // Majd megkeressük a benne lévő összes többi elemet is, és azokra is rárakjuk
-            foreach (Control child in ctrl.Controls)
+            // Végigmegyünk az összes gyerek-elemen (Label, Panel stb.), és azokra is rákötjük
+            foreach (Control child in parent.Controls)
             {
                 AssignClickToAll(child, card);
             }
@@ -79,6 +110,26 @@ namespace QuestionBankClient
         {
             pnlright.Controls.Clear();
 
+            // --- ÚJ FEJLÉC (CÍM) DINAMIKUS LÉTREHOZÁSA ---
+            Label lblHeader = new Label();
+            lblHeader.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            lblHeader.ForeColor = System.Drawing.Color.FromArgb(40, 50, 80);
+            lblHeader.Dock = DockStyle.Top; // Odaragasztjuk a panel tetejére
+            lblHeader.Height = 60;
+            lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+
+            // Beállítjuk a szöveget a típus alapján
+            if (type == "Single") lblHeader.Text = "Egy helyes válaszos kérdés";
+            else if (type == "Multi") lblHeader.Text = "Több helyes válaszos kérdés";
+            else if (type == "tf") lblHeader.Text = "Igaz / Hamis kérdés";
+            else if (type == "Essay") lblHeader.Text = "Esszé / Kifejtős kérdés";
+            else if (type == "Short") lblHeader.Text = "Rövid válasz / Fordítás";
+            else lblHeader.Text = "Kérdés beállításai";
+
+            // Először a fejlécet adjuk a panelhez
+            pnlright.Controls.Add(lblHeader);
+
+            // --- PANELEK BETÖLTÉSE ---
             if (type == "Single")
             {
                 var settings = new UC_Single_settings { Dock = DockStyle.Fill };
@@ -87,8 +138,10 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
-                // Ha van válaszbetöltő logikád a Single-höz, azt ide teheted
+                // Válaszbetöltő logika jöhet ide...
+
                 pnlright.Controls.Add(settings);
+                settings.BringToFront(); // Ez garantálja, hogy a fejléc alatt töltse ki a helyet
             }
             else if (type == "Multi")
             {
@@ -98,8 +151,10 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
-                // Válaszok betöltése a Multi-hoz...
+                // Válaszbetöltő logika jöhet ide...
+
                 pnlright.Controls.Add(settings);
+                settings.BringToFront();
             }
             else if (type == "tf")
             {
@@ -109,8 +164,9 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
-                // Igaz/Hamis gomb beállítása a betöltött válasz alapján...
+
                 pnlright.Controls.Add(settings);
+                settings.BringToFront();
             }
             else if (type == "Essay")
             {
@@ -121,14 +177,15 @@ namespace QuestionBankClient
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
 
-                // Minta válasz visszatöltése (ha létezik a memóriában)
                 if (selectedIndex.Data.Answers != null && selectedIndex.Data.Answers.Count > 0)
                 {
                     settings.SampleAnswer = selectedIndex.Data.Answers[0].AnswerText;
                 }
+
                 pnlright.Controls.Add(settings);
+                settings.BringToFront();
             }
-            else if (type == "Short") // Ez a régi Shortans panel, amit a Fordításhoz használunk
+            else if (type == "Short")
             {
                 var settings = new UC_Shortans_settings { Dock = DockStyle.Fill };
                 settings.QuestionText = selectedIndex.Data.QuestionText;
@@ -136,12 +193,12 @@ namespace QuestionBankClient
                 settings.SelectedLanguageId = selectedIndex.Data.LanguageId;
                 settings.SelectedLevelId = selectedIndex.Data.QuestionLevelId;
                 settings.SelectedSkillId = selectedIndex.Data.SkillTypeId;
-                // Fordítás válaszainak betöltése...
+
                 pnlright.Controls.Add(settings);
+                settings.BringToFront();
             }
         }
 
-        
 
         // --- ESEMÉNYKEZELŐK (Gombok) ---
 
@@ -160,7 +217,16 @@ namespace QuestionBankClient
             CreateNewQuestionCard("Multi", "Új feleletválasztós kérdés...");
         }
 
-        
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CreateNewQuestionCard("Essay", "Írd ide az esszé kérdést...");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CreateNewQuestionCard("Single", "Írd ide a kérdést (Egy helyes válasz)...");
+        }
+
 
         // --- SEGÉDFÜGGVÉNYEK (Layout, Újraszámozás) ---
 
@@ -184,41 +250,41 @@ namespace QuestionBankClient
             {
                 if (ctrl is UC_QuestionCard card)
                 {
-                    // Itt javítottuk: card.QuestionText helyett card.Data.QuestionText
                     card.UpdateDisplay(qCounter++, card.Data.QuestionText);
                 }
             }
         }
-        //meglévő kérdőívek betöltése a modellből
+
+        // Meglévő kérdőívek betöltése a modellből
         public void LoadQuestionsFromModel(List<Question> questions)
         {
             flpQuestionList.Controls.Clear();
-            qCounter = 1; // Újraindítjuk a sorszámozást
+            qCounter = 1;
 
             foreach (var qData in questions)
             {
                 UC_QuestionCard card = new UC_QuestionCard();
                 card.Data = qData; // Átadjuk az adatokat a kártyának
 
-                // --- ÚJ SZÓTÁR: TÖKÉLETES ILLESZKEDÉS AZ ADATBÁZISHOZ ---
+                // --- ID átfordítása UI Kulcsra (Ezek az adatbázis ID-k) ---
                 if (qData.QuestionTypeId == 1) qData.UI_TypeKey = "Single";
                 else if (qData.QuestionTypeId == 2) qData.UI_TypeKey = "Multi";
                 else if (qData.QuestionTypeId == 3) qData.UI_TypeKey = "tf";
                 else if (qData.QuestionTypeId == 4) qData.UI_TypeKey = "Essay";
-                else if (qData.QuestionTypeId == 5) qData.UI_TypeKey = "Short"; // Translation-t a régi Short panel kezeli
-                else qData.UI_TypeKey = "Ismeretlen";
+                else if (qData.QuestionTypeId == 5) qData.UI_TypeKey = "Short";
+                else if (string.IsNullOrEmpty(qData.UI_TypeKey)) qData.UI_TypeKey = "Ismeretlen";
 
-                // --- VÉDŐHÁLÓ A NULL ÉRTÉKEK ELLEN ---
-                string typeKey = qData.UI_TypeKey != null ? qData.UI_TypeKey.ToUpper() : "ISMERETLEN";
+                // Kártya szövegének összeállítása
+                string typeKey = qData.UI_TypeKey.ToUpper();
                 string qText = qData.QuestionText != null ? qData.QuestionText : "Nincs szöveg";
-
                 string summary = $"[{typeKey}] ({qData.Points} pont)\n{qText}";
 
+                // Kártya hozzáadása a listához
                 flpQuestionList.Controls.Add(card);
                 card.Width = flpQuestionList.ClientSize.Width - 25;
                 card.UpdateDisplay(qCounter++, summary);
 
-                // Bekötjük az eseményeket, hogy újra lehessen kattintani a szerkesztéshez
+                // --- ITT KÖTJÜK BE A KATTINTÁST A MEGLÉVŐ KÁRTYÁKRA ---
                 AssignClickToAll(card, card);
             }
         }
@@ -239,8 +305,7 @@ namespace QuestionBankClient
 
         // --- DESIGNER METÓDUSOK ---
         private void flpQuestionList_Resize(object sender, EventArgs e) { ResizeCards(); }
-        
-        
+
         private void UC_TypeSelector_Load_1(object sender, EventArgs e) { }
         private void pnlright_Paint(object sender, PaintEventArgs e) { }
         private void flpQuestionList_Paint(object sender, PaintEventArgs e) { }
@@ -297,11 +362,8 @@ namespace QuestionBankClient
             // 3. FRISSÍTJÜK A KÁRTYÁT
             int pos = flpQuestionList.Controls.GetChildIndex(selectedIndex) + 1;
             selectedIndex.UpdateDisplay(pos, cardSummary);
-
-
         }
 
-        // Ez a metódus fogja átmenteni az adatokat a panelről a kártyára
         // Ez a metódus fogja átmenteni az adatokat a panelről a kártyára
         public void SaveCurrentCard()
         {
@@ -369,6 +431,7 @@ namespace QuestionBankClient
             int order = flpQuestionList.Controls.IndexOf(ActiveCard) + 1;
             ActiveCard.UpdateDisplay(order, summary);
         }
+
         // --- PUBLIKUS MŰVELETEK (Törlés) ---
         // Ez végzi a tényleges törlést
         public void DeleteCurrentCard()
@@ -489,15 +552,8 @@ namespace QuestionBankClient
             }
         }
 
-        private void cmbRandomLanguage_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void cmbRandomLanguage_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void label2_Click(object sender, EventArgs e) { }
 
         private void btnOpenBank_Click(object sender, EventArgs e)
         {
@@ -527,16 +583,6 @@ namespace QuestionBankClient
                     }
                 }
             }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            CreateNewQuestionCard("Essay", "Írd ide az esszé kérdést...");
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            CreateNewQuestionCard("Single", "Írd ide a kérdést (Egy helyes válasz)...");
         }
     }
 }

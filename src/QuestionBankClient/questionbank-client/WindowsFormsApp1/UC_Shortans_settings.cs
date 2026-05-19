@@ -152,5 +152,28 @@ namespace QuestionBankClient
         {
 
         }
+
+        private void btnDelete_Click_1(object sender, EventArgs e)
+        {
+            var parent = this.Parent?.Parent as UC_TypeSelector;
+            if (parent != null) parent.DeleteCurrentCard();
+        }
+
+        private void btnSave_Click_1(object sender, EventArgs e)
+        {
+            // Megkeressük a szülő TypeSelector panelt
+            var parent = this.Parent?.Parent as UC_TypeSelector;
+            if (parent != null)
+            {
+                // Rászólunk, hogy mentse el a kártyát!
+                parent.SaveCurrentCard();
+                MessageBox.Show("A kérdés frissítve lett a listában!", "Sikeres mentés", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void panel1_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
