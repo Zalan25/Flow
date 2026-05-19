@@ -77,11 +77,17 @@ namespace QuestionBankClient
             this.selectedIndex = card;
 
             // Vizuális visszajelzés (Színek frissítése)
+            //foreach (UC_QuestionCard c in flpQuestionList.Controls.OfType<UC_QuestionCard>())
+            //{
+            //    c.BackColor = System.Drawing.SystemColors.Control; // Eredeti szín
+            //}
+            //card.BackColor = System.Drawing.Color.LightBlue; // Kijelölt szín
             foreach (UC_QuestionCard c in flpQuestionList.Controls.OfType<UC_QuestionCard>())
             {
-                c.BackColor = System.Drawing.SystemColors.Control; // Eredeti szín
+                c.SetSelected(false);
             }
-            card.BackColor = System.Drawing.Color.LightBlue; // Kijelölt szín
+
+            card.SetSelected(true);
 
             // Hibakereső üzenet (Ha betölt, de mégsem nyílik le a panel, ez megmondja miért)
             if (string.IsNullOrEmpty(card.Data.UI_TypeKey))
