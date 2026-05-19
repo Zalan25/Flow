@@ -18,6 +18,7 @@ namespace QuestionBankClient
         public UC_QuestionCard()
         {
             InitializeComponent();
+            ApplyDesign();
         }
 
         // Frissítjük a kártya kinézetét
@@ -46,5 +47,42 @@ namespace QuestionBankClient
                 e.Graphics.DrawRectangle(pen, 1, 1, paintControl.Width - 3, paintControl.Height - 3);
             }
         }
+
+        //Kinézet
+        private readonly Color DarkBlue = Color.FromArgb(25, 52, 88);
+        private readonly Color TextPurple = Color.FromArgb(48, 45, 91);
+        private readonly Color CardBorder = Color.FromArgb(215, 220, 230);
+        private readonly Color CardBackground = Color.White;
+        private readonly Color SoftBlue = Color.FromArgb(245, 247, 255);
+        private readonly Color DeleteRed = Color.FromArgb(190, 65, 65);
+        private void ApplyDesign()
+        {
+            this.BackColor = CardBackground;
+            this.Height = 150;
+            this.Margin = new Padding(0, 0, 0, 18);
+            this.Padding = new Padding(18);
+
+            this.Paint -= UC_QuestionCard_Paint;
+            this.Paint += UC_QuestionCard_Paint;
+
+            foreach (Control control in this.Controls)
+            {
+                control.BackColor = CardBackground;
+            }
+
+            StyleLabels();
+            StyleButtons();
+        }
+
+        //Keret
+        private void UC_QuestionCard_Paint(object sender, PaintEventArgs e)
+        {
+            using (Pen pen = new Pen(CardBorder, 1))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.Width - 1, this.Height - 1);
+            }
+        }
+
+        //Felirat
     }
 }
