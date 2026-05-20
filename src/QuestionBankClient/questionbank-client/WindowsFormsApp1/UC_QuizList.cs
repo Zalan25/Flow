@@ -74,6 +74,29 @@ namespace QuestionBankClient
                         await DeleteQuizFromDatabase(id);
                     };
 
+                    // --- ÚJ GOMB: Aktiválás / Deaktiválás ---
+                    Button btnToggleActive = new Button
+                    {
+                        // Ha IsActive igaz, akkor "Deaktiválás" a gomb szövege, különben "Aktiválás"
+                        Text = quiz.IsActive ? "Deaktiválás" : "Aktiválás",
+                        Width = 140,
+                        Dock = DockStyle.Right, // Ez is jobbra dokkol, a Törlés gomb MELLETT fog megjelenni
+                        // Zöld ha aktív (deaktiválható), Szürke ha inaktív (aktiválható)
+                        BackColor = quiz.IsActive ? Color.MediumSeaGreen : Color.LightGray,
+                        ForeColor = quiz.IsActive ? Color.White : Color.Black,
+                        FlatStyle = FlatStyle.Flat,
+                        Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                        Cursor = Cursors.Hand,
+                        Tag = quiz.TestId // Elrakjuk ide is az ID-t
+                    };
+                    btnToggleActive.FlatAppearance.BorderSize = 0;
+                    btnToggleActive.Click += async (s, e) => {
+                        // A kattintás esemény meghívja a segédmetódust, átadva a gombot magát és a teszt ID-ját
+                        Button clickedButton = (Button)s;
+                        int id = (int)clickedButton.Tag;
+                        await ToggleQuizStatus(id, clickedButton);
+                    };
+
                     Button btnQuiz = new Button
                     {
                         Text = $"{quiz.Title}\n(ID: {quiz.TestId}) - {quiz.Description}",
@@ -97,14 +120,60 @@ namespace QuestionBankClient
                         }
                     };
 
-                    pnlRow.Controls.Add(btnDelete);
-                    pnlRow.Controls.Add(btnQuiz);
+                    // Hozzáadjuk a gombokat a panelhez. 
+                    // A dokkolás miatt a sorrend fontos: ami előbb van hozzáadva, az kerül a legszélére.
+                    pnlRow.Controls.Add(btnDelete);       // Legjobboldalra
+                    pnlRow.Controls.Add(btnToggleActive); // A törlés mellé balra
+                    pnlRow.Controls.Add(btnQuiz);         // Kitölti a maradékot balra
+
                     flpQuizzes.Controls.Add(pnlRow);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Hiba a kérdőívek betöltésekor: " + ex.Message, "Hálózati hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // --- ÚJ METÓDUS: API hívás az állapotváltásra ---
+        private async Task ToggleQuizStatus(int testId, Button btn)
+        {
+            btn.Enabled = false; // Kikapcsoljuk a gombot, amíg a hálózat dolgozik (ne lehessen spammelni)
+            try
+            {
+                // Meghívjuk a korábban az API-ban megírt végpontot
+                var response = await DatabaseService.Client.PostAsync($"api/quiz/toggle-active/{testId}", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+
+                    // Frissítjük a gomb külsejét a szerverről visszakapott új állapot alapján
+                    if (jsonResponse.Contains("\"isActive\":true") || jsonResponse.Contains("\"isActive\": true"))
+                    {
+                        btn.Text = "Deaktiválás";
+                        btn.BackColor = Color.MediumSeaGreen;
+                        btn.ForeColor = Color.White;
+                    }
+                    else
+                    {
+                        btn.Text = "Aktiválás";
+                        btn.BackColor = Color.LightGray;
+                        btn.ForeColor = Color.Black;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Nem sikerült átállítani az állapotot.", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hálózati hiba: " + ex.Message, "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btn.Enabled = true; // Hálózat után visszakapcsoljuk a gombot
             }
         }
 

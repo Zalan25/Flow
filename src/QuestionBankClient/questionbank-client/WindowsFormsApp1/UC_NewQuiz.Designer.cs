@@ -41,30 +41,25 @@
             // 
             // pnlMainContent
             // 
-            this.pnlMainContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlMainContent.AutoScroll = true;
             this.pnlMainContent.Controls.Add(this.pnlStartCard);
-            this.pnlMainContent.Location = new System.Drawing.Point(4, 4);
+            this.pnlMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMainContent.Location = new System.Drawing.Point(0, 0);
             this.pnlMainContent.Margin = new System.Windows.Forms.Padding(4);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Size = new System.Drawing.Size(1672, 1002);
+            this.pnlMainContent.Size = new System.Drawing.Size(1676, 1010);
             this.pnlMainContent.TabIndex = 3;
             this.pnlMainContent.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMainContent_Paint_1);
             // 
             // pnlStartCard
             // 
-            this.pnlStartCard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlStartCard.BackColor = System.Drawing.SystemColors.ControlLight;
             this.pnlStartCard.Controls.Add(this.btnAddQuestions);
             this.pnlStartCard.Controls.Add(this.lblDescription);
             this.pnlStartCard.Controls.Add(this.txtDescription);
             this.pnlStartCard.Controls.Add(this.txtTestName);
             this.pnlStartCard.Controls.Add(this.lblTestName);
-            this.pnlStartCard.Location = new System.Drawing.Point(120, 38);
+            this.pnlStartCard.Location = new System.Drawing.Point(75, 51);
             this.pnlStartCard.Margin = new System.Windows.Forms.Padding(4);
             this.pnlStartCard.Name = "pnlStartCard";
             this.pnlStartCard.Size = new System.Drawing.Size(1502, 913);

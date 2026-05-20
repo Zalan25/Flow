@@ -238,6 +238,9 @@ namespace QuestionBankClient
 
         }
 
-        
+        private void lblMainTitle_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

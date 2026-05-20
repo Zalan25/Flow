@@ -49,7 +49,7 @@
             this.rbCorrect.Size = new System.Drawing.Size(983, 29);
             this.rbCorrect.TabIndex = 2;
             this.rbCorrect.TabStop = true;
-            this.rbCorrect.Text = "radioButton1";
+            this.rbCorrect.Text = "Opció1";
             this.rbCorrect.UseVisualStyleBackColor = true;
             // 
             // UC_MultiOption_Item

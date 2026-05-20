@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlmain = new System.Windows.Forms.Panel();
-            this.pnlbetamain = new System.Windows.Forms.Panel();
             this.pnlchoose = new System.Windows.Forms.Panel();
             this.btnnew = new System.Windows.Forms.Button();
             this.btnexisting = new System.Windows.Forms.Button();
@@ -38,138 +36,128 @@
             this.btnBack = new System.Windows.Forms.Button();
             this.btnFinalSave = new System.Windows.Forms.Button();
             this.lblMainTitle = new System.Windows.Forms.Label();
-            this.pnlmain.SuspendLayout();
+            this.pnlmain = new System.Windows.Forms.Panel();
+            this.pnlbetamain = new System.Windows.Forms.Panel();
             this.pnlchoose.SuspendLayout();
             this.pnlHeader.SuspendLayout();
+            this.pnlmain.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // pnlmain
-            // 
-            this.pnlmain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlmain.Controls.Add(this.pnlbetamain);
-            this.pnlmain.Controls.Add(this.pnlchoose);
-            this.pnlmain.Location = new System.Drawing.Point(2, 313);
-            this.pnlmain.Margin = new System.Windows.Forms.Padding(6);
-            this.pnlmain.Name = "pnlmain";
-            this.pnlmain.Size = new System.Drawing.Size(1288, 798);
-            this.pnlmain.TabIndex = 0;
-            this.pnlmain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlmain_Paint);
-            // 
-            // pnlbetamain
-            // 
-            this.pnlbetamain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlbetamain.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.pnlbetamain.Location = new System.Drawing.Point(460, 0);
-            this.pnlbetamain.Margin = new System.Windows.Forms.Padding(6);
-            this.pnlbetamain.Name = "pnlbetamain";
-            this.pnlbetamain.Size = new System.Drawing.Size(828, 798);
-            this.pnlbetamain.TabIndex = 1;
             // 
             // pnlchoose
             // 
-            this.pnlchoose.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.pnlchoose.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.pnlchoose.BackColor = System.Drawing.Color.White;
             this.pnlchoose.Controls.Add(this.btnnew);
             this.pnlchoose.Controls.Add(this.btnexisting);
             this.pnlchoose.Controls.Add(this.lbledit);
-            this.pnlchoose.Location = new System.Drawing.Point(2, 0);
-            this.pnlchoose.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlchoose.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlchoose.Location = new System.Drawing.Point(0, 0);
+            this.pnlchoose.Margin = new System.Windows.Forms.Padding(0);
             this.pnlchoose.Name = "pnlchoose";
-            this.pnlchoose.Size = new System.Drawing.Size(446, 796);
+            this.pnlchoose.Size = new System.Drawing.Size(396, 1112);
             this.pnlchoose.TabIndex = 0;
             // 
             // btnnew
             // 
-            this.btnnew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnnew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.btnnew.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnnew.BackColor = System.Drawing.Color.White;
             this.btnnew.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnnew.FlatAppearance.BorderSize = 0;
+            this.btnnew.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(244)))), ((int)(((byte)(248)))));
             this.btnnew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnnew.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnnew.ForeColor = System.Drawing.Color.White;
-            this.btnnew.Location = new System.Drawing.Point(75, 489);
+            this.btnnew.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnnew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(43)))), ((int)(((byte)(71)))));
+            this.btnnew.Location = new System.Drawing.Point(12, 300);
             this.btnnew.Margin = new System.Windows.Forms.Padding(4);
             this.btnnew.Name = "btnnew";
-            this.btnnew.Size = new System.Drawing.Size(294, 123);
+            this.btnnew.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.btnnew.Size = new System.Drawing.Size(372, 70);
             this.btnnew.TabIndex = 3;
-            this.btnnew.Text = "Új Kérdőív";
+            this.btnnew.Text = "➕  Új Kérdőív";
+            this.btnnew.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnnew.UseVisualStyleBackColor = false;
             this.btnnew.Click += new System.EventHandler(this.btnnew_Click);
             // 
             // btnexisting
             // 
-            this.btnexisting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnexisting.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.btnexisting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnexisting.BackColor = System.Drawing.Color.White;
             this.btnexisting.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnexisting.FlatAppearance.BorderSize = 0;
+            this.btnexisting.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(244)))), ((int)(((byte)(248)))));
             this.btnexisting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnexisting.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnexisting.ForeColor = System.Drawing.Color.White;
-            this.btnexisting.Location = new System.Drawing.Point(75, 273);
+            this.btnexisting.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnexisting.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(43)))), ((int)(((byte)(71)))));
+            this.btnexisting.Location = new System.Drawing.Point(12, 220);
             this.btnexisting.Margin = new System.Windows.Forms.Padding(4);
             this.btnexisting.Name = "btnexisting";
-            this.btnexisting.Size = new System.Drawing.Size(294, 128);
+            this.btnexisting.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.btnexisting.Size = new System.Drawing.Size(372, 70);
             this.btnexisting.TabIndex = 4;
-            this.btnexisting.Text = "Kérdőíveim";
+            this.btnexisting.Text = "📁  Kérdőíveim";
+            this.btnexisting.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnexisting.UseVisualStyleBackColor = false;
             this.btnexisting.Click += new System.EventHandler(this.btnexisting_Click);
             // 
             // lbledit
             // 
-            this.lbledit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbledit.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbledit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.lbledit.Location = new System.Drawing.Point(36, 19);
+            this.lbledit.AutoSize = true;
+            this.lbledit.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbledit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(43)))), ((int)(((byte)(71)))));
+            this.lbledit.Location = new System.Drawing.Point(24, 40);
             this.lbledit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbledit.Name = "lbledit";
-            this.lbledit.Size = new System.Drawing.Size(374, 158);
+            this.lbledit.Size = new System.Drawing.Size(349, 172);
             this.lbledit.TabIndex = 3;
-            this.lbledit.Text = "Kérdőív Szerkesztő";
-            this.lbledit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbledit.Text = "Kérdőív\r\nszerkesztő";
+            this.lbledit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pnlHeader
             // 
-            this.pnlHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlHeader.AutoScroll = true;
+            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(246)))));
             this.pnlHeader.Controls.Add(this.btnBack);
             this.pnlHeader.Controls.Add(this.btnFinalSave);
             this.pnlHeader.Controls.Add(this.lblMainTitle);
-            this.pnlHeader.Location = new System.Drawing.Point(2, 2);
-            this.pnlHeader.Margin = new System.Windows.Forms.Padding(4);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(396, 0);
+            this.pnlHeader.Margin = new System.Windows.Forms.Padding(0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1288, 302);
+            this.pnlHeader.Size = new System.Drawing.Size(892, 140);
             this.pnlHeader.TabIndex = 3;
             this.pnlHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlHeader_Paint);
             // 
             // btnBack
             // 
-            this.btnBack.Location = new System.Drawing.Point(24, 13);
+            this.btnBack.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(235)))));
+            this.btnBack.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBack.FlatAppearance.BorderSize = 0;
+            this.btnBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBack.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBack.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(43)))), ((int)(((byte)(71)))));
+            this.btnBack.Location = new System.Drawing.Point(20, 45);
             this.btnBack.Margin = new System.Windows.Forms.Padding(4);
             this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(116, 56);
+            this.btnBack.Size = new System.Drawing.Size(90, 50);
             this.btnBack.TabIndex = 1;
-            this.btnBack.Text = "Vissza";
-            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Text = "◀";
+            this.btnBack.UseVisualStyleBackColor = false;
             this.btnBack.Visible = false;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click_1);
             // 
             // btnFinalSave
             // 
             this.btnFinalSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFinalSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.btnFinalSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(43)))), ((int)(((byte)(71)))));
             this.btnFinalSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnFinalSave.FlatAppearance.BorderSize = 0;
             this.btnFinalSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFinalSave.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFinalSave.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFinalSave.ForeColor = System.Drawing.Color.White;
-            this.btnFinalSave.Location = new System.Drawing.Point(1000, 19);
+            this.btnFinalSave.Location = new System.Drawing.Point(612, 40);
             this.btnFinalSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnFinalSave.Name = "btnFinalSave";
-            this.btnFinalSave.Size = new System.Drawing.Size(246, 104);
+            this.btnFinalSave.Size = new System.Drawing.Size(240, 60);
             this.btnFinalSave.TabIndex = 1;
             this.btnFinalSave.Text = "Mentés";
             this.btnFinalSave.UseVisualStyleBackColor = false;
@@ -178,32 +166,58 @@
             // lblMainTitle
             // 
             this.lblMainTitle.AutoSize = true;
-            this.lblMainTitle.Font = new System.Drawing.Font("Segoe UI", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.lblMainTitle.Location = new System.Drawing.Point(14, 144);
+            this.lblMainTitle.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(43)))), ((int)(((byte)(71)))));
+            this.lblMainTitle.Location = new System.Drawing.Point(169, 29);
             this.lblMainTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMainTitle.Name = "lblMainTitle";
-            this.lblMainTitle.Size = new System.Drawing.Size(548, 59);
+            this.lblMainTitle.Size = new System.Drawing.Size(381, 86);
             this.lblMainTitle.TabIndex = 0;
-            this.lblMainTitle.Text = "Saját kérdőív összeállítása";
+            this.lblMainTitle.Text = "Kérdőíveim";
+            this.lblMainTitle.Click += new System.EventHandler(this.lblMainTitle_Click);
+            // 
+            // pnlmain
+            // 
+            this.pnlmain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(246)))));
+            this.pnlmain.Controls.Add(this.pnlbetamain);
+            this.pnlmain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlmain.Location = new System.Drawing.Point(396, 140);
+            this.pnlmain.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlmain.Name = "pnlmain";
+            this.pnlmain.Size = new System.Drawing.Size(892, 972);
+            this.pnlmain.TabIndex = 0;
+            this.pnlmain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlmain_Paint);
+            // 
+            // pnlbetamain
+            // 
+            this.pnlbetamain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(246)))));
+            this.pnlbetamain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlbetamain.Location = new System.Drawing.Point(0, 0);
+            this.pnlbetamain.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlbetamain.Name = "pnlbetamain";
+            this.pnlbetamain.Size = new System.Drawing.Size(892, 972);
+            this.pnlbetamain.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(246)))));
             this.ClientSize = new System.Drawing.Size(1288, 1112);
-            this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.pnlmain);
+            this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.pnlchoose);
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(890, 871);
+            this.MinimumSize = new System.Drawing.Size(1000, 800);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Kérdőív Kezelő";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
-            this.pnlmain.ResumeLayout(false);
             this.pnlchoose.ResumeLayout(false);
+            this.pnlchoose.PerformLayout();
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
+            this.pnlmain.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
