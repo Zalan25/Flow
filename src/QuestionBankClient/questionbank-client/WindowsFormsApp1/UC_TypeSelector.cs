@@ -57,7 +57,7 @@ namespace QuestionBankClient
             else if (type == "Short") newCard.Data.QuestionTypeId = 5;
 
             flpQuestionList.Controls.Add(newCard);
-            newCard.Width = flpQuestionList.ClientSize.Width - 10;
+            newCard.Width = flpQuestionList.ClientSize.Width - 42;
 
             newCard.UpdateDisplay(qCounter++, defaultText);
 
@@ -330,7 +330,7 @@ namespace QuestionBankClient
 
                 // Kártya hozzáadása a listához
                 flpQuestionList.Controls.Add(card);
-                card.Width = flpQuestionList.ClientSize.Width - 25;
+                card.Width = flpQuestionList.ClientSize.Width - 42;
                 card.UpdateDisplay(qCounter++, summary);
 
                 // --- ITT KÖTJÜK BE A KATTINTÁST A MEGLÉVŐ KÁRTYÁKRA ---
