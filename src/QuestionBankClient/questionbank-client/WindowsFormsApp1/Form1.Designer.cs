@@ -50,10 +50,10 @@
             this.pnlchoose.Controls.Add(this.btnexisting);
             this.pnlchoose.Controls.Add(this.lbledit);
             this.pnlchoose.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlchoose.Location = new System.Drawing.Point(0, 0);
+            this.pnlchoose.Location = new System.Drawing.Point(0, 140);
             this.pnlchoose.Margin = new System.Windows.Forms.Padding(0);
             this.pnlchoose.Name = "pnlchoose";
-            this.pnlchoose.Size = new System.Drawing.Size(396, 1112);
+            this.pnlchoose.Size = new System.Drawing.Size(396, 972);
             this.pnlchoose.TabIndex = 0;
             // 
             // btnnew
@@ -120,10 +120,10 @@
             this.pnlHeader.Controls.Add(this.btnFinalSave);
             this.pnlHeader.Controls.Add(this.lblMainTitle);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeader.Location = new System.Drawing.Point(396, 0);
+            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Margin = new System.Windows.Forms.Padding(0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(892, 140);
+            this.pnlHeader.Size = new System.Drawing.Size(1288, 140);
             this.pnlHeader.TabIndex = 3;
             this.pnlHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlHeader_Paint);
             // 
@@ -154,7 +154,7 @@
             this.btnFinalSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFinalSave.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFinalSave.ForeColor = System.Drawing.Color.White;
-            this.btnFinalSave.Location = new System.Drawing.Point(612, 40);
+            this.btnFinalSave.Location = new System.Drawing.Point(1008, 40);
             this.btnFinalSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnFinalSave.Name = "btnFinalSave";
             this.btnFinalSave.Size = new System.Drawing.Size(240, 60);
@@ -180,9 +180,11 @@
             // 
             // pnlmain
             // 
+            this.pnlmain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlmain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(246)))));
             this.pnlmain.Controls.Add(this.pnlbetamain);
-            this.pnlmain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlmain.Location = new System.Drawing.Point(396, 140);
             this.pnlmain.Margin = new System.Windows.Forms.Padding(0);
             this.pnlmain.Name = "pnlmain";
@@ -192,8 +194,10 @@
             // 
             // pnlbetamain
             // 
+            this.pnlbetamain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlbetamain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(246)))));
-            this.pnlbetamain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlbetamain.Location = new System.Drawing.Point(0, 0);
             this.pnlbetamain.Margin = new System.Windows.Forms.Padding(0);
             this.pnlbetamain.Name = "pnlbetamain";
@@ -206,9 +210,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(246)))));
             this.ClientSize = new System.Drawing.Size(1288, 1112);
+            this.Controls.Add(this.pnlchoose);
             this.Controls.Add(this.pnlmain);
             this.Controls.Add(this.pnlHeader);
-            this.Controls.Add(this.pnlchoose);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1000, 800);
             this.Name = "Form1";
