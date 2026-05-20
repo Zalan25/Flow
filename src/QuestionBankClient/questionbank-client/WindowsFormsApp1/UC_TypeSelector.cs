@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -32,7 +33,7 @@ namespace QuestionBankClient
 
         // --- KÉRDÉSEK KEZELÉSE (Létrehozás, Kiválasztás, Betöltés) ---
 
-        private void CreateNewQuestionCard(string type, string defaultText)
+        private void CreateNewQuestionCard(string type)
         {
             UC_QuestionCard newCard = new UC_QuestionCard();
 
@@ -44,7 +45,7 @@ namespace QuestionBankClient
 
             // Típus kulcs és alapértékek beállítása
             newCard.Data.UI_TypeKey = type;
-            newCard.Data.QuestionText = defaultText;
+            
             newCard.Data.Points = 1;
 
             // --- JAVÍTVA: Az adatbázis (SQL) Típus ID-k beállítása a szöveges kulcs alapján ---
@@ -57,7 +58,7 @@ namespace QuestionBankClient
             flpQuestionList.Controls.Add(newCard);
             newCard.Width = flpQuestionList.ClientSize.Width - 10;
 
-            newCard.UpdateDisplay(qCounter++, defaultText);
+            
 
             // JAVÍTVA: Csak EGYSZER kötjük be a kattintást, a központi rekurzív metódussal!
             AssignClickToAll(newCard, newCard);
@@ -207,27 +208,27 @@ namespace QuestionBankClient
 
         private void btnShort_Click(object sender, EventArgs e)
         {
-            CreateNewQuestionCard("Short", "Új rövid válaszos kérdés...");
+            CreateNewQuestionCard("Short");
         }
 
         private void btnTF_Click(object sender, EventArgs e)
         {
-            CreateNewQuestionCard("tf", "Új igaz/hamis kérdés...");
+            CreateNewQuestionCard("tf");
         }
 
         private void btnMulti_Click(object sender, EventArgs e)
         {
-            CreateNewQuestionCard("Multi", "Új feleletválasztós kérdés...");
+            CreateNewQuestionCard("Multi");
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            CreateNewQuestionCard("Essay", "Írd ide az esszé kérdést...");
+            CreateNewQuestionCard("Essay");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            CreateNewQuestionCard("Single", "Írd ide a kérdést (Egy helyes válasz)...");
+            CreateNewQuestionCard("Single");
         }
 
 
@@ -303,7 +304,7 @@ namespace QuestionBankClient
         // Ezt a nevet fogja hívni a középső választó
         public void HandleNewQuestionSelection(string type, string text)
         {
-            CreateNewQuestionCard(type, text);
+            CreateNewQuestionCard(type);
         }
 
         // --- DESIGNER METÓDUSOK ---
@@ -587,5 +588,6 @@ namespace QuestionBankClient
                 }
             }
         }
+        
     }
 }

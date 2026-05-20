@@ -38,7 +38,7 @@
             this.rbCorrect.AutoSize = true;
             this.rbCorrect.Location = new System.Drawing.Point(15, 12);
             this.rbCorrect.Name = "rbCorrect";
-            this.rbCorrect.Size = new System.Drawing.Size(110, 29);
+            this.rbCorrect.Size = new System.Drawing.Size(109, 29);
             this.rbCorrect.TabIndex = 0;
             this.rbCorrect.TabStop = true;
             this.rbCorrect.Text = "Helyes";
@@ -46,7 +46,7 @@
             // 
             // txtOption
             // 
-            this.txtOption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtOption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtOption.Location = new System.Drawing.Point(140, 10);
             this.txtOption.Name = "txtOption";
@@ -56,7 +56,7 @@
             // btnDelete
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDelete.BackColor = System.Drawing.Color.LightCoral;
+            this.btnDelete.BackColor = System.Drawing.Color.DarkRed;
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -75,9 +75,9 @@
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.txtOption);
             this.Controls.Add(this.rbCorrect);
-            this.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10); // Kis alsó margó, hogy ne tapadjanak össze
+            this.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.Name = "UC_SingleOption_Item";
-            this.Size = new System.Drawing.Size(600, 55); // Kényelmes szélesség és magasság
+            this.Size = new System.Drawing.Size(600, 55);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -56,7 +56,7 @@
             // 
             this.lblTypeHeader.AutoSize = true;
             this.lblTypeHeader.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTypeHeader.Location = new System.Drawing.Point(16, 15);
+            this.lblTypeHeader.Location = new System.Drawing.Point(83, 23);
             this.lblTypeHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTypeHeader.Name = "lblTypeHeader";
             this.lblTypeHeader.Size = new System.Drawing.Size(250, 45);
@@ -66,7 +66,7 @@
             // btnTF
             // 
             this.btnTF.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnTF.Location = new System.Drawing.Point(24, 262);
+            this.btnTF.Location = new System.Drawing.Point(62, 296);
             this.btnTF.Margin = new System.Windows.Forms.Padding(4);
             this.btnTF.Name = "btnTF";
             this.btnTF.Size = new System.Drawing.Size(290, 85);
@@ -78,7 +78,7 @@
             // btnMulti
             // 
             this.btnMulti.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMulti.Location = new System.Drawing.Point(21, 169);
+            this.btnMulti.Location = new System.Drawing.Point(62, 203);
             this.btnMulti.Margin = new System.Windows.Forms.Padding(4);
             this.btnMulti.Name = "btnMulti";
             this.btnMulti.Size = new System.Drawing.Size(290, 85);
@@ -90,7 +90,7 @@
             // btnShort
             // 
             this.btnShort.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnShort.Location = new System.Drawing.Point(24, 76);
+            this.btnShort.Location = new System.Drawing.Point(62, 110);
             this.btnShort.Margin = new System.Windows.Forms.Padding(4);
             this.btnShort.Name = "btnShort";
             this.btnShort.Size = new System.Drawing.Size(290, 85);
@@ -101,6 +101,9 @@
             // 
             // pnlleft
             // 
+            this.pnlleft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlleft.AutoScroll = true;
             this.pnlleft.Controls.Add(this.button2);
             this.pnlleft.Controls.Add(this.button1);
             this.pnlleft.Controls.Add(this.btnOpenBank);
@@ -114,17 +117,16 @@
             this.pnlleft.Controls.Add(this.btnMulti);
             this.pnlleft.Controls.Add(this.btnTF);
             this.pnlleft.Controls.Add(this.lblTypeHeader);
-            this.pnlleft.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlleft.Location = new System.Drawing.Point(0, 0);
             this.pnlleft.Margin = new System.Windows.Forms.Padding(4);
             this.pnlleft.Name = "pnlleft";
-            this.pnlleft.Size = new System.Drawing.Size(352, 1005);
+            this.pnlleft.Size = new System.Drawing.Size(431, 1142);
             this.pnlleft.TabIndex = 0;
             // 
             // button2
             // 
             this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.Location = new System.Drawing.Point(24, 355);
+            this.button2.Location = new System.Drawing.Point(62, 391);
             this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(290, 85);
@@ -136,7 +138,7 @@
             // button1
             // 
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Location = new System.Drawing.Point(24, 448);
+            this.button1.Location = new System.Drawing.Point(62, 484);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(290, 85);
@@ -147,7 +149,7 @@
             // 
             // btnOpenBank
             // 
-            this.btnOpenBank.Location = new System.Drawing.Point(47, 822);
+            this.btnOpenBank.Location = new System.Drawing.Point(91, 995);
             this.btnOpenBank.Name = "btnOpenBank";
             this.btnOpenBank.Size = new System.Drawing.Size(242, 94);
             this.btnOpenBank.TabIndex = 15;
@@ -161,12 +163,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(41, 625);
+            this.label2.Location = new System.Drawing.Point(85, 778);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 31);
+            this.label2.Size = new System.Drawing.Size(97, 31);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Nyelv";
+            this.label2.Text = "Nyelv:";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
@@ -175,16 +177,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(41, 539);
+            this.label3.Location = new System.Drawing.Point(85, 691);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(154, 31);
+            this.label3.Size = new System.Drawing.Size(163, 31);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Mennyiség";
+            this.label3.Text = "Mennyiség:";
             // 
             // numRandomCount
             // 
-            this.numRandomCount.Location = new System.Drawing.Point(39, 573);
+            this.numRandomCount.Location = new System.Drawing.Point(91, 725);
             this.numRandomCount.Minimum = new decimal(new int[] {
             1,
             0,
@@ -201,7 +203,7 @@
             // 
             // btnAddRandom
             // 
-            this.btnAddRandom.Location = new System.Drawing.Point(42, 710);
+            this.btnAddRandom.Location = new System.Drawing.Point(91, 875);
             this.btnAddRandom.Name = "btnAddRandom";
             this.btnAddRandom.Size = new System.Drawing.Size(242, 94);
             this.btnAddRandom.TabIndex = 13;
@@ -213,7 +215,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(25, 480);
+            this.label1.Location = new System.Drawing.Point(63, 618);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(289, 45);
@@ -224,7 +226,7 @@
             // 
             this.cmbRandomLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRandomLanguage.FormattingEnabled = true;
-            this.cmbRandomLanguage.Location = new System.Drawing.Point(39, 671);
+            this.cmbRandomLanguage.Location = new System.Drawing.Point(91, 812);
             this.cmbRandomLanguage.Name = "cmbRandomLanguage";
             this.cmbRandomLanguage.Size = new System.Drawing.Size(245, 33);
             this.cmbRandomLanguage.TabIndex = 11;
@@ -237,10 +239,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCenter.BackColor = System.Drawing.SystemColors.Window;
             this.pnlCenter.Controls.Add(this.flpQuestionList);
-            this.pnlCenter.Location = new System.Drawing.Point(356, 0);
+            this.pnlCenter.Location = new System.Drawing.Point(460, 0);
             this.pnlCenter.Margin = new System.Windows.Forms.Padding(4);
             this.pnlCenter.Name = "pnlCenter";
-            this.pnlCenter.Size = new System.Drawing.Size(546, 1004);
+            this.pnlCenter.Size = new System.Drawing.Size(478, 1142);
             this.pnlCenter.TabIndex = 1;
             // 
             // flpQuestionList
@@ -249,11 +251,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flpQuestionList.AutoScroll = true;
-            this.flpQuestionList.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.flpQuestionList.BackColor = System.Drawing.SystemColors.ControlDark;
             this.flpQuestionList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpQuestionList.Location = new System.Drawing.Point(3, 0);
             this.flpQuestionList.Name = "flpQuestionList";
-            this.flpQuestionList.Size = new System.Drawing.Size(543, 1001);
+            this.flpQuestionList.Size = new System.Drawing.Size(472, 1139);
             this.flpQuestionList.TabIndex = 0;
             this.flpQuestionList.WrapContents = false;
             this.flpQuestionList.Paint += new System.Windows.Forms.PaintEventHandler(this.flpQuestionList_Paint);
@@ -263,12 +265,13 @@
             // 
             this.pnlright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlright.AutoScroll = true;
             this.pnlright.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.pnlright.Controls.Add(this.lblSetHeader);
-            this.pnlright.Location = new System.Drawing.Point(908, 0);
+            this.pnlright.Location = new System.Drawing.Point(942, 0);
             this.pnlright.Margin = new System.Windows.Forms.Padding(4);
             this.pnlright.Name = "pnlright";
-            this.pnlright.Size = new System.Drawing.Size(728, 1004);
+            this.pnlright.Size = new System.Drawing.Size(694, 1141);
             this.pnlright.TabIndex = 2;
             this.pnlright.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlright_Paint);
             // 
@@ -294,7 +297,7 @@
             this.Controls.Add(this.pnlleft);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "UC_TypeSelector";
-            this.Size = new System.Drawing.Size(1640, 1005);
+            this.Size = new System.Drawing.Size(1640, 1142);
             this.Load += new System.EventHandler(this.UC_TypeSelector_Load_1);
             this.pnlleft.ResumeLayout(false);
             this.pnlleft.PerformLayout();

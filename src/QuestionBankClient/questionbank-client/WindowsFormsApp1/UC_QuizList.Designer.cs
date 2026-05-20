@@ -23,6 +23,8 @@
             // 
             // lblTitle
             // 
+            this.lblTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(80)))));
@@ -48,6 +50,7 @@
             this.flpQuizzes.TabIndex = 1;
             this.flpQuizzes.WrapContents = false;
             this.flpQuizzes.Paint += new System.Windows.Forms.PaintEventHandler(this.flpQuizzes_Paint);
+            this.flpQuizzes.Resize += new System.EventHandler(this.flpQuizzes_Resize);
             // 
             // UC_QuizList
             // 
@@ -60,6 +63,7 @@
             this.Name = "UC_QuizList";
             this.Size = new System.Drawing.Size(1900, 1308);
             this.Load += new System.EventHandler(this.UC_QuizList_Load);
+           
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -59,7 +59,7 @@
             this.Controls.Add(this.rbCorrect);
             this.Controls.Add(this.txtOption);
             this.Name = "UC_MultiOption_Item";
-            this.Size = new System.Drawing.Size(983, 226);
+            this.Size = new System.Drawing.Size(983, 86);
             this.Load += new System.EventHandler(this.UC_MultiOption_Item_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

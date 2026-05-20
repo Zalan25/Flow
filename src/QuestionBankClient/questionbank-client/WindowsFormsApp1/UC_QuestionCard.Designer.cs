@@ -36,14 +36,12 @@
             // 
             // pnlquestioncard
             // 
-            this.pnlquestioncard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlquestioncard.BackColor = System.Drawing.SystemColors.ControlLight;
             this.pnlquestioncard.Controls.Add(this.lblText);
             this.pnlquestioncard.Controls.Add(this.lblNumber);
             this.pnlquestioncard.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pnlquestioncard.Location = new System.Drawing.Point(3, 0);
+            this.pnlquestioncard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlquestioncard.Location = new System.Drawing.Point(0, 0);
             this.pnlquestioncard.Name = "pnlquestioncard";
             this.pnlquestioncard.Padding = new System.Windows.Forms.Padding(10);
             this.pnlquestioncard.Size = new System.Drawing.Size(854, 455);

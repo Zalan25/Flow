@@ -22,6 +22,7 @@ namespace QuestionBankClient
         public Form1()
         {
             InitializeComponent();
+            this.MinimumSize = this.Size;
 
             // Ez garantálja, hogy induláskor azonnal a helyére kerüljön minden
             this.Load += (s, e) => Form1_Resize(null, null);

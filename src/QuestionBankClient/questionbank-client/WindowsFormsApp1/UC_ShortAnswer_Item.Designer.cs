@@ -41,12 +41,13 @@
             // 
             // btnRemove
             // 
+            this.btnRemove.BackColor = System.Drawing.Color.DarkRed;
             this.btnRemove.Location = new System.Drawing.Point(357, 19);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(142, 36);
             this.btnRemove.TabIndex = 1;
-            this.btnRemove.Text = "törlés";
-            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Text = "Törlés";
+            this.btnRemove.UseVisualStyleBackColor = false;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // UC_ShortAnswer_Item

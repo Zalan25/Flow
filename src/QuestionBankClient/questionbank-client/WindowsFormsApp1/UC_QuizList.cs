@@ -56,47 +56,58 @@ namespace QuestionBankClient
                         Margin = new Padding(0, 0, 0, 10)
                     };
 
+                    
+                    Panel pnlActions = new Panel
+                    {
+                        Dock = DockStyle.Right,
+                        Width = 270, // Elegendő hely a két gombnak és a margóknak
+                        BackColor = Color.FromArgb(235, 245, 255) // Ugyanaz a szín, mint a fő gombé, hogy egybeolvadjon
+                    };
+
+                    // --- TÖRÉS GOMB ÚJRATERVEZVE ---
                     Button btnDelete = new Button
                     {
                         Text = "Törlés",
-                        Width = 100,
-                        Dock = DockStyle.Right,
-                        BackColor = Color.Crimson,
-                        ForeColor = Color.White,
+                        Bounds = new Rectangle(160, 20, 90, 40), // (X, Y, Szélesség, Magasság) -> Y=20 miatt középre kerül
+                        BackColor = Color.White,
+                        ForeColor = Color.Crimson,
                         FlatStyle = FlatStyle.Flat,
-                        Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                        Font = new Font("Segoe UI", 10, FontStyle.Bold), // Kisebb betűméret a modernségért
                         Cursor = Cursors.Hand,
                         Tag = quiz.TestId
                     };
-                    btnDelete.FlatAppearance.BorderSize = 0;
+                    btnDelete.FlatAppearance.BorderSize = 1; // Finom piros keret a Figma tervhez hasonlóan
+                    btnDelete.FlatAppearance.BorderColor = Color.Crimson;
                     btnDelete.Click += async (s, e) => {
                         int id = (int)((Button)s).Tag;
                         await DeleteQuizFromDatabase(id);
                     };
 
-                    // --- ÚJ GOMB: Aktiválás / Deaktiválás ---
+                    // --- AKTIVÁLÓ GOMB ÚJRATERVEZVE ---
                     Button btnToggleActive = new Button
                     {
-                        // Ha IsActive igaz, akkor "Deaktiválás" a gomb szövege, különben "Aktiválás"
                         Text = quiz.IsActive ? "Deaktiválás" : "Aktiválás",
-                        Width = 140,
-                        Dock = DockStyle.Right, // Ez is jobbra dokkol, a Törlés gomb MELLETT fog megjelenni
-                        // Zöld ha aktív (deaktiválható), Szürke ha inaktív (aktiválható)
-                        BackColor = quiz.IsActive ? Color.MediumSeaGreen : Color.LightGray,
-                        ForeColor = quiz.IsActive ? Color.White : Color.Black,
+                        Bounds = new Rectangle(10, 20, 140, 40), // X=10 -> Így van 10px távolság a Törlés gombtól (10+140=150)
+                        BackColor = quiz.IsActive ? Color.MediumSeaGreen : Color.White,
+                        ForeColor = quiz.IsActive ? Color.White : Color.FromArgb(64, 64, 64),
                         FlatStyle = FlatStyle.Flat,
-                        Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                        Font = new Font("Segoe UI", 10, FontStyle.Bold),
                         Cursor = Cursors.Hand,
-                        Tag = quiz.TestId // Elrakjuk ide is az ID-t
+                        Tag = quiz.TestId
                     };
-                    btnToggleActive.FlatAppearance.BorderSize = 0;
+                    btnToggleActive.FlatAppearance.BorderSize = quiz.IsActive ? 0 : 1;
+                    btnToggleActive.FlatAppearance.BorderColor = Color.Gray;
                     btnToggleActive.Click += async (s, e) => {
-                        // A kattintás esemény meghívja a segédmetódust, átadva a gombot magát és a teszt ID-ját
                         Button clickedButton = (Button)s;
                         int id = (int)clickedButton.Tag;
                         await ToggleQuizStatus(id, clickedButton);
                     };
 
+                    // Hozzáadjuk a gombokat az akció panelhez
+                    pnlActions.Controls.Add(btnToggleActive);
+                    pnlActions.Controls.Add(btnDelete);
+
+                    // --- FŐ GOMB (A kártya bal oldala) ---
                     Button btnQuiz = new Button
                     {
                         Text = $"{quiz.Title}\n(ID: {quiz.TestId}) - {quiz.Description}",
@@ -120,11 +131,10 @@ namespace QuestionBankClient
                         }
                     };
 
-                    // Hozzáadjuk a gombokat a panelhez. 
-                    // A dokkolás miatt a sorrend fontos: ami előbb van hozzáadva, az kerül a legszélére.
-                    pnlRow.Controls.Add(btnDelete);       // Legjobboldalra
-                    pnlRow.Controls.Add(btnToggleActive); // A törlés mellé balra
-                    pnlRow.Controls.Add(btnQuiz);         // Kitölti a maradékot balra
+                    // Hozzáadjuk a konténereket a sorhoz.
+                    // Z-Order miatt ELŐSZÖR a jobb oldali panelt adjuk hozzá, utána a kitöltő (Fill) gombot!
+                    pnlRow.Controls.Add(pnlActions);
+                    pnlRow.Controls.Add(btnQuiz);
 
                     flpQuizzes.Controls.Add(pnlRow);
                 }
@@ -135,13 +145,12 @@ namespace QuestionBankClient
             }
         }
 
-        // --- ÚJ METÓDUS: API hívás az állapotváltásra ---
+        // --- API hívás az állapotváltásra ---
         private async Task ToggleQuizStatus(int testId, Button btn)
         {
-            btn.Enabled = false; // Kikapcsoljuk a gombot, amíg a hálózat dolgozik (ne lehessen spammelni)
+            btn.Enabled = false;
             try
             {
-                // Meghívjuk a korábban az API-ban megírt végpontot
                 var response = await DatabaseService.Client.PostAsync($"api/quiz/toggle-active/{testId}", null);
 
                 if (response.IsSuccessStatusCode)
@@ -154,17 +163,20 @@ namespace QuestionBankClient
                         btn.Text = "Deaktiválás";
                         btn.BackColor = Color.MediumSeaGreen;
                         btn.ForeColor = Color.White;
+                        btn.FlatAppearance.BorderSize = 0; // Aktív állapotban nincs keret
                     }
                     else
                     {
                         btn.Text = "Aktiválás";
-                        btn.BackColor = Color.LightGray;
-                        btn.ForeColor = Color.Black;
+                        btn.BackColor = Color.White;
+                        btn.ForeColor = Color.FromArgb(64, 64, 64);
+                        btn.FlatAppearance.BorderSize = 1; // Inaktív állapotban finom szürke keret
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Nem sikerült átállítani az állapotot.", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string errorDetails = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Nem sikerült átállítani az állapotot.\nOk: {errorDetails}", "Szerver Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -173,7 +185,7 @@ namespace QuestionBankClient
             }
             finally
             {
-                btn.Enabled = true; // Hálózat után visszakapcsoljuk a gombot
+                btn.Enabled = true;
             }
         }
 
@@ -209,5 +221,12 @@ namespace QuestionBankClient
         // Üres események a Designer kompatibilitás miatt
         private void flpQuizzes_Paint(object sender, PaintEventArgs e) { }
         private void UC_QuizList_Load(object sender, EventArgs e) { }
+
+        private void flpQuizzes_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        
     }
 }
