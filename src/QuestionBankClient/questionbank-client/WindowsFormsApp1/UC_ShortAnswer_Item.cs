@@ -67,21 +67,32 @@ namespace QuestionBankClient
 
             this.Resize -= UC_ShortAnswer_Item_Resize;
             this.Resize += UC_ShortAnswer_Item_Resize;
+
+            UC_ShortAnswer_Item_Resize(this, EventArgs.Empty);
         }
 
         private void UC_ShortAnswer_Item_Resize(object sender, EventArgs e)
         {
+            if (this.Width < 220)
+                return;
+
             if (lblCorrect != null)
             {
                 lblCorrect.Left = 6;
                 lblCorrect.Top = 11;
             }
 
-            btnRemove.Width = 56;
-            btnRemove.Left = this.Width - btnRemove.Width - 6;
+            btnRemove.Width = 58;
+            btnRemove.Height = 28;
+            btnRemove.Left = this.ClientSize.Width - btnRemove.Width - 6;
+            btnRemove.Top = 7;
 
             txtAltAnswer.Left = 28;
+            txtAltAnswer.Top = 8;
             txtAltAnswer.Width = btnRemove.Left - txtAltAnswer.Left - 10;
+            txtAltAnswer.Height = 26;
+
+            btnRemove.BringToFront();
         }
 
     }

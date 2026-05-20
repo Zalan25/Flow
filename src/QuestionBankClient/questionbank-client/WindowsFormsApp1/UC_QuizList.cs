@@ -161,12 +161,13 @@ namespace QuestionBankClient
 
         private void ApplyDesign()
         {
-            this.BackColor = LightBackground;
+            this.BackColor = Theme.PageBackground;
 
             lblTitle.Text = "Kérdőíveim";
             lblTitle.Font = Theme.TitleFont;
             lblTitle.ForeColor = Theme.TextPurple;
             lblTitle.Location = new Point(40, 35);
+            lblTitle.AutoSize = true;
 
             if (btnNewQuiz == null)
             {
@@ -193,7 +194,7 @@ namespace QuestionBankClient
             Theme.StylePrimaryButton(btnNewQuiz);
             btnNewQuiz.Cursor = Cursors.Hand;
 
-            flpQuizzes.BackColor = LightBackground;
+            flpQuizzes.BackColor = Theme.PageBackground;
             flpQuizzes.Location = new Point(40, 140);
             flpQuizzes.Size = new Size(this.Width - 80, this.Height - 180);
             flpQuizzes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -282,5 +283,7 @@ namespace QuestionBankClient
 
             return card;
         }
+
+      
     }
 }

@@ -115,11 +115,12 @@ namespace QuestionBankClient
         {
             // Új alternatíva hozzáadása a listához
             //var newItem = new UC_ShortAnswer_Item { Width = flpAnswers.Width - 25 };
-            var newItem = new UC_ShortAnswer_Item
-            {
-                Width = 250
-            };
+            var newItem = new UC_ShortAnswer_Item();
+            newItem.Width = GetAnswerItemWidth();
+
             flpAnswers.Controls.Add(newItem);
+
+            ResizeAnswerItems();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -187,15 +188,12 @@ namespace QuestionBankClient
             {
                 // Létrehozzuk a sort a meglévő adatból
                 var item = new UC_ShortAnswer_Item();
-                //item.Width = flpAnswers.Width - 25;
-                item.Width = 250;
-
-                // Visszatöltjük a szöveget
+                item.Width = GetAnswerItemWidth();
                 item.AnswerText = ans.AnswerText;
 
-                // Hozzáadjuk a listához
                 flpAnswers.Controls.Add(item);
             }
+            ResizeAnswerItems();
         }
         private void panel1_Paint_1(object sender, PaintEventArgs e)
         {
@@ -211,9 +209,17 @@ namespace QuestionBankClient
         private void ApplyDesign()
         {
             this.BackColor = Theme.PanelBackground;
+            this.AutoScroll = false;
+
             panel1.Dock = DockStyle.Fill;
             panel1.BackColor = Theme.PanelBackground;
-            panel1.AutoScroll = true;
+            panel1.AutoScroll = false;
+            panel1.AutoScrollMinSize = Size.Empty;
+            panel1.HorizontalScroll.Enabled = false;
+            panel1.HorizontalScroll.Visible = false;
+            panel1.VerticalScroll.Enabled = false;
+            panel1.VerticalScroll.Visible = false;
+            panel1.Padding = new Padding(0);
 
             Theme.StyleInput(txtQuestionText);
             Theme.StyleInput(txtPoints);
@@ -222,18 +228,9 @@ namespace QuestionBankClient
             Theme.StyleCombo(cmbSkill);
             Theme.StyleDeleteButton(btnDelete);
             Theme.StylePrimaryButton(btnSave);
-            txtQuestionText.Size = new Size(300, 95);
-            txtPoints.Size = new Size(80, 32);
-            cmbQuestionLanguage.Size = new Size(130, 32);
-            cmbQuestionLevel.Size = new Size(130, 32);
-            cmbSkill.Size = new Size(190, 32);
 
             this.MinimumSize = Size.Empty;
             this.MaximumSize = Size.Empty;
-            panel1.AutoScrollMinSize = new Size(0, 700);
-            panel1.HorizontalScroll.Enabled = false;
-            panel1.HorizontalScroll.Visible = false;
-            panel1.Padding = new Padding(0);
 
             // Felső sor
             StyleLabel(label5, "Nyelv", 20, 18);
@@ -243,40 +240,49 @@ namespace QuestionBankClient
             StyleCombo(cmbQuestionLevel, 170, 46, 125);
 
             // Második sor
-            StyleLabel(label6, "Készség", 20, 100);
-            StyleCombo(cmbSkill, 20, 128, 185);
+            StyleLabel(label6, "Készség", 20, 92);
+            StyleCombo(cmbSkill, 20, 118, 185);
 
-            StyleLabel(lblrate, "Pontszám", 220, 100);
-            StyleTextBox(txtPoints, 220, 128, 75, 30, false);
+            StyleLabel(lblrate, "Pontszám", 220, 92);
+            StyleTextBox(txtPoints, 220, 118, 75, 30, false);
 
             // Kérdés
-            StyleSectionLabel(label1, "Kérdés szövege", 20, 188);
-            StyleTextBox(txtQuestionText, 20, 224, 275, 100, true);
+            StyleSectionLabel(label1, "Kérdés szövege", 20, 170);
+            StyleTextBox(txtQuestionText, 20, 202, 295, 80, true);
 
             // Helyes válaszok
-            StyleSectionLabel(label2, "Helyes / elfogadott válaszok", 20, 342);
+            StyleSectionLabel(label2, "Helyes  válaszok", 20, 298);
             label2.Size = new Size(185, 28);
 
-            StyleSmallButton(btnAddAns, "+ Másik válasz", 205, 338);
+            StyleSmallButton(btnAddAns, "Újabb válasz", 205, 295);
             btnAddAns.Size = new Size(110, 34);
 
-            flpAnswers.Location = new Point(20, 390);
-            flpAnswers.Size = new Size(295, 175);
+            flpAnswers.Location = new Point(20, 340);
+            flpAnswers.Size = new Size(315, 155);
             flpAnswers.BackColor = Color.White;
             flpAnswers.FlowDirection = FlowDirection.TopDown;
             flpAnswers.WrapContents = false;
-            flpAnswers.AutoScroll = false;
-            flpAnswers.Padding = new Padding(6);
+            flpAnswers.AutoScroll = true;
+            flpAnswers.Padding = new Padding(6, 6, 6, 6);
+
+            // vízszintes scroll tiltása
+            flpAnswers.HorizontalScroll.Enabled = false;
+            flpAnswers.HorizontalScroll.Visible = false;
+            flpAnswers.HorizontalScroll.Maximum = 0;
 
             // Alsó gombok
-            StyleDeleteButton(btnDelete, "Törlés", 20, 595);
-            StylePrimaryButton(btnSave, "Mentés", 160, 595);
+            StyleDeleteButton(btnDelete, "Törlés", 20, 520);
+            StylePrimaryButton(btnSave, "Mentés", 160, 520);
 
             // Rejtett / nem használt labelök
             lblBaseSettings.Visible = false;
             lblCheck.Visible = false;
             lblEval.Visible = false;
             label3.Visible = false;
+            flpAnswers.Resize -= flpAnswers_Resize;
+            flpAnswers.Resize += flpAnswers_Resize;
+            ResizeAnswerItems();
+
         }
 
         //Stílus segédfüggvények
@@ -363,7 +369,36 @@ namespace QuestionBankClient
             button.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             button.Cursor = Cursors.Hand;
         }
+        private int GetAnswerItemWidth()
+        {
+            int width = flpAnswers.ClientSize.Width
+                        - flpAnswers.Padding.Left
+                        - flpAnswers.Padding.Right
+                        - SystemInformation.VerticalScrollBarWidth
+                        - 8;
 
+            return Math.Max(width, 240);
+        }
+        private void ResizeAnswerItems()
+        {
+            if (flpAnswers == null) return;
 
+            int width = GetAnswerItemWidth();
+
+            foreach (UC_ShortAnswer_Item item in flpAnswers.Controls.OfType<UC_ShortAnswer_Item>())
+            {
+                item.Width = width;
+            }
+
+            flpAnswers.HorizontalScroll.Enabled = false;
+            flpAnswers.HorizontalScroll.Visible = false;
+            flpAnswers.HorizontalScroll.Maximum = 0;
+        }
+        
+
+        private void flpAnswers_Resize(object sender, EventArgs e)
+        {
+            ResizeAnswerItems();
+        }
     }
 }
