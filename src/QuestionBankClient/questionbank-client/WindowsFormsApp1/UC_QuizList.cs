@@ -111,11 +111,13 @@ namespace QuestionBankClient
                 //    pnlRow.Controls.Add(btnQuiz);
                 //    flpQuizzes.Controls.Add(pnlRow);
                 }
+                
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Hiba a kérdőívek betöltésekor: " + ex.Message, "Hálózati hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            
         }
 
         // Kérdőív törlése API-n keresztül
@@ -166,7 +168,6 @@ namespace QuestionBankClient
             lblTitle.Text = "Kérdőíveim";
             lblTitle.Font = Theme.TitleFont;
             lblTitle.ForeColor = Theme.TextPurple;
-            lblTitle.Location = new Point(40, 35);
             lblTitle.AutoSize = true;
 
             if (btnNewQuiz == null)
@@ -189,22 +190,65 @@ namespace QuestionBankClient
 
             btnNewQuiz.Text = "+ Új kérdőív";
             btnNewQuiz.Size = new Size(230, 56);
-            btnNewQuiz.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnNewQuiz.Location = new Point(this.Width - btnNewQuiz.Width - 40, 35);
+            btnNewQuiz.Anchor = AnchorStyles.None;
             Theme.StylePrimaryButton(btnNewQuiz);
             btnNewQuiz.Cursor = Cursors.Hand;
 
+            flpQuizzes.Anchor = AnchorStyles.None;
             flpQuizzes.BackColor = Theme.PageBackground;
-            flpQuizzes.Location = new Point(40, 140);
-            flpQuizzes.Size = new Size(this.Width - 80, this.Height - 180);
-            flpQuizzes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             flpQuizzes.FlowDirection = FlowDirection.LeftToRight;
             flpQuizzes.WrapContents = true;
             flpQuizzes.AutoScroll = true;
             flpQuizzes.Padding = new Padding(0);
 
+            this.Resize -= UC_QuizList_ResizeDesignOnly;
+            this.Resize += UC_QuizList_ResizeDesignOnly;
+
+            ApplyQuizListLayout();
+
             btnNewQuiz.BringToFront();
             lblTitle.BringToFront();
+        }
+        private void ApplyQuizListLayout()
+        {
+            if (lblTitle != null)
+            {
+                lblTitle.Location = new Point(40, 35);
+            }
+
+            if (btnNewQuiz != null)
+            {
+                btnNewQuiz.Location = new Point(
+                    Math.Max(40, this.ClientSize.Width - btnNewQuiz.Width - 40),
+                    35
+                );
+
+                btnNewQuiz.BringToFront();
+            }
+
+            if (flpQuizzes != null)
+            {
+                flpQuizzes.Location = new Point(40, 140);
+
+                flpQuizzes.Size = new Size(
+                    Math.Max(300, this.ClientSize.Width - 80),
+                    Math.Max(250, this.ClientSize.Height - 180)
+                );
+            }
+
+            if (lblTitle != null)
+            {
+                lblTitle.BringToFront();
+            }
+
+            if (btnNewQuiz != null)
+            {
+                btnNewQuiz.BringToFront();
+            }
+        }
+        private void UC_QuizList_ResizeDesignOnly(object sender, EventArgs e)
+        {
+            ApplyQuizListLayout();
         }
 
         //Quiz kártya létrehozása
