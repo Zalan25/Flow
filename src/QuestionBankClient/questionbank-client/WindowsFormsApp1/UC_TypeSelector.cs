@@ -238,6 +238,7 @@ namespace QuestionBankClient
         private void btnShort_Click(object sender, EventArgs e)
         {
             CreateNewQuestionCard("Short", "Új rövid válaszos kérdés...");
+            SetActiveTypeButton(btnShort);
         }
 
         private void btnTF_Click(object sender, EventArgs e)
@@ -655,17 +656,17 @@ namespace QuestionBankClient
 
             // Fő elrendezés
             pnlleft.Dock = DockStyle.Left;
-            pnlleft.Width = 330;
-            pnlleft.BackColor = PanelBackground;
+            pnlleft.Width = 300;
+            pnlleft.BackColor = Theme.PanelBackground;
             pnlleft.Padding = new Padding(22, 24, 22, 24);
 
             pnlright.Dock = DockStyle.Right;
-            pnlright.Width = 380;
-            pnlright.BackColor = SoftPanelBackground;
-            pnlright.Padding = new Padding(14, 18, 14, 18);
+            pnlright.Width = 390;
+            pnlright.BackColor = Theme.PanelBackground;
+            pnlright.Padding = new Padding(18, 18, 18, 18);
 
             pnlCenter.Dock = DockStyle.Fill;
-            pnlCenter.BackColor = LightBackground;
+            pnlCenter.BackColor = Theme.PageBackground;
             pnlCenter.Padding = new Padding(28, 24, 28, 24);
 
             // Nagyon fontos: Dock sorrend miatt újrarendezzük a kontrollokat
@@ -750,16 +751,29 @@ namespace QuestionBankClient
         {
             button.Text = text;
             button.Location = new Point(22, top);
-            button.Size = new Size(260, 52);
-            button.BackColor = Color.FromArgb(245, 247, 255);
-            button.ForeColor = TextPurple;
+            button.Size = new Size(245, 52);
+            button.BackColor = Color.White;
+            button.ForeColor = Theme.TextPurple;
             button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderColor = BorderGray;
+            button.FlatAppearance.BorderColor = Theme.BorderGray;
             button.FlatAppearance.BorderSize = 1;
-            button.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            button.TextAlign = ContentAlignment.MiddleLeft;
-            button.Padding = new Padding(16, 0, 0, 0);
+            button.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            button.TextAlign = ContentAlignment.MiddleCenter;
             button.Cursor = Cursors.Hand;
+            button.UseVisualStyleBackColor = false;
+        }
+        private void SetActiveTypeButton(Button activeButton)
+        {
+            Button[] buttons = { btnShort, btnMulti, btnTF, button1, button2 };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = Color.White;
+                btn.ForeColor = Theme.TextPurple;
+            }
+
+            activeButton.BackColor = Theme.DarkBlue;
+            activeButton.ForeColor = Color.White;
         }
 
         private void StyleSecondaryButton(Button button, string text, int top)

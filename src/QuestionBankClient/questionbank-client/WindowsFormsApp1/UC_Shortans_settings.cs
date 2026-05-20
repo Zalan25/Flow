@@ -210,13 +210,26 @@ namespace QuestionBankClient
         private readonly Color DeleteRed = Color.FromArgb(190, 65, 65);
         private void ApplyDesign()
         {
-            this.BackColor = SoftPanelBackground;
+            this.BackColor = Theme.PanelBackground;
+            panel1.Dock = DockStyle.Fill;
+            panel1.BackColor = Theme.PanelBackground;
+            panel1.AutoScroll = true;
+
+            Theme.StyleInput(txtQuestionText);
+            Theme.StyleInput(txtPoints);
+            Theme.StyleCombo(cmbQuestionLanguage);
+            Theme.StyleCombo(cmbQuestionLevel);
+            Theme.StyleCombo(cmbSkill);
+            Theme.StyleDeleteButton(btnDelete);
+            Theme.StylePrimaryButton(btnSave);
+            txtQuestionText.Size = new Size(300, 95);
+            txtPoints.Size = new Size(80, 32);
+            cmbQuestionLanguage.Size = new Size(130, 32);
+            cmbQuestionLevel.Size = new Size(130, 32);
+            cmbSkill.Size = new Size(190, 32);
+
             this.MinimumSize = Size.Empty;
             this.MaximumSize = Size.Empty;
-
-            panel1.Dock = DockStyle.Fill;
-            panel1.BackColor = SoftPanelBackground;
-            panel1.AutoScroll = true;
             panel1.AutoScrollMinSize = new Size(0, 700);
             panel1.HorizontalScroll.Enabled = false;
             panel1.HorizontalScroll.Visible = false;

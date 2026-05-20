@@ -47,7 +47,7 @@ namespace QuestionBankClient
         private async void btnFinalSave_Click(object sender, EventArgs e)
         {
             Form1 mainForm = (Form1)this.ParentForm;
-            var typeSelector = mainForm.pnlmain.Controls.OfType<UC_TypeSelector>().FirstOrDefault();
+            var typeSelector = mainForm.Controls.Find("flpQuestionList", true).FirstOrDefault();
 
             if (string.IsNullOrWhiteSpace(txtTestName.Text))
             {
@@ -62,13 +62,20 @@ namespace QuestionBankClient
             // Ha nyitva van a kártyalista, összeszedjük a kérdéseket
             if (typeSelector != null)
             {
-                var flp = typeSelector.Controls.Find("flpQuestionList", true).FirstOrDefault() as FlowLayoutPanel;
+                var flp = mainForm.Controls.Find("flpQuestionList", true).FirstOrDefault() as FlowLayoutPanel;
+
                 if (flp != null)
                 {
                     mainForm.ActiveQuiz.Questions.Clear();
+
                     foreach (UC_QuestionCard card in flp.Controls.OfType<UC_QuestionCard>())
                     {
-                        if (card.Data == null) card.Data = new Question();
+                        if (card.Data == null)
+                            card.Data = new Question();
+
+                        if (card.Data.Points == 0)
+                            card.Data.Points = 1;
+
                         mainForm.ActiveQuiz.Questions.Add(card.Data);
                     }
                 }
@@ -123,8 +130,8 @@ namespace QuestionBankClient
             pnlMainContent.Padding = new Padding(0);
 
             pnlStartCard.Anchor = AnchorStyles.None;
-            pnlStartCard.BackColor = PanelBackground;
             pnlStartCard.Size = new Size(760, 430);
+            pnlStartCard.BackColor = Theme.PanelBackground;
             pnlStartCard.Location = new Point(
                 (pnlMainContent.Width - pnlStartCard.Width) / 2,
                 125
@@ -136,10 +143,9 @@ namespace QuestionBankClient
             lblTestName.AutoSize = true;
             lblTestName.Location = new Point(58, 55);
 
-            txtTestName.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
-            txtTestName.BorderStyle = BorderStyle.FixedSingle;
-            txtTestName.Multiline = false;
             txtTestName.Size = new Size(640, 34);
+            Theme.StyleInput(txtTestName);
+            txtTestName.Multiline = false;
             txtTestName.Location = new Point(58, 88);
             txtTestName.Text = string.IsNullOrWhiteSpace(txtTestName.Text) ? "" : txtTestName.Text;
 
@@ -149,14 +155,14 @@ namespace QuestionBankClient
             lblDescription.AutoSize = true;
             lblDescription.Location = new Point(58, 145);
 
-            txtDescription.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
-            txtDescription.BorderStyle = BorderStyle.FixedSingle;
+            Theme.StyleInput(txtDescription);
             txtDescription.Multiline = false;
             txtDescription.Size = new Size(640, 34);
             txtDescription.Location = new Point(58, 178);
 
             btnAddQuestions.Text = "+ Kérdés hozzáadása";
             btnAddQuestions.Size = new Size(285, 50);
+            Theme.StylePrimaryButton(btnAddQuestions);
             btnAddQuestions.Location = new Point(
                 (pnlStartCard.Width - btnAddQuestions.Width) / 2,
                 300

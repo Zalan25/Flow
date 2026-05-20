@@ -86,51 +86,54 @@ namespace QuestionBankClient
 
         private void btnnew_Click(object sender, EventArgs e)
         {
-            ActiveQuiz = new Quiz();
+            ShowNewQuiz();
+            //ActiveQuiz = new Quiz();
 
-            pnlbetamain.Controls.Clear();
-            UC_NewQuiz uc = new UC_NewQuiz { Dock = DockStyle.Fill };
-            pnlbetamain.Controls.Add(uc);
+            //pnlbetamain.Controls.Clear();
+            //UC_NewQuiz uc = new UC_NewQuiz { Dock = DockStyle.Fill };
+            //pnlbetamain.Controls.Add(uc);
 
-            lblMainTitle.Text = "Új kérdőív létrehozása";
-            btnBack.Visible = true;
+            //lblMainTitle.Text = "Új kérdőív létrehozása";
+            //btnBack.Visible = true;
 
-            // EZ A SOR KAPCSOLJA VISSZA A MENTÉS GOMBOT!
-            if (btnFinalSave != null) btnFinalSave.Visible = true;
+            //// EZ A SOR KAPCSOLJA VISSZA A MENTÉS GOMBOT!
+            //if (btnFinalSave != null) btnFinalSave.Visible = true;
         }
 
         private void btnexisting_Click(object sender, EventArgs e)
         {
-            // Töröljük a középső területet
-            pnlbetamain.Controls.Clear();
+            ShowQuizList();
+            //// Töröljük a középső területet
+            //pnlbetamain.Controls.Clear();
 
-            // Betöltjük a kérdőívek listáját
-            UC_QuizList quizListPanel = new UC_QuizList { Dock = DockStyle.Fill };
-            pnlbetamain.Controls.Add(quizListPanel);
+            //// Betöltjük a kérdőívek listáját
+            //UC_QuizList quizListPanel = new UC_QuizList { Dock = DockStyle.Fill };
+            //pnlbetamain.Controls.Add(quizListPanel);
 
-            lblMainTitle.Text = "Mentett Kérdőíveim";
-            btnBack.Visible = true;
-            if (btnFinalSave != null) btnFinalSave.Visible = false;
+            //lblMainTitle.Text = "Mentett Kérdőíveim";
+            //btnBack.Visible = true;
+            //if (btnFinalSave != null) btnFinalSave.Visible = false;
         }
 
         public void btnBack_Click_1(object sender, EventArgs e)
         {
-            // Mindent kitakarítunk
-            pnlmain.Controls.Clear();
-            pnlbetamain.Controls.Clear();
+            ShowQuizList();
+            //// Mindent kitakarítunk
+            //pnlmain.Controls.Clear();
+            //pnlbetamain.Controls.Clear();
 
-            // Visszatesszük az eredeti két panelt
-            pnlmain.Controls.Add(pnlchoose);
-            pnlmain.Controls.Add(pnlbetamain);
+            //// Visszatesszük az eredeti két panelt
+            //pnlmain.Controls.Add(pnlchoose);
+            //pnlmain.Controls.Add(pnlbetamain);
 
-            // Alaphelyzetbe állítjuk a feliratokat és gombokat
-            lblMainTitle.Text = "Saját kérdőív összeállítása";
-            btnBack.Visible = false;
-            if (btnFinalSave != null) btnFinalSave.Visible = false;
+            //// Alaphelyzetbe állítjuk a feliratokat és gombokat
+            //lblMainTitle.Text = "Saját kérdőív összeállítása";
+            //btnBack.Visible = false;
+            //if (btnFinalSave != null) btnFinalSave.Visible = false;
 
-            // ELENGEDHETETLEN: Újra lefuttatjuk az elrendezést, hogy ne legyen üres a kép
-            //Form1_Resize(null, null);
-            this.Refresh(); // Frissítjük a teljes ablakot, hogy ne "haljon meg"
+            //// ELENGEDHETETLEN: Újra lefuttatjuk az elrendezést, hogy ne legyen üres a kép
+            ////Form1_Resize(null, null);
+            //this.Refresh(); // Frissítjük a teljes ablakot, hogy ne "haljon meg"
         }
 
         // --- VÉGLEGES MENTÉS (SQL) ---
@@ -199,19 +202,30 @@ namespace QuestionBankClient
         // létező quiz megnyitása a szerkesztéshez
         public void OpenExistingQuiz(Quiz loadedQuiz)
         {
-            this.ActiveQuiz = loadedQuiz; // Beállítjuk az adatbázisból jött tesztet aktívnak
+            ActiveQuiz = loadedQuiz;
 
-            pnlmain.Controls.Clear();
+            ClearContent();
+            SetActiveMenu(btnMenuQuizList);
+
             UC_TypeSelector typeSelector = new UC_TypeSelector();
             typeSelector.Dock = DockStyle.Fill;
-            pnlmain.Controls.Add(typeSelector);
 
-            // Meghívunk egy új metódust a TypeSelectorban, ami kirajzolja a kártyákat
+            pnlContent.Controls.Add(typeSelector);
+
             typeSelector.LoadQuestionsFromModel(loadedQuiz.Questions);
+            //this.ActiveQuiz = loadedQuiz; // Beállítjuk az adatbázisból jött tesztet aktívnak
 
-            lblMainTitle.Text = "Kérdőív szerkesztése: " + loadedQuiz.Title;
-            btnBack.Visible = true;
-            btnFinalSave.Visible = true;
+            //pnlmain.Controls.Clear();
+            //UC_TypeSelector typeSelector = new UC_TypeSelector();
+            //typeSelector.Dock = DockStyle.Fill;
+            //pnlmain.Controls.Add(typeSelector);
+
+            //// Meghívunk egy új metódust a TypeSelectorban, ami kirajzolja a kártyákat
+            //typeSelector.LoadQuestionsFromModel(loadedQuiz.Questions);
+
+            //lblMainTitle.Text = "Kérdőív szerkesztése: " + loadedQuiz.Title;
+            //btnBack.Visible = true;
+            //btnFinalSave.Visible = true;
         }
 
 
@@ -265,18 +279,23 @@ namespace QuestionBankClient
         {
             this.Controls.Clear();
 
+            this.Text = "Kérdőív szerkesztő";
+            this.BackColor = Theme.PageBackground;
+            this.MinimumSize = new Size(1200, 750);
+            this.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+
             pnlSidebar = new Panel();
             pnlSidebar.Name = "pnlSidebar";
-            pnlSidebar.BackColor = SidebarBackground;
+            pnlSidebar.BackColor = Color.White;
             pnlSidebar.Dock = DockStyle.Left;
             pnlSidebar.Width = 300;
             pnlSidebar.Padding = new Padding(32, 36, 32, 32);
 
             pnlContent = new Panel();
             pnlContent.Name = "pnlContent";
-            pnlContent.BackColor = LightBackground;
+            pnlContent.BackColor = Theme.PageBackground;
             pnlContent.Dock = DockStyle.Fill;
-            pnlContent.Padding = new Padding(60, 48, 42, 42);
+            pnlContent.Padding = new Padding(55, 40, 45, 40);
 
             this.Controls.Add(pnlContent);
             this.Controls.Add(pnlSidebar);
@@ -289,7 +308,7 @@ namespace QuestionBankClient
         {
             lblAppTitle = new Label();
             lblAppTitle.Text = "Kérdőív\nszerkesztő";
-            lblAppTitle.ForeColor = TextPurple;
+            lblAppTitle.ForeColor = Theme.TextPurple;
             lblAppTitle.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
             lblAppTitle.AutoSize = false;
             lblAppTitle.Width = 230;
@@ -320,13 +339,15 @@ namespace QuestionBankClient
             button.Padding = new Padding(18, 0, 0, 0);
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.BackColor = SidebarBackground;
-            button.ForeColor = TextPurple;
+            button.BackColor = Color.White;
+            button.ForeColor = Theme.TextPurple;
             button.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
             button.Cursor = Cursors.Hand;
+            button.UseVisualStyleBackColor = false;
 
             return button;
         }
+
 
         //Képernyő váltás
         private void ClearContent()
@@ -336,10 +357,10 @@ namespace QuestionBankClient
 
         private void SetActiveMenu(Button activeButton)
         {
-            btnMenuQuizList.BackColor = SidebarBackground;
-            btnMenuNewQuiz.BackColor = SidebarBackground;
+            btnMenuQuizList.BackColor = Color.White;
+            btnMenuNewQuiz.BackColor = Color.White;
 
-            activeButton.BackColor = ActiveMenuBackground;
+            activeButton.BackColor = Theme.ActiveMenuBackground;
         }
 
         private void ShowQuizList()
@@ -367,6 +388,7 @@ namespace QuestionBankClient
         public void OpenTypeSelector()
         {
             ClearContent();
+            SetActiveMenu(btnMenuNewQuiz);
 
             UC_TypeSelector selector = new UC_TypeSelector();
             selector.Dock = DockStyle.Fill;

@@ -14,9 +14,9 @@ namespace QuestionBankClient
         public UC_QuizList()
         {
             InitializeComponent();
-            LoadQuizzesFromDatabase();
-            //Kinézet
             ApplyDesign();
+            LoadQuizzesFromDatabase();
+            
         }
 
         // Kérdőív részletes letöltése az API-ból
@@ -164,33 +164,34 @@ namespace QuestionBankClient
             this.BackColor = LightBackground;
 
             lblTitle.Text = "Kérdőíveim";
-            lblTitle.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
-            lblTitle.ForeColor = TextPurple;
+            lblTitle.Font = Theme.TitleFont;
+            lblTitle.ForeColor = Theme.TextPurple;
             lblTitle.Location = new Point(40, 35);
-            lblTitle.AutoSize = true;
 
-            btnNewQuiz = new Button();
+            if (btnNewQuiz == null)
+            {
+                btnNewQuiz = new Button();
+                btnNewQuiz.Name = "btnNewQuiz";
+
+                btnNewQuiz.Click += (s, e) =>
+                {
+                    Form1 main = this.ParentForm as Form1;
+
+                    if (main != null)
+                    {
+                        main.ShowNewQuiz();
+                    }
+                };
+
+                this.Controls.Add(btnNewQuiz);
+            }
+
             btnNewQuiz.Text = "+ Új kérdőív";
             btnNewQuiz.Size = new Size(230, 56);
             btnNewQuiz.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnNewQuiz.Location = new Point(this.Width - btnNewQuiz.Width - 40, 35);
-            btnNewQuiz.BackColor = DarkBlue;
-            btnNewQuiz.ForeColor = Color.White;
-            btnNewQuiz.FlatStyle = FlatStyle.Flat;
-            btnNewQuiz.FlatAppearance.BorderSize = 0;
-            btnNewQuiz.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            Theme.StylePrimaryButton(btnNewQuiz);
             btnNewQuiz.Cursor = Cursors.Hand;
-            btnNewQuiz.Click += (s, e) =>
-            {
-                Form1 main = this.ParentForm as Form1;
-
-                if (main != null)
-                {
-                    main.ShowNewQuiz();
-                }
-            };
-
-            this.Controls.Add(btnNewQuiz);
 
             flpQuizzes.BackColor = LightBackground;
             flpQuizzes.Location = new Point(40, 140);
