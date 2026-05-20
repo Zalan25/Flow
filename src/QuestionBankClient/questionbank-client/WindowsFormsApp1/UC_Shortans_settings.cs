@@ -263,12 +263,12 @@ namespace QuestionBankClient
             flpAnswers.FlowDirection = FlowDirection.TopDown;
             flpAnswers.WrapContents = false;
             flpAnswers.AutoScroll = true;
-            flpAnswers.Padding = new Padding(6, 6, 6, 6);
+            flpAnswers.Padding = new Padding(6);
 
-            // vízszintes scroll tiltása
             flpAnswers.HorizontalScroll.Enabled = false;
             flpAnswers.HorizontalScroll.Visible = false;
             flpAnswers.HorizontalScroll.Maximum = 0;
+            flpAnswers.AutoScrollMinSize = new Size(0, 0);
 
             // Alsó gombok
             StyleDeleteButton(btnDelete, "Törlés", 20, 520);
@@ -375,9 +375,9 @@ namespace QuestionBankClient
                         - flpAnswers.Padding.Left
                         - flpAnswers.Padding.Right
                         - SystemInformation.VerticalScrollBarWidth
-                        - 8;
+                        - 38;
 
-            return Math.Max(width, 240);
+            return Math.Max(width, 220);
         }
         private void ResizeAnswerItems()
         {
@@ -388,13 +388,15 @@ namespace QuestionBankClient
             foreach (UC_ShortAnswer_Item item in flpAnswers.Controls.OfType<UC_ShortAnswer_Item>())
             {
                 item.Width = width;
+                item.Margin = new Padding(0, 0, 0, 10);
             }
 
             flpAnswers.HorizontalScroll.Enabled = false;
             flpAnswers.HorizontalScroll.Visible = false;
             flpAnswers.HorizontalScroll.Maximum = 0;
+            flpAnswers.AutoScrollMinSize = new Size(0, 0);
         }
-        
+
 
         private void flpAnswers_Resize(object sender, EventArgs e)
         {

@@ -35,6 +35,8 @@ namespace QuestionBankClient
         private Label lblCorrect;
         private void ApplyDesign()
         {
+            this.AutoSize = false;
+            this.Margin = new Padding(0, 0, 0, 10);
             this.Height = 42;
             this.BackColor = Color.White;
             this.Margin = new Padding(0, 0, 0, 8);
