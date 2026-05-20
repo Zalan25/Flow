@@ -241,12 +241,14 @@ namespace QuestionBankClient
             StyleTextBox(txtQuestionText, 20, 224, 275, 100, true);
 
             // Helyes válaszok
-            StyleSectionLabel(label2, "Helyes válaszok", 20, 356);
+            StyleSectionLabel(label2, "Helyes / elfogadott válaszok", 20, 342);
+            label2.Size = new Size(185, 28);
 
-            StyleSmallButton(btnAddAns, "+ Másik válasz", 20, 388);
+            StyleSmallButton(btnAddAns, "+ Másik válasz", 205, 338);
+            btnAddAns.Size = new Size(110, 34);
 
-            flpAnswers.Location = new Point(20, 435);
-            flpAnswers.Size = new Size(275, 145);
+            flpAnswers.Location = new Point(20, 390);
+            flpAnswers.Size = new Size(295, 175);
             flpAnswers.BackColor = Color.White;
             flpAnswers.FlowDirection = FlowDirection.TopDown;
             flpAnswers.WrapContents = false;
