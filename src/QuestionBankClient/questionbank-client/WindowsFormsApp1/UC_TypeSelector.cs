@@ -660,9 +660,9 @@ namespace QuestionBankClient
             pnlleft.Padding = new Padding(22, 24, 22, 24);
 
             pnlright.Dock = DockStyle.Right;
-            pnlright.Width = 430;
+            pnlright.Width = 380;
             pnlright.BackColor = SoftPanelBackground;
-            pnlright.Padding = new Padding(20, 22, 20, 20);
+            pnlright.Padding = new Padding(14, 18, 14, 18);
 
             pnlCenter.Dock = DockStyle.Fill;
             pnlCenter.BackColor = LightBackground;
